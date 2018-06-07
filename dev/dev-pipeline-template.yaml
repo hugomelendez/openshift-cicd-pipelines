@@ -45,7 +45,7 @@ objects:
         - name: TAG_IMAGE
           value: ${TAG_IMAGE}
         - name: IMAGE_NAME
-          value: ${APP_NAME}
+          value: ${IMAGE_NAME}
         - name: TAG_NAME
           value: latest        
         jenkinsfilePath: Jenkinsfile

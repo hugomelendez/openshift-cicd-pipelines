@@ -113,7 +113,7 @@ pipeline {
                                 openshift.set("triggers", "dc/${env.APP}", "--manual");
                             } else {
                                 // Deploys the new version of the application
-                                openshift.patch("dc/${env.APP}", "'{\"spec\":{\"triggers\":[{\"type\":\"ImageChange\",\"imageChangeParams\":{\"containerNames\":[\"${env.APP}\"],\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"${env.APP}:${env.TAG_NAME}\"}}}]}}}'")
+                                openshift.patch("dc/${env.APP}", "'{\"spec\":{\"triggers\":[{\"type\":\"ImageChange\",\"imageChangeParams\":{\"containerNames\":[\"${env.APP}\"],\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"${env.IMAGE_NAME}:${env.TAG_NAME}\"}}}]}}}'")
                                 openshift.selector("dc", env.APP).rollout().latest();
                             }
                         } 
