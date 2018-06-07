@@ -86,10 +86,10 @@ pipeline {
                         openshift.withProject() {
                             def pom = readMavenPom file: "pom.xml"
 
-                            env.TAG_NAME = pom.version;
+                            env.TAG = pom.version;
                             
                             // Tags the image              
-                            openshift.tag("${env.APP}:latest", "${env.IMAGE_NAME}:${env.TAG_NAME}");
+                            openshift.tag("${env.APP}:latest", "${env.IMAGE_NAME}:${env.TAG}");
                         }
                     }
                 } 
@@ -102,7 +102,7 @@ pipeline {
                         openshift.withProject() {
                         // Creates the application if it does not exists and deploy it
                             if (!openshift.selector("dc", env.APP).exists()) {
-                                dc = openshift.newApp("${env.APP}:${env.TAG_NAME}", "--name=${APP}").narrow("dc");
+                                dc = openshift.newApp("${env.APP}:${env.TAG}", "--name=${APP}").narrow("dc");
                                 
                                 openshift.selector("svc", env.APP).expose();
                                 
@@ -113,7 +113,7 @@ pipeline {
                                 openshift.set("triggers", "dc/${env.APP}", "--manual");
                             } else {
                                 // Deploys the new version of the application
-                                openshift.patch("dc/${env.APP}", "'{\"spec\":{\"triggers\":[{\"type\":\"ImageChange\",\"imageChangeParams\":{\"containerNames\":[\"${env.APP}\"],\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"${env.IMAGE_NAME}:${env.TAG_NAME}\"}}}]}}}'")
+                                openshift.patch("dc/${env.APP}", "'{\"spec\":{\"triggers\":[{\"type\":\"ImageChange\",\"imageChangeParams\":{\"containerNames\":[\"${env.APP}\"],\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"${env.IMAGE}:${env.TAG}\"}}}]}}}'")
                                 openshift.selector("dc", env.APP).rollout().latest();
                             }
                         } 
