@@ -31,7 +31,7 @@ pipeline {
         stage("Test Code") {
             when {
                 expression {
-                    return env.TEST_COMMAND != "none"
+                    return !env.TEST_COMMAND.equals("none")
                 }
             }
             steps {
@@ -41,7 +41,7 @@ pipeline {
         stage("Analize Code") {
             when {
                 expression {
-                    return env.CODE_ANALYSIS_COMMAND != "none"
+                    return !env.CODE_ANALYSIS_COMMAND.equals("none")
                 }
             }
             steps {
@@ -51,7 +51,7 @@ pipeline {
         stage("Release Artifacts") {
             when {
                 expression {
-                    return env.RELEASE_COMMAND != "none"
+                    return !env.RELEASE_COMMAND.equals("none")
                 }
             }
             steps {
@@ -77,7 +77,7 @@ pipeline {
         stage("Tag Image") {
             when {
                 expression {
-                    return env.TAG_IMAGE == "true"
+                    return env.TAG_IMAGE.equals("true")
                 }
             }
             steps {
