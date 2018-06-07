@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: test-pipeline-template
+  annotations:
+    openshift.io/display-name: Application Pipeline (TEST)
+    iconClass: fa fa-code
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      pipeline: ${APP_NAME}
+    name: ${APP_NAME}-pipeline
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+        - name: APP
+          value: ${APP_NAME}
+        jenkinsfilePath: test/Jenkinsfile
+      type: JenkinsPipeline
+parameters:
+- description: The application name
+  displayName: Application name
+  name: APP_NAME
+  required: true

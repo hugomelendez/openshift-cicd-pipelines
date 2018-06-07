@@ -1,0 +1,124 @@
+pipeline {
+    agent {
+        // The Jenkins slave image to use (ie maven)
+        label env.JENKINS_SLAVE_IMAGE
+    }
+    options {
+        // Prevents for checking out the code automatically
+        skipDefaultCheckout()
+    }
+    stages {
+        stage("Checkout Code") {
+            steps {
+                script {
+                    if (!env.GIT_BRANCH) {
+                        // If the branch is not specified an input is presented to complete it
+                        env.GIT_BRANCH = input(id: 'branch',
+                                            message: 'Select branch to deploy',
+                                            parameters: [string(defaultValue: 'master', name: 'Branch')]);
+                    }
+                    
+                    git branch: env.GIT_BRANCH, url: env.GIT_REPO
+                }
+            }
+        }
+        stage("Compile Code") {
+            steps {
+                sh env.COMPILE_COMMAND
+            }
+        }
+        stage("Test Code") {
+            when {
+                expression {
+                    return env.TEST_COMMAND != "none"
+                }
+            }
+            steps {
+                sh env.TEST_COMMAND
+            }
+        }
+        stage("Analize Code") {
+            when {
+                expression {
+                    return env.CODE_ANALYSIS_COMMAND != "none"
+                }
+            }
+            steps {
+                sh env.CODE_ANALYSIS_COMMAND
+            }
+        }
+        stage("Release Artifacts") {
+            when {
+                expression {
+                    return env.RELEASE_COMMAND != "none"
+                }
+            }
+            steps {
+                sh env.RELEASE_COMMAND
+            }
+        }
+        stage("Build Image") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject() {
+                            // Creates the BuildConfig if it does not exists
+                            if (!openshift.selector("bc", env.APP).exists())
+                                openshift.newBuild("--image-stream=${env.BASE_IMAGE}", "--name=${env.APP}", "--binary=true", "-l app=${env.APP}");
+                            
+                            // Starts a new build
+                            openshift.selector("bc", env.APP).startBuild("--from-dir=${env.ARTIFACTS_DIR}", "--wait=true");
+                        }
+                    }
+                }
+            }
+        }
+        stage("Tag Image") {
+            when {
+                expression {
+                    return env.TAG_IMAGE == "true"
+                }
+            }
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject() {
+                            def pom = readMavenPom file: "pom.xml"
+
+                            env.TAG_NAME = pom.version;
+                            
+                            // Tags the image              
+                            openshift.tag("${env.APP}:latest", "${env.APP}:${env.TAG_NAME}");
+                        }
+                    }
+                } 
+            }
+        }
+        stage("Deploy Application") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject() {
+                        // Creates the application if it does not exists and deploy it
+                            if (!openshift.selector("dc", env.APP).exists()) {
+                                dc = openshift.newApp("${env.APP}:${env.TAG_NAME}", "--name=${APP}").narrow("dc");
+                                
+                                openshift.selector("svc", env.APP).expose();
+                                
+                                while (dc.object().spec.replicas != dc.object().status.availableReplicas) {
+                                    sleep 10
+                                }
+                                
+                                openshift.set("triggers", "dc/${env.APP}", "--manual");
+                            } else {
+                                // Deploys the new version of the application
+                                openshift.patch("dc/${env.APP}", "'{\"spec\":{\"triggers\":[{\"type\":\"ImageChange\",\"imageChangeParams\":{\"containerNames\":[\"${env.APP}\"],\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"${env.APP}:${env.TAG_NAME}\"}}}]}}}'")
+                                openshift.selector("dc", env.APP).rollout().latest();
+                            }
+                        } 
+                    }
+                }
+            }
+        }
+    }
+}

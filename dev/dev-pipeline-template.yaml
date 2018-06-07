@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: dev-pipeline-template
+  annotations:
+    openshift.io/display-name: Application Pipeline (DEV)
+    iconClass: fa fa-code
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      pipeline: ${APP_NAME}
+    name: ${APP_NAME}-pipeline
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+        - name: GIT_BRANCH
+          value: ${GIT_BRANCH}
+        - name: GIT_REPO
+          value: ${GIT_REPO}
+        - name: APP
+          value: ${APP_NAME}
+        - name: BASE_IMAGE
+          value: ${BASE_IMAGE}
+        - name: ARTIFACTS_DIR
+          value: ${ARTIFACTS_DIR}
+        - name: JENKINS_SLAVE_IMAGE
+          value: ${JENKINS_SLAVE_IMAGE}
+        - name: COMPILE_COMMAND
+          value: ${COMPILE_COMMAND}
+        - name: TEST_COMMAND
+          value: "${{TEST_COMMAND}}"
+        - name: CODE_ANALYSIS_COMMAND
+          value: ${CODE_ANALYSIS_COMMAND}
+        - name: RELEASE_COMMAND
+          value: ${RELEASE_COMMAND}
+        - name: TAG_IMAGE
+          value: ${TAG_IMAGE}
+        - name: TAG_NAME
+          value: latest        
+        jenkinsfilePath: dev/Jenkinsfile
+      type: JenkinsPipeline
+parameters:
+- description: The application Git repository
+  displayName: Application Git repository
+  name: GIT_REPO
+  required: true
+- description: The application Git branch
+  displayName: Application Git branch
+  name: GIT_BRANCH
+  value: master
+- description: The application name
+  displayName: Application name
+  name: APP_NAME
+  required: true
+- description: The application base image
+  displayName: Application base image
+  name: BASE_IMAGE
+  value: redhat-openjdk18-openshift:1.2
+  required: true
+- description: The folder that points to the application binaries or files
+  displayName: Application binaries
+  name: ARTIFACTS_DIR
+  required: true
+  value: "./target"
+- description: The application's compile command
+  displayName: Compile command
+  name: COMPILE_COMMAND
+  required: true
+  value: "mvn package -DskipTests"
+- description: The application's test command
+  displayName: Test command
+  name: TEST_COMMAND
+  required: true
+  value: "none"
+- description: The application's code analysis command
+  displayName: Code analysis command
+  name: CODE_ANALYSIS_COMMAND
+  required: true
+  value: "none"
+- description: The application's release command
+  displayName: Release command
+  name: RELEASE_COMMAND
+  required: true
+  value: "none"
+- description: The Jenkins slave image to compile the application
+  displayName: Jenkins slave image
+  name: JENKINS_SLAVE_IMAGE
+  required: true
+  value: maven
+- description: Whether to tag the generated image or not
+  displayName: Tag image
+  name: TAG_IMAGE
+  value: "false"
+  required: true
