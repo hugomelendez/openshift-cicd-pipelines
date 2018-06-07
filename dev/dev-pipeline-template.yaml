@@ -103,3 +103,6 @@ parameters:
   name: TAG_IMAGE
   value: "false"
   required: true
+- description: Image name
+  displayName: Image name
+  name: IMAGE_NAME
