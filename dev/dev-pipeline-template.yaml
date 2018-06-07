@@ -13,6 +13,12 @@ objects:
       pipeline: ${APP_NAME}
     name: ${APP_NAME}-pipeline
   spec:
+    source:
+      type: Git
+      git:
+        uri: http://gogs-gogs.192.168.64.36.nip.io/leandroberetta/openshift-pipelines.git
+        ref: master
+      contextDir: dev
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -31,7 +37,7 @@ objects:
         - name: COMPILE_COMMAND
           value: ${COMPILE_COMMAND}
         - name: TEST_COMMAND
-          value: "${{TEST_COMMAND}}"
+          value: ${TEST_COMMAND}
         - name: CODE_ANALYSIS_COMMAND
           value: ${CODE_ANALYSIS_COMMAND}
         - name: RELEASE_COMMAND
@@ -40,7 +46,7 @@ objects:
           value: ${TAG_IMAGE}
         - name: TAG_NAME
           value: latest        
-        jenkinsfilePath: dev/Jenkinsfile
+        jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 parameters:
 - description: The application Git repository

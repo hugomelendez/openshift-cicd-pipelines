@@ -11,7 +11,7 @@ pipeline {
         stage("Checkout Code") {
             steps {
                 script {
-                    if (!env.GIT_BRANCH) {
+                    if (env.GIT_BRANCH == "none") {
                         // If the branch is not specified an input is presented to complete it
                         env.GIT_BRANCH = input(id: 'branch',
                                             message: 'Select branch to deploy',
