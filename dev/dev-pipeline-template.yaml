@@ -47,7 +47,7 @@ objects:
         - name: IMAGE
           value: ${PARAM_IMAGE_NAME}
         - name: TAG
-        value: latest     
+          value: latest     
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 parameters:

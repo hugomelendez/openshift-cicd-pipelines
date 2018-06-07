@@ -102,7 +102,8 @@ pipeline {
                         openshift.withProject() {
                         // Creates the application if it does not exists and deploy it
                             if (!openshift.selector("dc", env.APP).exists()) {
-                                dc = openshift.newApp("${env.APP}:${env.TAG}", "--name=${APP}").narrow("dc");
+                                echo env.TAG;
+                                dc = openshift.newApp("${env.IMAGE}:${env.TAG}", "--name=${APP}").narrow("dc");
                                 
                                 openshift.selector("svc", env.APP).expose();
                                 
