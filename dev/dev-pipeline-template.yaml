@@ -105,4 +105,4 @@ parameters:
   required: true
 - description: Image name
   displayName: Image name
-  name: IMAGE_NAME
+  name: PARAM_IMAGE_NAME
