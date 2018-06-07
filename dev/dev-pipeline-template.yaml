@@ -10,8 +10,8 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      pipeline: ${APP_NAME}
-    name: ${APP_NAME}-pipeline
+      pipeline: ${PARAM_APP_NAME}
+    name: ${PARAM_APP_NAME}-pipeline
   spec:
     source:
       type: Git
@@ -45,7 +45,9 @@ objects:
         - name: TAG_IMAGE
           value: ${PARAM_TAG_IMAGE}
         - name: IMAGE
-          value: ${PARAM_IMAGE_NAME}      
+          value: ${PARAM_IMAGE_NAME}
+        - name: TAG
+        value: latest     
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 parameters:
