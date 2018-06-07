@@ -11,6 +11,7 @@ pipeline {
         stage("Checkout Code") {
             steps {
                 script {
+                    echo env.TAG
                     echo env.GIT_BRANCH
                     if (env.GIT_BRANCH.equals("none")) {
                         // If the branch is not specified an input is presented to complete it
