@@ -89,7 +89,7 @@ pipeline {
                             env.TAG_NAME = pom.version;
                             
                             // Tags the image              
-                            openshift.tag("${env.APP}:latest", "${env.APP}:${env.TAG_NAME}");
+                            openshift.tag("${env.APP}:latest", "${env.IMAGE_NAME}:${env.TAG_NAME}");
                         }
                     }
                 } 
