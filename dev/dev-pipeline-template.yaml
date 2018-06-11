@@ -10,6 +10,7 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
+      app: ${PARAM_APP_NAME}
       pipeline: ${PARAM_APP_NAME}-develop
     name: ${PARAM_APP_NAME}-develop-pipeline
   spec:
@@ -27,7 +28,7 @@ objects:
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
         - name: APP
-          value: ${PARAM_APP_NAME}
+          value: ${PARAM_APP_NAME}-develop
         - name: BASE_IMAGE
           value: ${PARAM_BASE_IMAGE}
         - name: ARTIFACTS_DIR
@@ -56,6 +57,7 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
+      app: ${PARAM_APP_NAME}
       pipeline: ${PARAM_APP_NAME}-rc
     name: ${PARAM_APP_NAME}-rc-pipeline
   spec:
@@ -100,6 +102,7 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
+      app: ${PARAM_APP_NAME}
       pipeline: ${PARAM_APP_NAME}-ga
     name: ${PARAM_APP_NAME}-ga-pipeline
   spec:
