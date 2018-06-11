@@ -66,7 +66,7 @@ pipeline {
                         openshift.withProject() {
                             // Creates the BuildConfig if it does not exists
                             if (!openshift.selector("bc", env.APP).exists())
-                                openshift.newBuild("--image-stream=${env.BASE_IMAGE}", "--name=${env.APP}", "--to=${env.IMAGE}, "--binary=true", "-l app=${env.APP}");
+                                openshift.newBuild("--image-stream=${env.BASE_IMAGE}", "--name=${env.APP}", "--to=${env.IMAGE}", "--binary=true", "-l app=${env.APP}");
                             
                             // Starts a new build
                             openshift.selector("bc", env.APP).startBuild("--from-dir=${env.ARTIFACTS_DIR}", "--wait=true");
