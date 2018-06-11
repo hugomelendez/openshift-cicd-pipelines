@@ -90,7 +90,7 @@ pipeline {
                             env.TAG = "${pom.version}-${env.TAG_POSTFIX}";
                             
                             // Tags the image              
-                            openshift.tag("${env.APP}:latest", "${env.IMAGE}:${env.TAG}");
+                            openshift.tag("${env.IMAGE}:latest", "${env.IMAGE}:${env.TAG}");
                         }
                     }
                 } 
