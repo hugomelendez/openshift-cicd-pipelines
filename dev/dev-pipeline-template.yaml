@@ -55,7 +55,7 @@ parameters:
   displayName: Application Git repository
   name: PARAM_GIT_REPO
   required: true
-- description: The application Git branch
+- description: The application Git branch (if "none" asks for the branch on startup)
   displayName: Application Git branch
   name: PARAM_GIT_BRANCH
   value: master
@@ -93,7 +93,7 @@ parameters:
   name: PARAM_RELEASE_COMMAND
   required: true
   value: "none"
-- description: The Jenkins slave image to compile the application
+- description: The Jenkins slave image to compile the application (maven, nodejs or custom...)
   displayName: Jenkins slave image
   name: PARAM_JENKINS_SLAVE_IMAGE
   required: true

@@ -101,7 +101,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                        // Creates the application if it does not exists and deploy it
+                            // Creates the application if it does not exists and deploy it
                             if (!openshift.selector("dc", env.APP).exists()) {
                                 echo env.TAG;
                                 dc = openshift.newApp("${env.IMAGE}:${env.TAG}", "--name=${APP}").narrow("dc");
