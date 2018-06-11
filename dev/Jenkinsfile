@@ -87,7 +87,7 @@ pipeline {
                         openshift.withProject() {
                             def pom = readMavenPom file: "pom.xml"
 
-                            env.TAG = pom.version;
+                            env.TAG = "${pom.version}-${env.TAG_POSTFIX}";
                             
                             // Tags the image              
                             openshift.tag("${env.APP}:latest", "${env.IMAGE}:${env.TAG}");
