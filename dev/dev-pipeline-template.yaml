@@ -10,7 +10,7 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      app: ${PARAM_APP_NAME}
+      app: ${PARAM_APP_NAME}-develop
       pipeline: ${PARAM_APP_NAME}-develop
     name: ${PARAM_APP_NAME}-develop-pipeline
   spec:
@@ -57,7 +57,7 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      app: ${PARAM_APP_NAME}
+      app: ${PARAM_APP_NAME}-rc
       pipeline: ${PARAM_APP_NAME}-rc
     name: ${PARAM_APP_NAME}-rc-pipeline
   spec:
@@ -102,7 +102,7 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      app: ${PARAM_APP_NAME}
+      app: ${PARAM_APP_NAME}-ga
       pipeline: ${PARAM_APP_NAME}-ga
     name: ${PARAM_APP_NAME}-ga-pipeline
   spec:
