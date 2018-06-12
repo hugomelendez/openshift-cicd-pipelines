@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: dev-pipeline-template
   annotations:
-    openshift.io/display-name: Application Pipeline (DEV)
+    openshift.io/display-name: Application Pipeline (Dev)
     iconClass: fa fa-code
 objects:
 - apiVersion: v1
@@ -11,7 +11,6 @@ objects:
   metadata:
     labels:
       app: ${PARAM_APP_NAME}-develop
-      pipeline: ${PARAM_APP_NAME}-develop
     name: ${PARAM_APP_NAME}-develop-pipeline
   spec:
     source:
@@ -58,7 +57,6 @@ objects:
   metadata:
     labels:
       app: ${PARAM_APP_NAME}-rc
-      pipeline: ${PARAM_APP_NAME}-rc
     name: ${PARAM_APP_NAME}-rc-pipeline
   spec:
     source:
@@ -103,7 +101,6 @@ objects:
   metadata:
     labels:
       app: ${PARAM_APP_NAME}-ga
-      pipeline: ${PARAM_APP_NAME}-ga
     name: ${PARAM_APP_NAME}-ga-pipeline
   spec:
     source:
