@@ -66,7 +66,7 @@ pipeline {
                         openshift.withProject() {
                             // Creates the BuildConfig if it does not exists
                             if (!openshift.selector("bc", env.APP).exists())
-                                openshift.newBuild("--image-stream=${env.BASE_IMAGE}", "--name=${env.APP}", "--to=${env.IMAGE}", "--binary=true", "-l app=${env.APP}");
+                                openshift.newBuild("--image-stream=${env.BASE_IMAGE}", "--name=${env.APP}", "--binary=true", "-l app=${env.APP}");
                             
                             // Starts a new build
                             openshift.selector("bc", env.APP).startBuild("--from-dir=${env.ARTIFACTS_DIR}", "--wait=true");
@@ -92,7 +92,7 @@ pipeline {
                             env.TAG = "${env.TAG}-${env.TAG_POSTFIX}";
                             
                             // Tags the image              
-                            openshift.tag("${env.IMAGE}:latest", "${env.IMAGE}:${env.TAG}");
+                            openshift.tag("${env.APP}:latest", "${env.IMAGE}:${env.TAG}");
                         }
                     }
                 } 
@@ -106,7 +106,7 @@ pipeline {
                             // Creates the application if it does not exists and deploy it
                             if (!openshift.selector("dc", env.APP).exists()) {
                                 echo env.TAG;
-                                dc = openshift.newApp("${env.IMAGE}:${env.TAG}", "--name=${APP}").narrow("dc");
+                                dc = openshift.newApp("${env.APP}:${env.TAG}", "--name=${APP}").narrow("dc");
                                 
                                 openshift.selector("svc", env.APP).expose();
                                 
