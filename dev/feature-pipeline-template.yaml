@@ -58,7 +58,7 @@ parameters:
 - description: The application Git branch (if "none" asks for the branch on startup)
   displayName: Application Git branch
   name: PARAM_GIT_BRANCH
-  value: master
+  required: true
 - description: The application name
   displayName: Application name
   name: PARAM_APP_NAME

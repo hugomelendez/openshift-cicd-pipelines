@@ -16,8 +16,8 @@ pipeline {
                     if (env.GIT_BRANCH.equals("none")) {
                         // If the branch is not specified an input is presented to complete it
                         env.GIT_BRANCH = input(id: 'branch',
-                                            message: 'Select branch to deploy',
-                                            parameters: [string(defaultValue: 'master', name: 'Branch')]);
+                                               message: 'Select branch to deploy',
+                                               parameters: [string(defaultValue: 'master', name: 'Branch')]);
                     }
                     
                     git branch: env.GIT_BRANCH, url: env.GIT_REPO
@@ -85,9 +85,11 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            def pom = readMavenPom file: "pom.xml"
+                            env.TAG = input(id: 'tag',
+                                            message: 'Value for the tag',
+                                            parameters: [string(defaultValue: '', name: 'Tag')]);
 
-                            env.TAG = "${pom.version}-${env.TAG_POSTFIX}";
+                            env.TAG = "${env.TAG}-${env.TAG_POSTFIX}";
                             
                             // Tags the image              
                             openshift.tag("${env.IMAGE}:latest", "${env.IMAGE}:${env.TAG}");
