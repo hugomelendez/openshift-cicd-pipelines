@@ -106,7 +106,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject() {
                             // Deploys the new version of the application
-                            openshift.set("triggers", "dc/${env.APP}", "--from-image=${env.IMAGE}:${env.TAG}");
+                            openshift.set("triggers", "dc/${env.APP}", "--from-image=${env.IMAGE}:${env.TAG}", "-c ${env.APP}");
                             openshift.selector("dc", env.APP).rollout().latest();
                         } 
                     }
