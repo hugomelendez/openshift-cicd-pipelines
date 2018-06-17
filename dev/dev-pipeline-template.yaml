@@ -48,6 +48,8 @@ objects:
           value: ${PARAM_APP_NAME}
         - name: TAG
           value: latest
+        - name: APP_TEMPLATE
+          value: ${PARAM_APP_TEMPLATE}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 - apiVersion: v1
@@ -90,6 +92,8 @@ objects:
           value: "true"
         - name: IMAGE
           value: ${PARAM_APP_NAME}
+        - name: APP_TEMPLATE
+          value: ${PARAM_APP_TEMPLATE}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 parameters:
@@ -140,3 +144,7 @@ parameters:
   name: PARAM_JENKINS_SLAVE_IMAGE
   required: true
   value: maven
+- description: The application template file
+  displayName: Application template file
+  name: PARAM_APP_TEPLATE
+  required: true
