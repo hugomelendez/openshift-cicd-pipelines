@@ -11,8 +11,6 @@ pipeline {
         stage("Checkout Code") {
             steps {
                 script {
-                    echo env.TAG
-                    echo env.GIT_BRANCH
                     if (env.GIT_BRANCH.equals("none")) {
                         // If the branch is not specified an input is presented to complete it
                         env.GIT_BRANCH = input(id: 'branch',
@@ -21,6 +19,19 @@ pipeline {
                     }
                     
                     git branch: env.GIT_BRANCH, url: env.GIT_REPO
+                }
+            }
+        }
+        stage ("Set Up") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject() {
+                            openshift.apply {
+                                openshift.process(readFile(file: env.APP_TEMPLATE), "-p", "PARAMS_APP_NAME=${APP}", "-p", "latest");
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -64,11 +75,6 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            // Creates the BuildConfig if it does not exists
-                            if (!openshift.selector("bc", env.APP).exists())
-                                openshift.newBuild("--image-stream=${env.BASE_IMAGE}", "--name=${env.APP}", "--binary=true", "-l app=${env.APP}");
-                            
-                            // Starts a new build
                             openshift.selector("bc", env.APP).startBuild("--from-dir=${env.ARTIFACTS_DIR}", "--wait=true");
                         }
                     }
@@ -88,8 +94,6 @@ pipeline {
                             env.TAG = input(id: 'tag',
                                             message: 'Value for the tag',
                                             parameters: [string(defaultValue: '', name: 'Tag')]);
-
-                            env.TAG = "${env.TAG}-${env.TAG_POSTFIX}";
                             
                             // Tags the image              
                             openshift.tag("${env.APP}:latest", "${env.IMAGE}:${env.TAG}");
@@ -103,23 +107,9 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            // Creates the application if it does not exists and deploy it
-                            if (!openshift.selector("dc", env.APP).exists()) {
-                                echo env.TAG;
-                                dc = openshift.newApp("${env.APP}:${env.TAG}", "--name=${APP}").narrow("dc");
-                                
-                                openshift.selector("svc", env.APP).expose();
-                                
-                                while (dc.object().spec.replicas != dc.object().status.availableReplicas) {
-                                    sleep 10
-                                }
-                                
-                                openshift.set("triggers", "dc/${env.APP}", "--manual");
-                            } else {
-                                // Deploys the new version of the application
-                                openshift.patch("dc/${env.APP}", "'{\"spec\":{\"triggers\":[{\"type\":\"ImageChange\",\"imageChangeParams\":{\"containerNames\":[\"${env.APP}\"],\"from\":{\"kind\":\"ImageStreamTag\",\"name\":\"${env.IMAGE}:${env.TAG}\"}}}]}}}'")
-                                openshift.selector("dc", env.APP).rollout().latest();
-                            }
+                            // Deploys the new version of the application
+                            openshift.set("triggers", "--from-image=${env.IMAGE}:${env.TAG}");
+                            openshift.selector("dc", env.APP).rollout().latest();
                         } 
                     }
                 }

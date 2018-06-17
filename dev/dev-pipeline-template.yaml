@@ -48,8 +48,6 @@ objects:
           value: ${PARAM_APP_NAME}
         - name: TAG
           value: latest
-        - name: TAG_POSTFIX
-          value: none
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 - apiVersion: v1
@@ -92,8 +90,6 @@ objects:
           value: "true"
         - name: IMAGE
           value: ${PARAM_APP_NAME}
-        - name: TAG_POSTFIX
-          value: ${PARAM_POSTFIX_RC_TAG}  
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 parameters:
@@ -144,8 +140,3 @@ parameters:
   name: PARAM_JENKINS_SLAVE_IMAGE
   required: true
   value: maven
-- description: Postfix for Release Candadite tagging
-  displayName: Postfix (RC) value
-  name: PARAM_POSTFIX_RC_TAG
-  value: RC
-  required: true
