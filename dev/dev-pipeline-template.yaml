@@ -146,5 +146,5 @@ parameters:
   value: maven
 - description: The application template file
   displayName: Application template file
-  name: PARAM_APP_TEPLATE
+  name: PARAM_APP_TEMPLATE
   required: true

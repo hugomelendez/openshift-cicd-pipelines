@@ -27,7 +27,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE), "-p", "PARAMS_APP_NAME=${APP}", "-p", "latest"));
+                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE), "-p", "PARAM_APP_NAME=${APP}", "-p", "PARAM_APP_VERSION=latest"));
                         }
                     }
                 }
