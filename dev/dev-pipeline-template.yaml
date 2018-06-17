@@ -5,6 +5,7 @@ metadata:
   annotations:
     openshift.io/display-name: Application Pipelines (Dev)
     iconClass: fa fa-code
+    description: Templates to generate several pipelines for development. 
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -28,6 +29,12 @@ objects:
           value: ${PARAM_GIT_REPO}
         - name: APP
           value: ${PARAM_APP_NAME}-develop
+        - name: IMAGE
+          value: ${PARAM_APP_NAME}
+        - name: TAG
+          value: latest
+        - name: APP_TEMPLATE
+          value: ${PARAM_APP_TEMPLATE}
         - name: BASE_IMAGE
           value: ${PARAM_BASE_IMAGE}
         - name: ARTIFACTS_DIR
@@ -44,20 +51,14 @@ objects:
           value: ${PARAM_RELEASE_COMMAND}
         - name: TAG_IMAGE
           value: "false"
-        - name: IMAGE
-          value: ${PARAM_APP_NAME}
-        - name: TAG
-          value: latest
-        - name: APP_TEMPLATE
-          value: ${PARAM_APP_TEMPLATE}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 - apiVersion: v1
   kind: BuildConfig
   metadata:
     labels:
-      app: ${PARAM_APP_NAME}-rc
-    name: ${PARAM_APP_NAME}-rc-pipeline
+      app: ${PARAM_APP_NAME}-release
+    name: ${PARAM_APP_NAME}-release-pipeline
   spec:
     source:
       type: Git
@@ -74,6 +75,12 @@ objects:
           value: ${PARAM_GIT_REPO}
         - name: APP
           value: ${PARAM_APP_NAME}-rc
+        - name: IMAGE
+          value: ${PARAM_APP_NAME}
+        - name: TAG
+          value: latest
+        - name: APP_TEMPLATE
+          value: ${PARAM_APP_TEMPLATE}
         - name: BASE_IMAGE
           value: ${PARAM_BASE_IMAGE}
         - name: ARTIFACTS_DIR
@@ -90,61 +97,58 @@ objects:
           value: ${PARAM_RELEASE_COMMAND}
         - name: TAG_IMAGE
           value: "true"
-        - name: IMAGE
-          value: ${PARAM_APP_NAME}
-        - name: APP_TEMPLATE
-          value: ${PARAM_APP_TEMPLATE}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 parameters:
-- description: The application Git repository
-  displayName: Application Git repository
+- description: The application's Git repository
+  displayName: Git Repository
   name: PARAM_GIT_REPO
   required: true
-- description: The application Git branch for development
-  displayName: Application Git branch
+- description: The application's branch for development
+  displayName: Dev Branch
   name: PARAM_GIT_BRANCH
   value: develop
-- description: The application name
+  required: true
+- description: The name for the application
   displayName: Application name
   name: PARAM_APP_NAME
   required: true
-- description: The application base image
-  displayName: Application base image
+- description: The template file (YAML) to create the application's objects
+  displayName: Template File
+  name: PARAM_APP_TEMPLATE
+  required: true
+- description: The base image for the application (S2I Binary will be used)
+  displayName: S2I (Binary) Base Image
   name: PARAM_BASE_IMAGE
   value: redhat-openjdk18-openshift:1.2
   required: true
 - description: The folder that points to the application binaries or files
-  displayName: Application binaries
+  displayName: Application Binaries
   name: PARAM_ARTIFACTS_DIR
   required: true
   value: "./target"
 - description: The application's compile command
-  displayName: Compile command
+  displayName: Compile Command
   name: PARAM_COMPILE_COMMAND
   required: true
   value: "mvn package -DskipTests"
 - description: The application's test command
-  displayName: Test command
+  displayName: Test Command
   name: PARAM_TEST_COMMAND
   required: true
   value: none
 - description: The application's code analysis command
-  displayName: Code analysis command
+  displayName: Code Analysis Command
   name: PARAM_CODE_ANALYSIS_COMMAND
   required: true
   value: none
 - description: The application's release command
-  displayName: Release command
+  displayName: Release Command
   name: PARAM_RELEASE_COMMAND
   required: true
   value: none
-- description: The Jenkins slave image to compile the application (maven, nodejs or custom...)
-  displayName: Jenkins slave image
+- description: The Jenkins slave image that will be used to compile the application (maven, nodejs or custom...)
+  displayName: Jenkins Slave Image
   name: PARAM_JENKINS_SLAVE_IMAGE
   required: true
   value: maven
-- description: The application template file
-  displayName: Application template file
-  name: PARAM_APP_TEMPLATE
-  required: true
