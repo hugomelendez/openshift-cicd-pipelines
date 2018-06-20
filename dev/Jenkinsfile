@@ -5,6 +5,7 @@ pipeline {
     }
     environment { 
         TAG = "latest"
+        TEST_COMMAND = ""
     }
     options {
         // Prevents for checking out the code automatically
