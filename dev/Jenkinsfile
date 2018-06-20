@@ -4,6 +4,7 @@ pipeline {
     }
     environment { 
         TAG = "latest"
+        MANUAL_TAG = "false"
     }
     options {
         skipDefaultCheckout()
@@ -11,15 +12,17 @@ pipeline {
     stages {
         stage("Set Repository") {
             when {
-                expression {
-                    return !env.GIT_REPO
+                not {
+                    expression {
+                        return env.GIT_REPO
+                    }
                 }
             }
             steps {
                 script {
                     env.GIT_REPO = input(id: 'repository',
-                                               message: 'Select repository to deploy',
-                                               parameters: [string(defaultValue: '', name: 'Repository')]);
+                                         message: 'Select repository to deploy',
+                                         parameters: [string(defaultValue: '', name: 'Repository')]);
                 }
             }
         }
@@ -34,8 +37,8 @@ pipeline {
             steps {
                 script {
                     env.GIT_BRANCH = input(id: 'branch',
-                                               message: 'Select branch to deploy',
-                                               parameters: [string(defaultValue: 'master', name: 'Branch')]);
+                                           message: 'Select branch to deploy',
+                                           parameters: [string(defaultValue: 'master', name: 'Branch')]);
                 }
             }
         }
@@ -64,9 +67,11 @@ pipeline {
         }
         stage("Compile Code") {
             when {
-                expression {
-                    return !env.COMPILE_COMMAND.equals("none")
-                }
+                not {
+                    expression {
+                        return env.COMPILE_COMMAND.equals("none")
+                    }
+                }  
             }
             steps {
                 sh env.COMPILE_COMMAND
@@ -74,9 +79,11 @@ pipeline {
         }
         stage("Test Code") {
             when {
-                expression {
-                    return !env.TEST_COMMAND.equals("none")
-                }
+                not {
+                    expression {
+                        return env.TEST_COMMAND.equals("none")
+                    }
+                } 
             }
             steps {
                 sh env.TEST_COMMAND
@@ -84,9 +91,11 @@ pipeline {
         }
         stage("Analize Code") {
             when {
-                expression {
-                    return !env.CODE_ANALYSIS_COMMAND.equals("none")
-                }
+                not {
+                    expression {
+                        return env.CODE_ANALYSIS_COMMAND.equals("none")
+                    }
+                } 
             }
             steps {
                 sh env.CODE_ANALYSIS_COMMAND
@@ -94,9 +103,11 @@ pipeline {
         }
         stage("Release Artifacts") {
             when {
-                expression {
-                    return !env.RELEASE_COMMAND.equals("none")
-                }
+                not {
+                    expression {
+                        return env.RELEASE_COMMAND.equals("none")
+                    }
+                }        
             }
             steps {
                 sh env.RELEASE_COMMAND
@@ -116,22 +127,24 @@ pipeline {
         stage("Set Tag") {
             when {
                 expression {
-                    return !env.TAG
+                    return env.MANUAL_TAG.equals("true")
                 }
             }
             steps {
                 script {
-env.TAG = input(id: 'tag',
-                                message: 'Value for the tag',
-                                parameters: [string(defaultValue: '', name: 'Tag')]);
+                    env.TAG = input(id: 'tag',
+                                    message: 'Value for the tag',
+                                    parameters: [string(defaultValue: '', name: 'Tag')]);
                 }
                 
             }
         } 
         stage("Tag Image") {
             when {
-                expression {
-                    return env.TAG
+                not {
+                    expression {
+                        return env.TAG.equals("latest")
+                    }
                 }
             }
             steps {
