@@ -43,8 +43,6 @@ objects:
           value: ${PARAM_TEST_COMMAND}
         - name: CODE_ANALYSIS_COMMAND
           value: ${PARAM_CODE_ANALYSIS_COMMAND}
-        - name: RELEASE_COMMAND
-          value: ${PARAM_RELEASE_COMMAND}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 - apiVersion: v1

@@ -4,39 +4,74 @@ pipeline {
         label env.JENKINS_SLAVE_IMAGE
     }
     environment { 
-        TAG = 'latest'
+        TAG = "latest"
     }
     options {
         // Prevents for checking out the code automatically
         skipDefaultCheckout()
     }
     stages {
+        /*
+        stage("Set Repository") {
+            when {
+                expression {
+                    return !env.GIT_REPO
+                }
+            }
+            steps {
+                script {
+                    env.GIT_REPO = input(id: 'repository',
+                                               message: 'Select repository to deploy',
+                                               parameters: [string(defaultValue: '', name: 'Repository')]);
+                }
+            }
+        }
+        */
+        stage("Set Branch") {
+            when {
+                not {
+                    expression {
+                        return env.GIT_BRANCH
+                    }
+                }         
+            }
+            steps {
+                script {
+                    env.GIT_BRANCH = input(id: 'branch',
+                                               message: 'Select branch to deploy',
+                                               parameters: [string(defaultValue: 'master', name: 'Branch')]);
+                }
+            }
+        }
         stage("Checkout Code") {
             steps {
                 script {
-                    if (env.GIT_BRANCH.equals("none")) {
-                        // If the branch is not specified an input is presented to complete it
-                        env.GIT_BRANCH = input(id: 'branch',
-                                               message: 'Select branch to deploy',
-                                               parameters: [string(defaultValue: 'master', name: 'Branch')]);
-                    }
-                    
                     git branch: env.GIT_BRANCH, url: env.GIT_REPO
                 }
             }
         }
         stage ("Set Up") {
+            when {
+                expression {
+                    return env.APP_TEMPLATE
+                }
+            }
             steps {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE), "-p", "PARAM_APP_NAME=${APP_NAME}"));
+                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE), "-p", "PARAM_APP_NAME=${env.APP_NAME}"));
                         }
                     }
                 }
             }
         }
         stage("Compile Code") {
+            when {
+                expression {
+                    return !env.COMPILE_COMMAND
+                }
+            }
             steps {
                 sh env.COMPILE_COMMAND
             }
@@ -85,7 +120,7 @@ pipeline {
         stage("Tag Image") {
             when {
                 expression {
-                    return env.TAG_IMAGE.equals("true")
+                    return env.TAG && !env.TAG.equals("latest")
                 }
             }
             steps {
