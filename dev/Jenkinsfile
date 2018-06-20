@@ -120,9 +120,12 @@ pipeline {
                 }
             }
             steps {
-                env.TAG = input(id: 'tag',
+                script {
+env.TAG = input(id: 'tag',
                                 message: 'Value for the tag',
                                 parameters: [string(defaultValue: '', name: 'Tag')]);
+                }
+                
             }
         } 
         stage("Tag Image") {
