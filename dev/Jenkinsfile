@@ -9,7 +9,6 @@ pipeline {
         skipDefaultCheckout()
     }
     stages {
-        /*
         stage("Set Repository") {
             when {
                 expression {
@@ -24,7 +23,6 @@ pipeline {
                 }
             }
         }
-        */
         stage("Set Branch") {
             when {
                 not {
@@ -136,9 +134,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                            // Tags the image              
-                            openshift.tag("${env.APP_NAME}:latest", "${env.APP_NAME}:${env.TAG}");
-                        }
+                        openshift.tag("${env.APP_NAME}:latest", "${env.APP_NAME}:${env.TAG}");
                     }
                 } 
             }
@@ -148,7 +144,6 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            if (env.TAG)
                             // Deploys the new version of the application
                             openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.APP_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
                         } 
