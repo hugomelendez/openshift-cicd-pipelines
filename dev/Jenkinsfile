@@ -146,7 +146,6 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            if (env.TAG)
                             // Deploys the new version of the application
                             openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.APP_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
                         } 
