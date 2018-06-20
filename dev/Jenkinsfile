@@ -1,22 +1,18 @@
 pipeline {
     agent {
-        // The Jenkins slave image to use (ie maven)
         label env.JENKINS_SLAVE_IMAGE
     }
     environment { 
         TAG = "latest"
-        TEST_COMMAND = "mvn test"
     }
     options {
-        // Prevents for checking out the code automatically
         skipDefaultCheckout()
     }
     stages {
-        /*
         stage("Set Repository") {
             when {
                 expression {
-                    return !env.GIT_REPO
+                    return env.GIT_REPO
                 }
             }
             steps {
@@ -27,7 +23,6 @@ pipeline {
                 }
             }
         }
-        */
         stage("Set Branch") {
             when {
                 not {
@@ -70,7 +65,7 @@ pipeline {
         stage("Compile Code") {
             when {
                 expression {
-                    return env.COMPILE_COMMAND
+                    return !env.COMPILE_COMMAND.equals("none")
                 }
             }
             steps {
@@ -118,20 +113,27 @@ pipeline {
                 }
             }
         }
+        stage("Set Tag") {
+            when {
+                expression {
+                    return !env.TAG
+                }
+            }
+            steps {
+                env.TAG = input(id: 'tag',
+                                message: 'Value for the tag',
+                                parameters: [string(defaultValue: '', name: 'Tag')]);
+            }
+        } 
         stage("Tag Image") {
             when {
                 expression {
-                    return env.TAG && !env.TAG.equals("latest")
+                    return env.TAG
                 }
             }
             steps {
                 script {
                     openshift.withCluster() {
-                        openshift.withProject() {
-                            env.TAG = input(id: 'tag',
-                                            message: 'Value for the tag',
-                                            parameters: [string(defaultValue: '', name: 'Tag')]);
-                            
                             // Tags the image              
                             openshift.tag("${env.APP_NAME}:latest", "${env.APP_NAME}:${env.TAG}");
                         }
@@ -144,6 +146,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
+                            if (env.TAG)
                             // Deploys the new version of the application
                             openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.APP_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
                         } 
