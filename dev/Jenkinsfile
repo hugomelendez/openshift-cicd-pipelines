@@ -3,6 +3,9 @@ pipeline {
         // The Jenkins slave image to use (ie maven)
         label env.JENKINS_SLAVE_IMAGE
     }
+    environment { 
+        TAG = 'latest'
+    }
     options {
         // Prevents for checking out the code automatically
         skipDefaultCheckout()
@@ -27,7 +30,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE), "-p", "PARAM_APP_NAME=${APP}", "-p", "PARAM_IMAGE_NAME=${IMAGE}"));
+                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE), "-p", "PARAM_APP_NAME=${APP_NAME}"));
                         }
                     }
                 }
@@ -73,7 +76,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            openshift.selector("bc", env.APP).startBuild("--from-dir=${env.ARTIFACTS_DIR}", "--wait=true");
+                            openshift.selector("bc", env.APP_NAME).startBuild("--from-dir=${env.ARTIFACTS_DIR}", "--wait=true");
                         }
                     }
                 }
@@ -94,7 +97,7 @@ pipeline {
                                             parameters: [string(defaultValue: '', name: 'Tag')]);
                             
                             // Tags the image              
-                            openshift.tag("${env.APP}:latest", "${env.IMAGE}:${env.TAG}");
+                            openshift.tag("${env.APP_NAME}:latest", "${env.APP_NAME}:${env.TAG}");
                         }
                     }
                 } 
@@ -106,7 +109,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject() {
                             // Deploys the new version of the application
-                            openshift.set("triggers", "dc/${env.APP}", "--from-image=${env.IMAGE}:${env.TAG}", "-c ${env.APP}");
+                            openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.APP_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
                         } 
                     }
                 }

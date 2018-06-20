@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: dev-pipeline-template
+  name: dev-pipelines-template
   annotations:
     openshift.io/display-name: Application Pipelines (Dev)
     iconClass: fa fa-code
@@ -27,12 +27,8 @@ objects:
           value: ${PARAM_GIT_BRANCH}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
-        - name: APP
+        - name: APP_NAME
           value: ${PARAM_APP_NAME}-develop
-        - name: IMAGE
-          value: ${PARAM_APP_NAME}
-        - name: TAG
-          value: latest
         - name: APP_TEMPLATE
           value: ${PARAM_APP_TEMPLATE}
         - name: BASE_IMAGE
@@ -49,8 +45,6 @@ objects:
           value: ${PARAM_CODE_ANALYSIS_COMMAND}
         - name: RELEASE_COMMAND
           value: ${PARAM_RELEASE_COMMAND}
-        - name: TAG_IMAGE
-          value: "false"
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 - apiVersion: v1
@@ -73,12 +67,8 @@ objects:
           value: none
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
-        - name: APP
-          value: ${PARAM_APP_NAME}-rc
-        - name: IMAGE
-          value: ${PARAM_APP_NAME}
-        - name: TAG
-          value: latest
+        - name: APP_NAME
+          value: ${PARAM_APP_NAME}-release
         - name: APP_TEMPLATE
           value: ${PARAM_APP_TEMPLATE}
         - name: BASE_IMAGE

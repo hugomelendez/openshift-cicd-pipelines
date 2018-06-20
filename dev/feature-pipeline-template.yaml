@@ -26,7 +26,7 @@ objects:
           value: ${PARAM_GIT_BRANCH}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
-        - name: APP
+        - name: APP_NAME
           value: ${PARAM_APP_NAME}
         - name: BASE_IMAGE
           value: ${PARAM_BASE_IMAGE}
@@ -42,12 +42,6 @@ objects:
           value: ${PARAM_CODE_ANALYSIS_COMMAND}
         - name: RELEASE_COMMAND
           value: ${PARAM_RELEASE_COMMAND}
-        - name: IMAGE
-          value: ${PARAM_APP_NAME}
-        - name: TAG
-          value: latest
-        - name: TAG_POSTFIX
-          value: none
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
 parameters:
