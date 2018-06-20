@@ -9,10 +9,11 @@ pipeline {
         skipDefaultCheckout()
     }
     stages {
+        /*
         stage("Set Repository") {
             when {
                 expression {
-                    return env.GIT_REPO
+                    return !env.GIT_REPO
                 }
             }
             steps {
@@ -23,6 +24,7 @@ pipeline {
                 }
             }
         }
+        */
         stage("Set Branch") {
             when {
                 not {
@@ -146,6 +148,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
+                            if (env.TAG)
                             // Deploys the new version of the application
                             openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.APP_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
                         } 
