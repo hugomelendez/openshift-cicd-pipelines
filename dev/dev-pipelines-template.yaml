@@ -61,8 +61,6 @@ objects:
     strategy:
       jenkinsPipelineStrategy:
         env:
-        - name: GIT_BRANCH
-          value: none
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
         - name: APP_NAME
@@ -83,7 +81,7 @@ objects:
           value: ${PARAM_CODE_ANALYSIS_COMMAND}
         - name: RELEASE_COMMAND
           value: ${PARAM_RELEASE_COMMAND}
-        - name: TAG_IMAGE
+        - name: MANUAL_TAG
           value: "true"
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
@@ -115,22 +113,22 @@ parameters:
   name: PARAM_ARTIFACTS_DIR
   required: true
   value: "./target"
-- description: The application's compile command
+- description: The application's compile command (if not required, leave none)
   displayName: Compile Command
   name: PARAM_COMPILE_COMMAND
   required: true
   value: "mvn package -DskipTests"
-- description: The application's test command
+- description: The application's test command (if not required, leave none)
   displayName: Test Command
   name: PARAM_TEST_COMMAND
   required: true
   value: none
-- description: The application's code analysis command
+- description: The application's code analysis command (if not required, leave none)
   displayName: Code Analysis Command
   name: PARAM_CODE_ANALYSIS_COMMAND
   required: true
   value: none
-- description: The application's release command
+- description: The application's release command (if not required, leave none)
   displayName: Release Command
   name: PARAM_RELEASE_COMMAND
   required: true
