@@ -5,6 +5,7 @@ pipeline {
     environment { 
         TAG = "latest"
         MANUAL_TAG = "false"
+        IMAGE_NAME = env.APP_NAME
     }
     options {
         skipDefaultCheckout()
@@ -150,7 +151,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                        openshift.tag("${env.APP_NAME}:latest", "${env.APP_NAME}:${env.TAG}");
+                        openshift.tag("${env.APP_NAME}:latest", "${env.IMAGE_NAME}:${env.TAG}");
                     }
                 } 
             }
