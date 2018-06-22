@@ -10,8 +10,6 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    labels:
-      app: ${PARAM_APP_NAME}-develop
     name: ${PARAM_APP_NAME}-develop-pipeline
   spec:
     source:
@@ -47,11 +45,14 @@ objects:
           value: ${PARAM_RELEASE_COMMAND}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${PARAM_WEBHOOK_SECRET}
+        type: Generic
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    labels:
-      app: ${PARAM_APP_NAME}-release
     name: ${PARAM_APP_NAME}-release-pipeline
   spec:
     source:
@@ -89,6 +90,11 @@ objects:
           value: "true"
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${PARAM_WEBHOOK_SECRET}
+        type: Generic
 parameters:
 - description: The application's Git repository
   displayName: Git Repository
@@ -142,3 +148,7 @@ parameters:
   name: PARAM_JENKINS_SLAVE_IMAGE
   required: true
   value: maven
+- name: PARAM_WEBHOOK_SECRET
+    description: A secret string used to configure the webhook
+    generate: expression 
+    from: "[a-zA-Z0-9]{40}"

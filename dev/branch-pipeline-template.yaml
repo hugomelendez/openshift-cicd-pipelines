@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: feature-pipeline-template
+  name: branch-pipelines-template
   annotations:
-    openshift.io/display-name: Application Pipeline (Feature)
+    openshift.io/display-name: Application Pipeline (Branch)
     iconClass: fa fa-code
+    description: Templates to generate an application based on a branch
 objects:
 - apiVersion: v1
   kind: BuildConfig
@@ -28,6 +29,8 @@ objects:
           value: ${PARAM_GIT_REPO}
         - name: APP_NAME
           value: ${PARAM_APP_NAME}
+        - name: APP_TEMPLATE
+          value: ${PARAM_APP_TEMPLATE}
         - name: BASE_IMAGE
           value: ${PARAM_BASE_IMAGE}
         - name: ARTIFACTS_DIR
@@ -44,52 +47,65 @@ objects:
           value: ${PARAM_RELEASE_COMMAND}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${PARAM_WEBHOOK_SECRET}
+        type: Generic
 parameters:
-- description: The application Git repository
-  displayName: Application Git repository
+- description: The application's Git repository
+  displayName: Git Repository
   name: PARAM_GIT_REPO
   required: true
-- description: The application Git branch (if "none" asks for the branch on startup)
-  displayName: Application Git branch
+- description: The application's branch for development
+  displayName: Dev Branch
   name: PARAM_GIT_BRANCH
+  value: develop
   required: true
-- description: The application name
+- description: The name for the application
   displayName: Application name
   name: PARAM_APP_NAME
   required: true
-- description: The application base image
-  displayName: Application base image
+- description: The template file (YAML) to create the application's objects
+  displayName: Template File
+  name: PARAM_APP_TEMPLATE
+  required: true
+- description: The base image for the application (S2I Binary will be used)
+  displayName: S2I (Binary) Base Image
   name: PARAM_BASE_IMAGE
   value: redhat-openjdk18-openshift:1.2
   required: true
 - description: The folder that points to the application binaries or files
-  displayName: Application binaries
+  displayName: Application Binaries
   name: PARAM_ARTIFACTS_DIR
   required: true
-  value: ./target
-- description: The application's compile command
-  displayName: Compile command
+  value: "./target"
+- description: The application's compile command (if not required, leave none)
+  displayName: Compile Command
   name: PARAM_COMPILE_COMMAND
   required: true
   value: "mvn package -DskipTests"
-- description: The application's test command
-  displayName: Test command
+- description: The application's test command (if not required, leave none)
+  displayName: Test Command
   name: PARAM_TEST_COMMAND
   required: true
   value: none
-- description: The application's code analysis command
-  displayName: Code analysis command
+- description: The application's code analysis command (if not required, leave none)
+  displayName: Code Analysis Command
   name: PARAM_CODE_ANALYSIS_COMMAND
   required: true
   value: none
-- description: The application's release command
-  displayName: Release command
+- description: The application's release command (if not required, leave none)
+  displayName: Release Command
   name: PARAM_RELEASE_COMMAND
   required: true
   value: none
-- description: The Jenkins slave image to compile the application (maven, nodejs or custom...)
-  displayName: Jenkins slave image
+- description: The Jenkins slave image that will be used to compile the application (maven, nodejs or custom...)
+  displayName: Jenkins Slave Image
   name: PARAM_JENKINS_SLAVE_IMAGE
   required: true
   value: maven
-
+- name: PARAM_WEBHOOK_SECRET
+    description: A secret string used to configure the webhook
+    generate: expression 
+    from: "[a-zA-Z0-9]{40}"
