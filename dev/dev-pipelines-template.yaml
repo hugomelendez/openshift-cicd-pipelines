@@ -148,7 +148,8 @@ parameters:
   name: PARAM_JENKINS_SLAVE_IMAGE
   required: true
   value: maven
-- name: PARAM_WEBHOOK_SECRET
-    description: A secret string used to configure the webhook
-    generate: expression 
-    from: "[a-zA-Z0-9]{40}"
+- description: A secret string used to configure the webhook
+  displayName: Webhook Secret
+  name: PARAM_WEBHOOK_SECRET
+  generate: expression 
+  from: "[a-zA-Z0-9]{40}"
