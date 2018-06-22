@@ -2,10 +2,6 @@ pipeline {
     agent {
         label env.JENKINS_SLAVE_IMAGE
     }
-    environment { 
-        TAG = "latest"
-        MANUAL_TAG = "false"
-    }
     options {
         skipDefaultCheckout()
     }
@@ -51,7 +47,18 @@ pipeline {
                 }
             }
         }
-        stage ("Set Up") {
+        stage("Initialize") {
+            steps {
+                script {
+                    if (!env.TAG)
+                        env.TAG = "latest"
+                    
+                    if (!env.MANUAL_TAG)
+                        env.MANUAL_TAG = "false"
+                }
+            }
+        }
+        stage ("Apply Changes") {
             when {
                 expression {
                     return env.APP_TEMPLATE
