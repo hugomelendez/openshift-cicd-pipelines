@@ -41,8 +41,6 @@ pipeline {
         stage("Checkout Code") {
             steps {
                 script {
-                    echo MANUAL_TAG
-                    echo TAG
                     git branch: env.GIT_BRANCH, url: env.GIT_REPO
                 }
             }
