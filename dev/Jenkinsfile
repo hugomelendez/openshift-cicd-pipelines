@@ -53,6 +53,9 @@ pipeline {
                     
                     if (!env.MANUAL_TAG)
                         env.MANUAL_TAG = "false"
+
+                    if (!env.IMAGE_NAME) 
+                        env.IMAGE_NAME = env.APP_NAME;    
                 }
             }
         }
@@ -157,9 +160,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                        if (!env.IMAGE_NAME) {
-                            env.IMAGE_NAME = env.APP_NAME;
-                        }
+                        
 
                         openshift.tag("${env.APP_NAME}:latest", "${env.IMAGE_NAME}:${env.TAG}");
                     }
@@ -171,8 +172,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            // Deploys the new version of the application
-                            openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.APP_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
+                            openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.IMAGE_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
                         } 
                     }
                 }
