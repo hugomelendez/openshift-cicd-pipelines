@@ -6,6 +6,69 @@ pipeline {
         timeout(time: 20, unit: 'MINUTES')
     }
     stages {
+        stage("Set Repository") {
+            when {
+                not {
+                    expression {
+                        return env.GIT_REPO
+                    }
+                }
+            }
+            steps {
+                script {
+                    env.GIT_REPO = input(id: 'repository',
+                                         message: 'Select repository',
+                                         parameters: [string(defaultValue: '', name: 'Repository')]);
+                }
+            }
+        }
+        stage("Set Branch") {
+            when {
+                not {
+                    expression {
+                        return env.GIT_BRANCH
+                    }
+                }         
+            }
+            steps {
+                script {
+                    env.GIT_BRANCH = input(id: 'branch',
+                                           message: 'Select branch',
+                                           parameters: [string(defaultValue: '', name: 'Branch')]);
+                }
+            }
+        }
+        stage("Checkout Code") {
+            steps {
+                script {
+                    git branch: env.GIT_BRANCH, url: env.GIT_REPO
+                }
+            }
+        }
+        stage("Initialize") {
+            steps {
+                script {
+                    if (!env.IMAGE_NAME) 
+                        env.IMAGE_NAME = env.APP_NAME;    
+                }
+            }
+        }
+        stage ("Apply Changes") {
+            when {
+                expression {
+                    return env.APP_TEMPLATE
+                }
+            }
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject() {
+                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE), "-p", "PARAM_APP_NAME=${env.APP_NAME}"));
+                        }
+                    }
+                }
+            }
+        }
         stage("Set Project") {
             when {
                 not {
@@ -32,13 +95,18 @@ pipeline {
             }
             steps {
                 script {
-                    sh "oc get istag -n ${env.PROJECT} --sort-by='{.metadata.name}'| grep ${env.APP_NAME} | tail -5 > tags"
-
-                    def tags = readFile("tags").trim();
-
-                    env.TAG = input(message: "Choose version",
-                                    parameters: [choice(choices: tags, description: '', name: 'Versions')]);
-
+                    openshift.withCluster() {
+                        openshift.withProject("${env.PROJECT}") {
+                            def is = openshift.selector("is", "hello-service").object();
+                            def tags = "";
+                            
+                            for (tag in is.spec.tags)
+                                tags = tag.name + "\n" + tags; 
+                            
+                            env.TAG = input(message: "Select version",
+                                            parameters: [choice(choices: tags, description: '', name: 'Versions')]);
+                        }
+                    }
                 }
             }
         }

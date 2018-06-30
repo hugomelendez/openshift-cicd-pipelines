@@ -67,7 +67,7 @@ objects:
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
         - name: APP_NAME
-          value: ${PARAM_APP_NAME}-release
+          value: ${PARAM_APP_NAME}
         - name: IMAGE_NAME
           value: ${PARAM_APP_NAME}
         - name: APP_TEMPLATE
