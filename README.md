@@ -36,7 +36,6 @@ This template creates two pipelines (based on parameters):
 
 This template create a pipeline to deploy to DEV from an specific branch (a feature branch for example)
 
-
 ## Test
 
 ### Pipelines

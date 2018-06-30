@@ -130,7 +130,10 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            openshift.selector("bc", env.APP_NAME).startBuild("--from-dir=${env.ARTIFACTS_DIR}", "--wait=true");
+                            if (env.ARTIFACTS_DIR)
+                                openshift.selector("bc", env.APP_NAME).startBuild("--from-dir=${env.ARTIFACTS_DIR}", "--wait=true");
+                            else 
+                                openshift.selector("bc", env.APP_NAME).startBuild("--wait=true");
                         }
                     }
                 }

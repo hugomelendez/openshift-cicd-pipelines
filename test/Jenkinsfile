@@ -1,0 +1,66 @@
+pipeline {
+    agent {
+        label env.JENKINS_SLAVE_IMAGE
+    }
+    options {
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+        timeout(time: 20, unit: 'MINUTES')
+    }
+    stages {
+        stage("Set Project") {
+            when {
+                not {
+                    expression {
+                        return env.PROJECT
+                    }
+                }
+            }
+            steps {
+                script {
+                     env.PROJECT = input(id: 'project',
+                                         message: 'Select the project where the tag to deploy resides',
+                                         parameters: [string(defaultValue: '', name: 'Project')]);
+                }
+            }
+        }
+        stage("Select Tag") {
+            when {
+                not {
+                    expression {
+                        return env.TAG
+                    }
+                }
+            }
+            steps {
+                script {
+                    sh "oc get istag -n ${env.PROJECT} --sort-by='{.metadata.name}'| grep ${env.APP_NAME} | tail -5 > tags"
+
+                    def tags = readFile("tags").trim();
+
+                    env.TAG = input(message: "Choose version",
+                                    parameters: [choice(choices: tags, description: '', name: 'Versions')]);
+
+                }
+            }
+        }
+        stage("Deploy Application") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject() {
+                            openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.IMAGE_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
+                        } 
+                    }
+                }
+            }
+        }
+        stage("Integration Test") {
+            steps {
+                script {
+
+                }
+            }
+        }
+    }
+}

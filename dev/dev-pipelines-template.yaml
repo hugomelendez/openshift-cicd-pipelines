@@ -106,7 +106,7 @@ parameters:
   value: develop
   required: true
 - description: The name for the application
-  displayName: Application name
+  displayName: Application Name
   name: PARAM_APP_NAME
   required: true
 - description: The template file (YAML) to create the application's objects

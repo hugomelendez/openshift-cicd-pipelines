@@ -57,13 +57,13 @@ parameters:
   displayName: Git Repository
   name: PARAM_GIT_REPO
   required: true
-- description: The application's branch for development
-  displayName: Dev Branch
+- description: The application's Git branch 
+  displayName: Git Branch
   name: PARAM_GIT_BRANCH
   value: develop
   required: true
 - description: The name for the application
-  displayName: Application name
+  displayName: Application Name
   name: PARAM_APP_NAME
   required: true
 - description: The template file (YAML) to create the application's objects

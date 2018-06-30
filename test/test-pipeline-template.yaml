@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: test-pipeline-template
+  annotations:
+    openshift.io/display-name: Application Pipeline (Test)
+    iconClass: fa fa-code
+    description: Template to generate a testing pipeline
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: ${PARAM_APP_NAME}
+    name: ${PARAM_APP_NAME}-pipeline
+  spec:
+    source:
+      type: Git
+      git:
+        uri: http://gogs-gogs.192.168.64.37.nip.io/leandroberetta/openshift-pipelines.git
+        ref: master
+      contextDir: test
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+        - name: APP_NAME
+          value: ${PARAM_APP_NAME}
+        - name: APP_IMAGE
+          value: ${PARAM_APP_NAME}
+        - name: JENKINS_SLAVE_IMAGE
+          value: ${PARAM_JENKINS_SLAVE_IMAGE}
+        - name: INTEGRATION_TEST_COMMAND
+          value: ${PARAM_INTEGRATION_TEST_COMMAND}
+        jenkinsfilePath: Jenkinsfile
+      type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${PARAM_WEBHOOK_SECRET}
+        type: Generic
+parameters:
+- description: The name for the application
+  displayName: Application Name
+  name: PARAM_APP_NAME
+  required: true  
+- description: A secret string used to configure the webhook
+  displayName: Webhook Secret
+  name: PARAM_WEBHOOK_SECRET
+  generate: expression 
+  from: "[a-zA-Z0-9]{40}"
