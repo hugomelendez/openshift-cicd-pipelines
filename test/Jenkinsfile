@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label env.JENKINS_SLAVE_IMAGE
-    }
+    agent any
     options {
         skipDefaultCheckout()
         disableConcurrentBuilds()

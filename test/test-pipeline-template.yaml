@@ -27,10 +27,6 @@ objects:
           value: ${PARAM_APP_NAME}
         - name: APP_IMAGE
           value: ${PARAM_APP_NAME}
-        - name: JENKINS_SLAVE_IMAGE
-          value: ${PARAM_JENKINS_SLAVE_IMAGE}
-        - name: INTEGRATION_TEST_COMMAND
-          value: ${PARAM_INTEGRATION_TEST_COMMAND}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
