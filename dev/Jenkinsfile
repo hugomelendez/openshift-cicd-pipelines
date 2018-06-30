@@ -165,10 +165,10 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                        openshift.tag("${env.APP_NAME}:latest", "${env.IMAGE_NAME}:${env.TAG}");
-
-                        openshift.selector("all", [app: env.APP_NAME]).label([version: env.TAG]);
-
+                        openshift.withProject() {
+                            openshift.tag("${env.APP_NAME}:latest", "${env.IMAGE_NAME}:${env.TAG}");
+                            openshift.selector("all", [app: env.APP_NAME]).label([version: env.TAG], "--overwrite=true");                            
+                        }
                     }
                 } 
             }

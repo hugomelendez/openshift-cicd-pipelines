@@ -112,7 +112,6 @@ parameters:
 - description: The template file (YAML) to create the application's objects
   displayName: Template File
   name: PARAM_APP_TEMPLATE
-  required: true
 - description: The base image for the application (S2I Binary will be used)
   displayName: S2I (Binary) Base Image
   name: PARAM_BASE_IMAGE
@@ -121,7 +120,6 @@ parameters:
 - description: The folder that points to the application binaries or files
   displayName: Application Binaries
   name: PARAM_ARTIFACTS_DIR
-  required: true
   value: "./target"
 - description: The application's compile command (if not required, leave none)
   displayName: Compile Command
