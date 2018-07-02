@@ -16,6 +16,117 @@ pipeline {
             }
             steps {
                 script {
+                     env.PROJECT = "dev1"
+                }
+            }
+        }
+        stage("Apply Changes") {
+            steps {
+                script {
+                    openshift.withCluster {
+                        openshift.withProject(env.PROJECT) {
+                            def dc = openshift.selector("dc", [app: "hello"]).object(exportable: true);
+                            /*
+                            try {
+                                def cmList = openshift.selector("cm", [app: env.APP_NAME]).objects(exportable: true);
+                                
+                                openshift.withProject() {
+                                    openshift.apply(cmList);             
+                                }
+                            } catch (e) {
+                                echo "No ConfigMap to export"
+                            }
+                            
+                            try {
+                                def pvcList = openshift.selector("pvc", env.APP_NAME).objects(exportable: true);
+                                
+                                openshift.withProject() {
+                                    openshift.apply(pvcList);             
+                                }                            
+                            } catch (e) {
+                                echo "No PersistentVolumeClaim to export"
+                            }
+                */            
+                            //dc.spec.remove("triggers");
+                            openshift.withProject("test") {
+                                def app = openshift.newApp('registry.access.redhat.com/jboss-fuse-6/fis-java-openshift')
+                                //openshift.apply(dc);             
+                            }     
+                        }
+                    }
+                }
+            }
+        }
+        stage("Select Tag") {
+            when {
+                not {
+                    expression {
+                        return env.TAG
+                    }
+                }
+            }
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject("${env.PROJECT}") {
+                            def is = openshift.selector("is", "hello-service").object();
+                            def tags = "";
+                            
+                            for (tag in is.spec.tags)
+                                tags = tag.name + "\n" + tags; 
+                            
+                            env.TAG = input(message: "Select version",
+                                            parameters: [choice(choices: tags, description: '', name: 'Versions')]);
+                        }
+                    }
+                }
+            }
+        }
+        stage("Deploy Application") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject() {
+                            openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.IMAGE_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
+                        } 
+                    }
+                }
+            }
+        }
+        /*
+        stage("Integration Test") {
+            steps {
+                script {
+
+                }
+            }
+        }
+        */
+    }
+}
+
+
+
+
+/*
+pipeline {
+    agent any
+    options {
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+        timeout(time: 20, unit: 'MINUTES')
+    }
+    stages {
+        stage("Set Project") {
+            when {
+                not {
+                    expression {
+                        return env.PROJECT
+                    }
+                }
+            }
+            steps {
+                script {
                      env.PROJECT = input(id: 'project',
                                          message: 'Select the project where the tag to deploy resides',
                                          parameters: [string(defaultValue: '', name: 'Project')]);
@@ -93,7 +204,6 @@ pipeline {
                 }
             }
         }
-        /*
         stage("Integration Test") {
             steps {
                 script {
@@ -101,6 +211,6 @@ pipeline {
                 }
             }
         }
-        */
     }
 }
+*/
