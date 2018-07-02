@@ -47,7 +47,7 @@ pipeline {
                                 echo "No PersistentVolumeClaim to export"
                             }
                 */            
-                            //dc.spec.remove("triggers");
+                            dc.spec.remove("triggers");
                             openshift.withProject("test") {
                                 openshift.apply(dc);             
                             }     
