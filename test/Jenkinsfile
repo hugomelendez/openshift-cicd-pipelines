@@ -49,8 +49,7 @@ pipeline {
                 */            
                             //dc.spec.remove("triggers");
                             openshift.withProject("test") {
-                                def app = openshift.newApp('registry.access.redhat.com/jboss-fuse-6/fis-java-openshift')
-                                //openshift.apply(dc);             
+                                openshift.apply(dc);             
                             }     
                         }
                     }
