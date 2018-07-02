@@ -167,10 +167,6 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject() {
                             openshift.tag("${env.APP_NAME}:latest", "${env.IMAGE_NAME}:${env.TAG}");
-
-                            def dc = openshift.selector("dc/${env.APP_NAME}").object();
-                            dc.spec.template.metadata.labels['version'] = env.TAG;
-                            openshift.apply(dc);
                         }
                     }
                 } 
