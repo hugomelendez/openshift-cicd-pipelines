@@ -61,7 +61,7 @@ pipeline {
                 }
             }
         }
-        stage ("Apply Changes") {
+        stage ("Apply Template") {
             when {
                 expression {
                     return env.APP_TEMPLATE

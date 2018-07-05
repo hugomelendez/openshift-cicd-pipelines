@@ -26,28 +26,9 @@ pipeline {
                     openshift.withCluster {
                         openshift.withProject(env.PROJECT) {
                             def dc = openshift.selector("dc", [app: "hello"]).object(exportable: true);
-                            /*
-                            try {
-                                def cmList = openshift.selector("cm", [app: env.APP_NAME]).objects(exportable: true);
-                                
-                                openshift.withProject() {
-                                    openshift.apply(cmList);             
-                                }
-                            } catch (e) {
-                                echo "No ConfigMap to export"
-                            }
                             
-                            try {
-                                def pvcList = openshift.selector("pvc", env.APP_NAME).objects(exportable: true);
-                                
-                                openshift.withProject() {
-                                    openshift.apply(pvcList);             
-                                }                            
-                            } catch (e) {
-                                echo "No PersistentVolumeClaim to export"
-                            }
-                */            
                             dc.spec.remove("triggers");
+                            
                             openshift.withProject("test") {
                                 openshift.apply(dc);             
                             }     
@@ -92,15 +73,6 @@ pipeline {
                 }
             }
         }
-        /*
-        stage("Integration Test") {
-            steps {
-                script {
-
-                }
-            }
-        }
-        */
     }
 }
 
@@ -211,5 +183,23 @@ pipeline {
             }
         }
     }
+}
+
+pipeline {
+  agent any
+
+  stages {
+    stage("Test") {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.selector("groups").describe();
+            submitter = input message: 'test', submitterParameter: 'submitter'
+            echo "${submitter}"
+          }
+        }
+      }
+    }
+  }
 }
 */
