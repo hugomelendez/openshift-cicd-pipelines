@@ -25,6 +25,8 @@ objects:
           value: ${PARAM_GIT_BRANCH}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
+        - name: GIT_SECRET
+          value: ${PARAM_GIT_SECRET}
         - name: APP_NAME
           value: ${PARAM_APP_NAME}-develop
         - name: APP_TEMPLATE
@@ -66,6 +68,8 @@ objects:
         env:
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
+        - name: GIT_SECRET
+          value: ${PARAM_GIT_SECRET}
         - name: APP_NAME
           value: ${PARAM_APP_NAME}
         - name: IMAGE_NAME
@@ -104,6 +108,11 @@ parameters:
   displayName: Dev Branch
   name: PARAM_GIT_BRANCH
   value: develop
+  required: true
+- description: The git's credentials (must be in the form of project-secret)
+  displayName: Git Credentials
+  name: PARAM_GIT_SECRET
+  value: projectname-secretname
   required: true
 - description: The name for the application
   displayName: Application Name
