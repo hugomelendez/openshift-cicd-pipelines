@@ -58,10 +58,19 @@ pipeline {
                             
                             env.TAG = input(message: "Select version",
                                             parameters: [choice(choices: tags, description: '', name: 'Versions')]);
-                            
-                            openshift.tag("${env.PROJECT}/${env.APP_NAME}:${env.TAG}", "${env.IMAGE_NAME}:${env.TAG}");
                         }
                     }
+                }
+            }
+        }
+        stage("Promote Tag") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject() {
+                            openshift.tag("${env.PROJECT}/${env.APP_NAME}:${env.TAG}", "${env.IMAGE_NAME}:${env.TAG}");
+                        }
+                    } 
                 }
             }
         }
