@@ -22,7 +22,7 @@ pipeline {
                 }
             }
         }
-        stage("Apply Objects") {
+        stage("Promote Objects") {
             steps {
                 script {
                     openshift.withCluster {
@@ -78,7 +78,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                        openshift.withProject("test") {
+                        openshift.withProject() {
                              openshift.verbose();
                              echo "${env.IMAGE_NAME}"
                             openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.IMAGE_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
