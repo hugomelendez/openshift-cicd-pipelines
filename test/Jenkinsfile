@@ -30,7 +30,7 @@ pipeline {
                             objects = openshift.process("${env.APP_TEMPLATE}", "-p", "PARAM_APP_NAME=${env.APP_NAME}", "-n", "${env.PROJECT}");
 
                             for (o in objects) {
-                                if (o.kind != "BuildConfig" || o.kind != "ImageStream") 
+                                if (o.kind != "BuildConfig" && o.kind != "ImageStream") 
                                     openshift.apply(o);
                             }
                         }
