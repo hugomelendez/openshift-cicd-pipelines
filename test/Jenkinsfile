@@ -68,6 +68,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject("test") {
+                             openshift.verbose();
                             openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.IMAGE_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
                         } 
                     }
