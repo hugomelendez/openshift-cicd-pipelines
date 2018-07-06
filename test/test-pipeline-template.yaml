@@ -25,6 +25,8 @@ objects:
         env:
         - name: APP_NAME
           value: ${PARAM_APP_NAME}
+        - name: APP_IMAGE
+          value: ${PARAM_APP_NAME}
         - name: APP_TEMPLATE
           value: ${PARAM_APP_TEMPLATE}
         jenkinsfilePath: Jenkinsfile
