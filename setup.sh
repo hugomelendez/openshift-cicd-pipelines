@@ -37,3 +37,6 @@ oc adm groups add-users administrators administrator1
 oc adm groups add-users test-approvers test-approver1 test-approver2
 oc adm groups add-users prod-approvers prod-approver1
 
+# Sets permissions
+oc adm policy add-role-to-user edit system:serviceaccount:test:jenkins -n dev1
+oc adm policy add-role-to-user edit system:serviceaccount:test:jenkins -n dev2
