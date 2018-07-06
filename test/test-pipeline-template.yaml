@@ -25,8 +25,8 @@ objects:
         env:
         - name: APP_NAME
           value: ${PARAM_APP_NAME}
-        - name: APP_IMAGE
-          value: ${PARAM_APP_NAME}
+        - name: APP_TEMPLATE
+          value: ${PARAM_APP_TEMPLATE}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
@@ -38,7 +38,9 @@ parameters:
 - description: The name for the application
   displayName: Application Name
   name: PARAM_APP_NAME
-  required: true  
+- description: The template to create the application's objects
+  displayName: Template Name
+  name: PARAM_APP_TEMPLATE
 - description: A secret string used to configure the webhook
   displayName: Webhook Secret
   name: PARAM_WEBHOOK_SECRET

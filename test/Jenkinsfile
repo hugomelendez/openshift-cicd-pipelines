@@ -27,7 +27,7 @@ pipeline {
                 script {
                     openshift.withCluster {
                         openshift.withProject() {
-                            objects = openshift.process("-f ${env.APP_TEMPLATE}.yaml", "-p", "PARAM_APP_NAME=${env.APP_NAME}");
+                            objects = openshift.process("-f ${env.APP_TEMPLATE}.yaml", "-p", "PARAM_APP_NAME=${env.APP_NAME}", "-n", "${env.PROJECT}");
 
                             for (o in objects) {
                                 if (o.kind != "BuildConfig" || o.kind != "ImageStream") 
