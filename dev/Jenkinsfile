@@ -177,7 +177,7 @@ pipeline {
             when {
                 not {
                     expression {
-                        return env.TAG.equals("latest")
+                        return !env.TAG.equals("latest")
                     }
                 }
             }
