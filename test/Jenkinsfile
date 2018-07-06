@@ -58,6 +58,8 @@ pipeline {
                             
                             env.TAG = input(message: "Select version",
                                             parameters: [choice(choices: tags, description: '', name: 'Versions')]);
+                            
+                            openshift.tag("${env.PROJECT}/${env.APP_NAME}:${env.TAG}", "${env.IMAGE_NAME}:${env.TAG}");
                         }
                     }
                 }
