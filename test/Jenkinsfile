@@ -50,7 +50,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject("${env.PROJECT}") {
-                            def is = openshift.selector("is", "hello-service").object();
+                            def is = openshift.selector("is", env.APP_NAME, "-n", env.PROJECT).object();
                             def tags = "";
                             
                             for (tag in is.spec.tags)
