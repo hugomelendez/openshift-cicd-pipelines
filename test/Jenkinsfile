@@ -5,6 +5,14 @@ pipeline {
         disableConcurrentBuilds()
     }
     stages {
+        stage("Initialize") {
+            steps {
+                script {
+                    if (!env.APPROVAL_GROUP)
+                        env.APPROVAL_GROUP = "test-approvers"
+                }
+            }
+        }
         // If project environment variable is not set, asks for it
         stage("Set Project") {
             when {
@@ -99,13 +107,18 @@ pipeline {
             steps {
                 script {
                     def submitter = input message: 'Confirm deployment', submitterParameter: 'submitter';
-                    def groups;
+                    submitter = submitter.tokenize("-")[0];
 
                     openshift.withCluster() {
-                        groups = openshift.selector("groups").objects();
+                        def groups = openshift.selector("groups").objects();
 
                         for (g in groups) {
                             echo "${g}";
+
+                            if (g.name.equals(env.APPROVAL_GROUP) && g.users.contains(submitter))
+                                echo "User ${submitter} from group ${g.name} approved the deployment"
+                            else 
+                                error "User ${submitter} from group ${g.name} is not allowed to approve the deployment"
                         }
                     }
                 }
