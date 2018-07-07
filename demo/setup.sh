@@ -20,8 +20,11 @@ oc create -f ../dev/branch-pipeline-template.yaml -n openshift
 # Creates the test template
 oc create -f ../test/test-pipeline-template.yaml -n test
 
+# Creates the prod template
+oc create -f ../prod/prod-pipeline-template.yaml -n prod
+
 # Creates a new cluster role for reading groups in the cluster
-oc create -f ../common/group-reader.yaml
+oc create -f ../config/roles/group-reader.yaml
 
 # Creates new groups
 oc adm groups new developers
@@ -49,23 +52,22 @@ oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:test:j
 # Project memberships
 oc adm policy add-role-to-user edit developer1 -n dev1
 oc adm policy add-role-to-user edit developer2 -n dev1
-
 oc adm policy add-role-to-user edit developer3 -n dev2
 oc adm policy add-role-to-user edit developer4 -n dev2
-
 oc adm policy add-role-to-group admin administrator -n dev1
 oc adm policy add-role-to-group admin administrator -n dev2
 oc adm policy add-role-to-group admin administrator -n test
 oc adm policy add-role-to-group admin administrator -n prod
-
 oc adm policy add-role-to-group edit test-approvers -n test
 oc adm policy add-role-to-group edit prod-approvers -n prod
-
 oc adm policy add-role-to-group view developers -n test
 oc adm policy add-role-to-group view developers -n prod
 
+# Creates the skopeo image
+sh ../config/jenkins/slaves/skopeo/skopeo.sh
 
+# Tags the skopeo image in the prod project 
+oc tag openshift/jenkins-slave-skopeo:latest jenkins-slave-skopeo:latest -n prod
 
-
-
-
+# Adds a label for the sync plugin to push the image into the prod jenkins
+oc label is jenkins-slave-skopeo role=jenkins-slave -n prod

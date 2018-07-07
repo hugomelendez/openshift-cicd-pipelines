@@ -1,0 +1,16 @@
+pipeline {
+    agent "jenkins-slave-skopeo"
+    options {
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+    }
+    stages {
+        stage("Initialize") {
+            steps {
+                script {
+                    sh "skopeo -h"
+                }
+            }
+        }
+    }
+}

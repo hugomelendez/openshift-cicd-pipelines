@@ -17,7 +17,7 @@ objects:
     source:
       type: Git
       git:
-        uri: http://gogs-gogs.192.168.64.37.nip.io/leandroberetta/openshift-pipelines.git
+        uri: https://github.com/redhatcsargentina/openshift-pipelines.git
         ref: master
       contextDir: dev
     strategy:
