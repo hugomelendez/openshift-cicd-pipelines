@@ -116,7 +116,7 @@ pipeline {
 
                     user = user.sub
                     */
-                    def user = submitter.substring(submitter.lastIndexOf("-"));
+                    def user = submitter.substring(0, submitter.lastIndexOf("-"));
                     echo "${user}";
 
                     openshift.withCluster() {
