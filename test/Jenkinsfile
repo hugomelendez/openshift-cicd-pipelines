@@ -112,11 +112,11 @@ pipeline {
 
                     echo user;
                     echo env.APPROVAL_GROUP;
+                    
                     openshift.withCluster() {
                         def groups = openshift.selector("groups").objects();
 
                         for (g in groups) {
-                            echo g;
                             if (g.name.equals(env.APPROVAL_GROUP) && g.users.contains(user)) {
                                 echo "${user} can"
                                 canApprove = true;
