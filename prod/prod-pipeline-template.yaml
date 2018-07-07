@@ -19,7 +19,7 @@ objects:
       git:
         uri: https://github.com/redhatcsargentina/openshift-pipelines.git
         ref: master
-      contextDir: test
+      contextDir: prod
     strategy:
       jenkinsPipelineStrategy:
         env:

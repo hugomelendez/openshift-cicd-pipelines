@@ -1,5 +1,7 @@
 pipeline {
-    agent "jenkins-slave-skopeo"
+    agent {
+        label "jenkins-slave-skopeo"
+    }
     options {
         skipDefaultCheckout()
         disableConcurrentBuilds()
