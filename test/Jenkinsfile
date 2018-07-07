@@ -111,10 +111,10 @@ pipeline {
                     def user = "";
 
                     for (i = 0; i < submitterTokens.length() - 1; i++) { 
-                        user = user + submitterTokens[i] "-";
+                        user = user + submitterTokens[i] + "-";
 
                     echo "${user}";
-                    
+
                     openshift.withCluster() {
                         def groups = openshift.selector("groups").objects();
 
