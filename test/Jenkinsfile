@@ -117,6 +117,8 @@ pipeline {
                         def groups = openshift.selector("groups").objects();
 
                         for (g in groups) {
+                            echo "${g.users.contains(user)}";
+                            echo "${g.users}";
                             if (g.name.equals(env.APPROVAL_GROUP) && g.users.contains(user)) {
                                 echo "${user} can"
                                 canApprove = true;
@@ -125,7 +127,7 @@ pipeline {
                         }
 
                         if (canApprove == false)
-                            error "User ${submitter} is not allowed to approve the deployment"
+                            error "User ${user} is not allowed to approve the deployment"
                     }
                 }
             }
