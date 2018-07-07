@@ -1,9 +1,9 @@
 #! /usr/bin/env bash
 
-CLUSTER_URL=https://192.168.64.39:8443
+CLUSTER_URL=$1
 
 # Logs in as admin to create projects
-oc login $CLUSTER_URL -p admin -p admin
+oc login $CLUSTER_URL
 
 # Creates projects for development (n teams, n projects)
 oc new-project dev1
@@ -14,14 +14,14 @@ oc new-project test
 oc new-project prod
 
 # Creates the development templates
-oc create -f ./dev/dev-pipelines-template.yaml -n openshift
-oc create -f ./dev/branch-pipeline-template.yaml -n openshift
+oc create -f ../dev/dev-pipelines-template.yaml -n openshift
+oc create -f ../dev/branch-pipeline-template.yaml -n openshift
 
 # Creates the test template
-oc create -f ./test/test-pipeline-template.yaml -n test
+oc create -f ../test/test-pipeline-template.yaml -n test
 
 # Creates a new cluster role for reading groups in the cluster
-oc create -f group-reader.yaml
+oc create -f ../common/group-reader.yaml
 
 # Creates new groups
 oc adm groups new developers
@@ -58,8 +58,11 @@ oc adm policy add-role-to-group admin administrator -n dev2
 oc adm policy add-role-to-group admin administrator -n test
 oc adm policy add-role-to-group admin administrator -n prod
 
-oc adm policy add-role-to-group view test-approvers -n test
-oc adm policy add-role-to-group view prod-approvers -n prod
+oc adm policy add-role-to-group edit test-approvers -n test
+oc adm policy add-role-to-group edit prod-approvers -n prod
+
+oc adm policy add-role-to-group view developers -n test
+oc adm policy add-role-to-group view developers -n prod
 
 
 
