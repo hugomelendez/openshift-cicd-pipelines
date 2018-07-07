@@ -107,8 +107,14 @@ pipeline {
             steps {
                 script {
                     def submitter = input message: 'Confirm deployment', submitterParameter: 'submitter';
-                    submitter = submitter.tokenize("-")[0];
+                    def submitterTokens = submitter.tokenize("-");
+                    def user = "";
 
+                    for (i = 0; i < submitterTokens.length() - 1; i++) { 
+                        user = user + submitterTokens[i] "-";
+
+                    echo "${user}";
+                    
                     openshift.withCluster() {
                         def groups = openshift.selector("groups").objects();
 

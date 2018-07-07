@@ -38,7 +38,31 @@ oc adm groups add-users test-approvers test-approver1 test-approver2
 oc adm groups add-users prod-approvers prod-approver1
 
 # Sets permissions
+
+# Allows jenkins service account from test to edit development projects
 oc adm policy add-role-to-user edit system:serviceaccount:test:jenkins -n dev1
 oc adm policy add-role-to-user edit system:serviceaccount:test:jenkins -n dev2
 
+# Allows jenkins service account to read groups from cluster
 oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:test:jenkins
+
+# Project memberships
+oc adm policy add-role-to-user edit developer1 -n dev1
+oc adm policy add-role-to-user edit developer2 -n dev1
+
+oc adm policy add-role-to-user edit developer3 -n dev2
+oc adm policy add-role-to-user edit developer4 -n dev2
+
+oc adm policy add-role-to-group admin administrator -n dev1
+oc adm policy add-role-to-group admin administrator -n dev2
+oc adm policy add-role-to-group admin administrator -n test
+oc adm policy add-role-to-group admin administrator -n prod
+
+oc adm policy add-role-to-group view test-approvers -n test
+oc adm policy add-role-to-group view prod-approvers -n prod
+
+
+
+
+
+
