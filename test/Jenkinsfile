@@ -120,7 +120,7 @@ pipeline {
                             echo "${g.users.contains(user)}";
                             echo "${g.users}";
                             echo "${g.metadata.name}";
-                            if (g.metadataname.equals(env.APPROVAL_GROUP) && g.users.contains(user)) {
+                            if (g.metadata.name.equals(env.APPROVAL_GROUP) && g.users.contains(user)) {
                                 echo "${user} can"
                                 canApprove = true;
                                 echo ""
