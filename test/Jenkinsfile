@@ -118,8 +118,9 @@ pipeline {
                         for (g in groups) {
                             echo g;
                             if (g.name.equals(env.APPROVAL_GROUP) && g.users.contains(user)) {
+                                echo "${user} can"
                                 canApprove = true;
-                                echo "User ${submitter} from group ${g.name} approved the deployment"
+                                echo "User ${user} from group ${g.name} approved the deployment"
                             } 
                         }
 
