@@ -110,7 +110,7 @@ pipeline {
                     def submitterTokens = submitter.tokenize("-");
                     def user = "";
 
-                    for (i = 0; i < submitterTokens.length() - 1; i++) 
+                    for (i = 0; i < submitterTokens.size() - 1; i++) 
                         user = user + submitterTokens[i] + "-";
 
                     echo "${user}";
