@@ -92,6 +92,8 @@ objects:
           value: ${PARAM_RELEASE_COMMAND}
         - name: MANUAL_TAG
           value: "true"
+        - name: APPLY_TEMPLATE
+          value: "true"
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:

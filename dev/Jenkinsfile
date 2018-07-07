@@ -95,8 +95,9 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            // Creates or replace (apply) into the development prjoect the application template for later use
-                            openshift.apply("-f", env.APP_TEMPLATE);
+                            // If set creates or replace (apply) into the development prjoect the application template for later use
+                            if (env.APPLY_TEMPLATE)
+                                openshift.apply("-f", env.APP_TEMPLATE);
                             // Uses the template to create the application
                             openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE), "-p", "PARAM_APP_NAME=${env.APP_NAME}"));
                         }
