@@ -10,13 +10,13 @@ pipeline {
             when {
                 not {
                     expression {
-                        return env.PROJECT
+                        return env.PROJECT_NAME
                     }
                 }
             }
             steps {
                 script {
-                     env.PROJECT = input(id: 'project',
+                     env.PROJECT_NAME = input(id: 'project',
                                          message: 'Select the project where the tag to deploy resides',
                                          parameters: [string(defaultValue: '', name: 'Project')]);
                 }
@@ -33,9 +33,9 @@ pipeline {
             }
             steps {
                 script {
-                     env.PROJECT = input(id: 'application',
-                                         message: 'Select the application to deploy',
-                                         parameters: [string(defaultValue: '', name: 'Application')]);
+                     env.APP_NAME = input(id: 'application',
+                                    message: 'Select the application to deploy',
+                                    parameters: [string(defaultValue: '', name: 'Application')]);
                 }
             }
         }
@@ -45,7 +45,7 @@ pipeline {
                     openshift.withCluster {
                         openshift.withProject() {
                             // Uses the template from development project to generate the application in test
-                            objects = openshift.process("${env.APP_TEMPLATE}", "-p", "PARAM_APP_NAME=${env.APP_NAME}", "-n", "${env.PROJECT}");
+                            objects = openshift.process("${env.APP_TEMPLATE}", "-p", "PARAM_APP_NAME=${env.APP_NAME}", "-n", "${env.PROJECT_NAME}");
 
                             for (o in objects) {
                                 // Prevents to promote the BuildConfig and ImageSream, the build is only done in development stages
@@ -68,7 +68,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                        openshift.withProject("${env.PROJECT}") {
+                        openshift.withProject("${env.PROJECT_NAME}") {
                             // Generates a list of tags to deploy
                             def is = openshift.selector("is", env.APP_NAME).object();
                             def tags = "";
@@ -89,7 +89,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject() {
                             // Tags image from development to test, this operation creates the ImageStream
-                            openshift.tag("${env.PROJECT}/${env.APP_NAME}:${env.TAG}", "${env.IMAGE_NAME}:${env.TAG}");
+                            openshift.tag("${env.PROJECT_NAME}/${env.APP_NAME}:${env.TAG}", "${env.IMAGE_NAME}:${env.TAG}");
                         }
                     } 
                 }
