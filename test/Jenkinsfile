@@ -95,6 +95,21 @@ pipeline {
                 }
             }
         }
+        stage("Approve Deploy") {
+            steps {
+                script {
+                    def submitter = input message: 'Confirm deployment', submitterParameter: 'submitter';
+                    def groups;
+
+                    openshift.withCluster() {
+                        groups = openshift.selector("groups").objects();
+
+                        for (g in groups)
+                            g.describe();
+                    }
+                }
+            }
+        }
         stage("Deploy Application") {
             steps {
                 script {
