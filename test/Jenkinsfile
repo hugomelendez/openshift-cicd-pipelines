@@ -27,7 +27,7 @@ pipeline {
             when {
                 not {
                     expression {
-                        return env.APP_NANE
+                        return env.APP_NAME
                     }
                 }
             }
