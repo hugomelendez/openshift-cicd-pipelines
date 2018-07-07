@@ -110,21 +110,13 @@ pipeline {
                     def user = submitter.substring(0, submitter.lastIndexOf("-"));
                     def canApprove = false;
 
-                    echo user;
-                    echo env.APPROVAL_GROUP;
-                    
                     openshift.withCluster() {
                         def groups = openshift.selector("groups").objects();
 
                         for (g in groups) {
-                            echo "${g.users.contains(user)}";
-                            echo "${g.users}";
-                            echo "${g.metadata.name}";
                             if (g.metadata.name.equals(env.APPROVAL_GROUP) && g.users.contains(user)) {
-                                echo "${user} can"
                                 canApprove = true;
-                                echo ""
-                                echo "User ${user} from group ${g.name} approved the deployment"
+                                echo "User ${user} from group ${g.metadata.name} approved the deployment"
                             } 
                         }
 
