@@ -107,29 +107,21 @@ pipeline {
             steps {
                 script {
                     def submitter = input message: 'Confirm deployment', submitterParameter: 'submitter';
-                    /*
-                    def submitterTokens = submitter.tokenize("-");
-                    def user = "";
-
-                    for (i = 0; i < submitterTokens.size() - 1; i++) 
-                        user = user + submitterTokens[i] + "-";
-
-                    user = user.sub
-                    */
                     def user = submitter.substring(0, submitter.lastIndexOf("-"));
-                    echo "${user}";
+                    def canApprove = false;
 
                     openshift.withCluster() {
                         def groups = openshift.selector("groups").objects();
 
                         for (g in groups) {
-                            echo "${g}";
-
-                            if (g.name.equals(env.APPROVAL_GROUP) && g.users.contains(submitter))
+                            if (g.name.equals(env.APPROVAL_GROUP) && g.users.contains(user)) {
+                                canApprove = true;
                                 echo "User ${submitter} from group ${g.name} approved the deployment"
-                            else 
-                                error "User ${submitter} from group ${g.name} is not allowed to approve the deployment"
+                            }   
                         }
+
+                        if (canApprove == false)
+                            error "User ${submitter} from group ${g.name} is not allowed to approve the deployment"
                     }
                 }
             }
