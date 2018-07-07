@@ -102,9 +102,11 @@ pipeline {
                     def groups;
 
                     openshift.withCluster() {
-                        groups = openshift.selector("groups").describe();
+                        groups = openshift.selector("groups").objects();
 
-                        
+                        for (g in groups) {
+                            echo "${g}";
+                        }
                     }
                 }
             }
