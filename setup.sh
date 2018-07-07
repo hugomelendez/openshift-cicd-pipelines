@@ -40,3 +40,5 @@ oc adm groups add-users prod-approvers prod-approver1
 # Sets permissions
 oc adm policy add-role-to-user edit system:serviceaccount:test:jenkins -n dev1
 oc adm policy add-role-to-user edit system:serviceaccount:test:jenkins -n dev2
+
+oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:test:jenkins
