@@ -132,6 +132,7 @@ pipeline {
                     def canApprove = false;
 
                     openshift.withCluster() {
+                        echo openshift.cluster();
                         def groups = openshift.selector("groups").objects();
 
                         for (g in groups) {

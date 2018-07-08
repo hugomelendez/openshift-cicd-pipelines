@@ -50,6 +50,7 @@ oc adm policy add-role-to-user edit system:serviceaccount:test:jenkins -n dev2
 
 # Allows jenkins service account to read groups from cluster
 oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:test:jenkins
+oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:prod:jenkins
 
 # Project memberships
 oc adm policy add-role-to-user edit developer1 -n dev1
