@@ -19,19 +19,35 @@ pipeline {
             }
         }
         // If project environment variable is not set, asks for it
-        stage("Set Project") {
+        stage("Set Project (Src)") {
             when {
                 not {
                     expression {
-                        return env.PROJECT_NAME
+                        return env.SRC_PROJECT_NAME
                     }
                 }
             }
             steps {
                 script {
-                     env.PROJECT_NAME = input(id: 'project',
-                                         message: 'Select the project where the tag to deploy resides',
-                                         parameters: [string(defaultValue: '', name: 'Project')]);
+                     env.SRC_PROJECT_NAME = input(id: 'project',
+                                            message: 'Select the project where the tag to deploy resides',
+                                            parameters: [string(defaultValue: '', name: 'Source Project')]);
+                }
+            }
+        }
+        stage("Set Project (Dst)") {
+            when {
+                not {
+                    expression {
+                        return env.DST_PROJECT_NAME
+                    }
+                }
+            }
+            steps {
+                script {
+                     env.DST_PROJECT_NAME = input(id: 'project',
+                                            message: 'Select the project to deploy',
+                                            parameters: [string(defaultValue: '', name: 'Destination Project')]);
                 }
             }
         }
@@ -58,7 +74,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject() {
                             // Uses the template from development project to generate the application in test
-                            objects = openshift.process("${env.APP_TEMPLATE_NAME}", "-p", "PARAM_APP_NAME=${env.APP_NAME}", "-n", "${env.PROJECT_NAME}");
+                            objects = openshift.process("${env.APP_TEMPLATE_NAME}", "-p", "PARAM_APP_NAME=${env.APP_NAME}", "-n", "${env.SRC_PROJECT_NAME}");
 
                             openshift.withCluster(env.DST_CLUSTER, env.DST_CLUSTER_TOKEN) {
                                 openshift.withProject(env.DST_PROJECT_NAME) {
