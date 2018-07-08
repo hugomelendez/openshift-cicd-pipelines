@@ -29,8 +29,8 @@ objects:
           value: ${PARAM_GIT_SECRET}
         - name: APP_NAME
           value: ${PARAM_APP_NAME}-develop
-        - name: APP_TEMPLATE
-          value: ${PARAM_APP_TEMPLATE}
+        - name: APP_TEMPLATE_FILE
+          value: ${PARAM_APP_TEMPLATE_FILE}
         - name: BASE_IMAGE
           value: ${PARAM_BASE_IMAGE}
         - name: ARTIFACTS_DIR
@@ -74,8 +74,8 @@ objects:
           value: ${PARAM_APP_NAME}
         - name: IMAGE_NAME
           value: ${PARAM_APP_NAME}
-        - name: APP_TEMPLATE
-          value: ${PARAM_APP_TEMPLATE}
+        - name: APP_TEMPLATE_FILE
+          value: ${PARAM_APP_TEMPLATE_FILE}
         - name: BASE_IMAGE
           value: ${PARAM_BASE_IMAGE}
         - name: ARTIFACTS_DIR
@@ -122,7 +122,7 @@ parameters:
   required: true
 - description: The template file (YAML) to create the application's objects
   displayName: Template File
-  name: PARAM_APP_TEMPLATE
+  name: PARAM_APP_TEMPLATE_FILE
 - description: The base image for the application (S2I Binary will be used)
   displayName: S2I (Binary) Base Image
   name: PARAM_BASE_IMAGE
