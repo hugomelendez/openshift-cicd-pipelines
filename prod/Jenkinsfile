@@ -101,6 +101,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
+                        echo openshift.cluster();
                         openshift.withProject(env.PROJECT_NAME) {
                             // Generates a list of tags to deploy
                             def is = openshift.selector("is", env.APP_NAME).object();
