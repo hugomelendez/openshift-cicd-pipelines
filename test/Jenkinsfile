@@ -56,7 +56,11 @@ pipeline {
                     openshift.withCluster {
                         openshift.withProject() {
                             // Uses the template from development project to generate the application in test
-                            template = openshift.selector("template", env.APP_TEMPLATE_NAME, "-n", env.PROJECT_NAME);
+                            def template;
+
+                            openshift.withProject(env.PROJECT_NAME) {
+                                template = openshift.selector("template", env.APP_TEMPLATE_NAME);
+                            }
 
                             // Creates or modifies the template in test project for later use
                             openshift.apply(template);
