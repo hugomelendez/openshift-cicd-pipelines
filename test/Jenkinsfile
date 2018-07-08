@@ -123,6 +123,7 @@ pipeline {
                     def canApprove = false;
 
                     openshift.withCluster() {
+                        openshift.verbose();
                         def groups = openshift.selector("groups").objects();
 
                         for (g in groups) {
