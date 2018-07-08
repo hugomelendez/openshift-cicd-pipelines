@@ -60,7 +60,7 @@ pipeline {
 
                             openshift.withProject(env.PROJECT_NAME) {
                                 template = openshift.selector("template", env.APP_TEMPLATE_NAME);
-                                echo template.describe()
+                                template.describe()
                             }
 
                             // Creates or modifies the template in test project for later use
