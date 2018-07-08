@@ -97,3 +97,6 @@ oc login https://$(minishift ip):8443 -u admin -p admin
 
 oc new-project prod
 
+PROD_CLUSTER_URL="https://$(minishift ip):8443"
+PROD_CLUSTER_SA="default"
+PROD_CLUSTER_TOKEN="$(oc sa get-token default)"

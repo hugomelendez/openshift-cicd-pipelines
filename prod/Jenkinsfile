@@ -55,15 +55,19 @@ pipeline {
         stage("Promote Objects") {
             steps {
                 script {
-                    openshift.withCluster {
+                    openshift.withCluster() {
                         openshift.withProject() {
                             // Uses the template from development project to generate the application in test
                             objects = openshift.process("${env.APP_TEMPLATE_NAME}", "-p", "PARAM_APP_NAME=${env.APP_NAME}", "-n", "${env.PROJECT_NAME}");
 
-                            for (o in objects) {
-                                // Prevents to promote the BuildConfig and ImageSream, the build is only done in development stages
-                                if (o.kind != "BuildConfig" && o.kind != "ImageStream") 
-                                    openshift.apply(o);
+                            openshift.withCluster(env.DST_CLUSTER, env.DST_CLUSTER_TOKEN) {
+                                openshift.withProject(env.DST_PROJECT_NAME) {
+                                    for (o in objects) {
+                                        // Prevents to promote the BuildConfig and ImageSream, the build is only done in development stages
+                                        if (o.kind != "BuildConfig" && o.kind != "ImageStream") 
+                                            openshift.apply(o);
+                                    }
+                                }
                             }
                         }
                     }
@@ -81,7 +85,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                        openshift.withProject("${env.PROJECT_NAME}") {
+                        openshift.withProject(env.PROJECT_NAME) {
                             // Generates a list of tags to deploy
                             def is = openshift.selector("is", env.APP_NAME).object();
                             def tags = "";
@@ -99,12 +103,7 @@ pipeline {
         stage("Promote Tag") {
             steps {
                 script {
-                    openshift.withCluster() {
-                        openshift.withProject() {
-                            // Tags image from development to test, this operation creates the ImageStream
-                            openshift.tag("${env.PROJECT_NAME}/${env.APP_NAME}:${env.TAG}", "${env.IMAGE_NAME}:${env.TAG}");
-                        }
-                    } 
+                    // Skopeo copy...
                 }
             }
         }
@@ -134,8 +133,8 @@ pipeline {
         stage("Deploy Application") {
             steps {
                 script {
-                    openshift.withCluster() {
-                        openshift.withProject() {
+                    openshift.withCluster(env.DST_CLUSTER, env.DST_CLUSTER_TOKEN) {
+                        openshift.withProject(env.DST_PROJECT_NAME) {
                             // Adds a trigger for deploying the tag, this will cause an automatic rollout
                             openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.IMAGE_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
                         } 

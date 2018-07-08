@@ -27,8 +27,10 @@ objects:
           value: ${PARAM_APP_NAME}
         - name: APP_IMAGE
           value: ${PARAM_APP_NAME}
-        - name: PROJECT_NAME
-          value: test  
+        - name: SRC_PROJECT_NAME
+          value: ${PARAM_SRC_PROJECT_NAME}
+        - name: DST_PROJECT_NAME
+          value: ${PARAM_DST_PROJECT_NAME}
         - name: APP_TEMPLATE_NAME
           value: ${PARAM_APP_TEMPLATE_NAME}
         jenkinsfilePath: Jenkinsfile
@@ -42,9 +44,21 @@ parameters:
 - description: The name for the application
   displayName: Application Name
   name: PARAM_APP_NAME
+  required: true
 - description: The template to create the application's objects
   displayName: Template Name
   name: PARAM_APP_TEMPLATE_NAME
+  required: true
+- description: The source project for image and objects promotion
+  displayName: Source Project
+  name: PARAM_SRC_PROJECT_NAME
+  required: true
+  value: test
+- description: The destination project for image and objects promotion
+  displayName: Destination Project
+  name: PARAM_DST_PROJECT_NAME
+  required: true
+  value: prod
 - description: A secret string used to configure the webhook
   displayName: Webhook Secret
   name: PARAM_WEBHOOK_SECRET
