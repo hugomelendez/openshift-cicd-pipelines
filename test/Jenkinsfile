@@ -60,10 +60,11 @@ pipeline {
 
                             openshift.withProject(env.PROJECT_NAME) {
                                 template = openshift.selector("template", env.APP_TEMPLATE_NAME);
+                                echo template.describe()
                             }
 
                             // Creates or modifies the template in test project for later use
-                            openshift.apply(template);
+                            openshift.apply(template.object());
 
                             objects = openshift.process("${env.APP_TEMPLATE_NAME}", "-p", "PARAM_APP_NAME=${env.APP_NAME}", "-n", "${env.PROJECT_NAME}");
 
