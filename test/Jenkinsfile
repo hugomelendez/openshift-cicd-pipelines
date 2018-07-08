@@ -59,7 +59,7 @@ pipeline {
                             def template;
 
                             openshift.withProject(env.PROJECT_NAME) {
-                                template = openshift.selector("template", env.APP_TEMPLATE_NAME).object();
+                                template = openshift.selector("template", env.APP_TEMPLATE_NAME).object(exportable: true);
                             }
 
                             // Creates or modifies the template in test project for later use
