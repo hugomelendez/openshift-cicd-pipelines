@@ -10,4 +10,4 @@ oc create is skopeo -n openshift
 oc create -f skopeo-bc.yaml -n openshift
 
 # Creates a new build
-oc start-build skopeo -n openshift
+oc start-build skopeo -n openshift --wait

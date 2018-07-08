@@ -1,9 +1,11 @@
 #! /usr/bin/env bash
 
-CLUSTER_URL=$1
+minishift profile set non-prod
+
+minishift start
 
 # Logs in as admin to create projects
-oc login $CLUSTER_URL
+oc login https://$(minishift ip):8443 -u admin -p admin
 
 # Creates projects for development (n teams, n projects)
 oc new-project dev1
@@ -54,20 +56,44 @@ oc adm policy add-role-to-user edit developer1 -n dev1
 oc adm policy add-role-to-user edit developer2 -n dev1
 oc adm policy add-role-to-user edit developer3 -n dev2
 oc adm policy add-role-to-user edit developer4 -n dev2
-oc adm policy add-role-to-group admin administrator -n dev1
-oc adm policy add-role-to-group admin administrator -n dev2
-oc adm policy add-role-to-group admin administrator -n test
-oc adm policy add-role-to-group admin administrator -n prod
+oc adm policy add-role-to-group admin administrators -n dev1
+oc adm policy add-role-to-group admin administrators -n dev2
+oc adm policy add-role-to-group admin administrators -n test
+oc adm policy add-role-to-group admin administrators -n prod
 oc adm policy add-role-to-group edit test-approvers -n test
 oc adm policy add-role-to-group edit prod-approvers -n prod
 oc adm policy add-role-to-group view developers -n test
 oc adm policy add-role-to-group view developers -n prod
 
+oc adm policy add-role-to-user view system:serviceaccount:test:jenkins -n dev1
+oc adm policy add-role-to-user view system:serviceaccount:test:jenkins -n dev2
+
 # Creates the skopeo image
-sh ../config/jenkins/slaves/skopeo/skopeo.sh
+
+# Imports the jenkins slave base image
+oc import-image jenkins-slave-base-rhel7 --confirm --from=registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7 -n openshift
+
+# Creates an image stream to hold the skopeo image
+oc create is skopeo -n openshift
+
+# Creates the build config
+oc create -f ../config/jenkins/slaves/skopeo/skopeo-bc.yaml -n openshift
+
+# Creates a new build
+oc start-build skopeo -n openshift --wait
 
 # Tags the skopeo image in the prod project 
-oc tag openshift/jenkins-slave-skopeo:latest jenkins-slave-skopeo:latest -n prod
+oc tag openshift/skopeo:latest skopeo:latest -n prod
 
 # Adds a label for the sync plugin to push the image into the prod jenkins
-oc label is jenkins-slave-skopeo role=jenkins-slave -n prod
+oc label is skopeo role=jenkins-slave -n prod
+
+minishift profile set prod
+
+minishift start
+
+# Logs in as admin to create projects
+oc login https://$(minishift ip):8443 -u admin -p admin
+
+oc new-project prod
+
