@@ -68,6 +68,8 @@ oc adm policy add-role-to-group view developers -n prod
 oc adm policy add-role-to-user view system:serviceaccount:test:jenkins -n dev1
 oc adm policy add-role-to-user view system:serviceaccount:test:jenkins -n dev2
 
+oc adm policy add-role-to-user view system:serviceaccount:prod:jenkins -n test
+
 # Creates the skopeo image
 
 # Imports the jenkins slave base image
