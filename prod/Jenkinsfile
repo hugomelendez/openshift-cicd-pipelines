@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label "skopeo"
-    }
+    agent any
     options {
         skipDefaultCheckout()
         disableConcurrentBuilds()
@@ -75,7 +73,7 @@ pipeline {
                         openshift.withProject() {
                             // Uses the template from development project to generate the application in test
                             objects = openshift.process("${env.SRC_PROJECT_NAME}//${env.APP_TEMPLATE_NAME}", "-p", "PARAM_APP_NAME=${env.APP_NAME}");
-/*
+
                             openshift.withCluster(env.DST_CLUSTER, env.DST_CLUSTER_TOKEN) {
                                 openshift.withProject(env.DST_PROJECT_NAME) {
                                     for (o in objects) {
@@ -85,7 +83,6 @@ pipeline {
                                     }
                                 }
                             }
-                            */
                         }
                     }
                 }
@@ -119,6 +116,9 @@ pipeline {
             }
         }
         stage("Promote Tag") {
+            agent {
+                label "skopeo"
+            }
             steps {
                 script {
                     sh "skopeo -h"
