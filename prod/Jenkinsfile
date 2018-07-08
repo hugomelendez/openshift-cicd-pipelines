@@ -103,7 +103,7 @@ pipeline {
         stage("Promote Tag") {
             steps {
                 script {
-                    // Skopeo copy...
+                    sh "skopeo -h"
                 }
             }
         }
