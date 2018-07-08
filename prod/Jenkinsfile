@@ -133,6 +133,7 @@ pipeline {
 
                     openshift.withCluster() {
                         echo openshift.cluster();
+                        openshift.verbose();
                         def groups = openshift.selector("groups").objects();
 
                         for (g in groups) {
