@@ -121,7 +121,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "skopeo -h"
+                    sh "skopeo copy -h"
                 }
             }
         }
