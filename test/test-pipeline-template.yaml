@@ -39,13 +39,13 @@ objects:
           secret: ${PARAM_WEBHOOK_SECRET}
         type: Generic
 parameters:
-- description: The name for the application
+- description: The name for the application to deploy (must exists in source project)
   displayName: Application Name
   name: PARAM_APP_NAME
-- description: The name for the application's development project
+- description: The name of the development project
   displayName: Project Name
   name: PARAM_PROJECT_NAME
-- description: The template to create the application's objects
+- description:  The template to create the application objects (must exists in source project)
   displayName: Template Name
   name: PARAM_APP_TEMPLATE_NAME
 - description: A secret string used to configure the webhook

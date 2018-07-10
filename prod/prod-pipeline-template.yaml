@@ -89,11 +89,11 @@ parameters:
   required: true
 - description: The destination cluster URL
   displayName: Destination Cluster URL
-  name: DST_CLUSTER_URL
+  name: PARAM_DST_CLUSTER_URL
   required: true
 - description: The destination cluster token
   displayName: Destination Cluster Token
-  name: DST_CLUSTER_TOKEN
+  name: PARAM_DST_CLUSTER_TOKEN
   required: true
 - description: A secret string used to configure the webhook
   displayName: Webhook Secret
