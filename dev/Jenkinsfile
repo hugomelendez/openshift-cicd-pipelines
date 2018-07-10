@@ -88,7 +88,7 @@ pipeline {
         stage ("Apply Template") {
             when {
                 expression {
-                    return env.APP_TEMPLATE
+                    return env.APP_TEMPLATE_FILE
                 }
             }
             steps {
@@ -96,10 +96,10 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject() {
                             // If set creates or replace (apply) into the development prjoect the application template for later use
-                            if (env.APPLY_TEMPLATE)
-                                openshift.apply("-f", env.APP_TEMPLATE);
+                            if (env.APPLY_TEMPLATE_FILE)
+                                openshift.apply("-f", env.APP_TEMPLATE_FILE);
                             // Uses the template to create the application
-                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE), "-p", "PARAM_APP_NAME=${env.APP_NAME}"));
+                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP_NAME=${env.APP_NAME}"));
                         }
                     }
                 }

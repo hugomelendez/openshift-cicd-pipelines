@@ -4,15 +4,17 @@ minishift profile set non-prod
 
 minishift start
 
+NON_PROD_CLUSTER_URL="https://$(minishift ip):8443"
+
 # Logs in as admin to create projects
-oc login https://$(minishift ip):8443 -u admin -p admin
+oc login $NON_PROD_CLUSTER_URL -u admin -p admin
 
 # Creates projects for development (n teams, n projects)
 oc new-project dev1
 oc new-project dev2
 # Creates the test project
 oc new-project test
-# Creates the prod project
+# Creates the prod (management) project
 oc new-project prod
 
 # Creates the development templates
@@ -98,11 +100,12 @@ minishift start
 # Logs in as admin to create projects
 oc login https://$(minishift ip):8443 -u admin -p admin
 
+# Creates the prod project 
 oc new-project prod
 
+# Creates an admin service account for deployments, etc
 oc create sa admin -n prod
-
-oc adm policy add-role-to-user admin admin -n prod
+oc adm policy add-role-to-user admin system:serviceaccount:prod:admin -n prod
 
 PROD_CLUSTER_URL="https://$(minishift ip):8443"
 PROD_CLUSTER_SA="admin"
