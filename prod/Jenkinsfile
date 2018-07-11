@@ -71,7 +71,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            // Uses the template from development project to generate the application in test
+                            // Uses the template from testing project to generate the application in test
                             objects = openshift.process("${env.SRC_PROJECT_NAME}//${env.APP_TEMPLATE_NAME}", "-p", "PARAM_APP_NAME=${env.APP_NAME}");
 
                             openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
@@ -121,11 +121,15 @@ pipeline {
             }
             steps {
                 script {
+                    // Credentials
                     def srcCreds = "unused:${env.SRC_REGISTRY_TOKEN}";
                     def dstCreds = "unused:${env.DST_REGISTRY_TOKEN}";
+
+                    // Paths 
                     def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT_NAME}/${env.APP_NAME}:${env.TAG}";
                     def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT_NAME}/${env.APP_NAME}:${env.TAG}";
 
+                    // Executes skopeo command
                     sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds=${srcCreds} --dest-creds=${dstCreds} ${src} ${dst}";
                 }
             }
