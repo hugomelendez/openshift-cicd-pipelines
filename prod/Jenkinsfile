@@ -121,8 +121,8 @@ pipeline {
             }
             steps {
                 script {
-                    def srcCreds = "unused:${env.SRC_REGISTRY_TOKEN}";
-                    def dstCreds = "unused:${env.DST_REGISTRY_TOKEN}";
+                    def srcCreds = "builder:${env.SRC_REGISTRY_TOKEN}";
+                    def dstCreds = "builder:${env.DST_REGISTRY_TOKEN}";
                     def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT_NAME}/${env.APP_NAME}:${env.TAG}";
                     def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT_NAME}/${env.APP_NAME}:${env.TAG}";
 
