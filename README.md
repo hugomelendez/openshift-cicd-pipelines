@@ -4,14 +4,16 @@ A common set of pipelines to use in customers.
 
 ## Pipelines
 
-* Dev
+* [Dev](./dev/README.md)
 * Test
 * Prod
 
 ## Demo
 
-The demo creates **two instances of Minishift** (**Non-Prod** and **Prod** clusters).
+* The demo creates **two instances of Minishift** (**Non-Prod** and **Prod** clusters).
+* The development and test stages are created in the Non-Prod cluster.
+* The image promotion to production is done with an Skopeo Jenkins slave image.
 
-The development and test stages are created in the Non-Prod cluster.
+To create the clusters execute the following command:
 
-The image promotion to production is done with a Skopeo Jenkins slave image.
+    sh demo/setup.sh

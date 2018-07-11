@@ -62,9 +62,9 @@ pipeline {
             steps {
                 script {
                     if (env.GIT_SECRET && env.GIT_SECRET != "" && env.GIT_SECRET != "none") 
-                        git branch: env.GIT_BRANCH, url: env.GIT_REPO, credentialsId: env.GIT_SECRET
+                        git(branch: env.GIT_BRANCH, url: env.GIT_REPO, credentialsId: "${openshift.project()}-${env.GIT_SECRET}");
                     else
-                        git branch: env.GIT_BRANCH, url: env.GIT_REPO
+                        git(branch: env.GIT_BRANCH, url: env.GIT_REPO);
                 }
             }
         }

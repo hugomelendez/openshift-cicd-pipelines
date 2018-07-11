@@ -4,10 +4,8 @@ minishift profile set non-prod
 
 minishift start
 
-NON_PROD_CLUSTER_URL="https://$(minishift ip):8443"
-
 # Logs in as admin to create projects
-oc login $NON_PROD_CLUSTER_URL -u admin -p admin
+oc login "https://$(minishift ip):8443" -u admin -p admin
 
 # Creates projects for development (n teams, n projects)
 oc new-project dev1
@@ -55,10 +53,10 @@ oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:test:j
 oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:prod:jenkins
 
 # Project memberships
-oc adm policy add-role-to-user edit developer1 -n dev1
-oc adm policy add-role-to-user edit developer2 -n dev1
-oc adm policy add-role-to-user edit developer3 -n dev2
-oc adm policy add-role-to-user edit developer4 -n dev2
+oc adm policy add-role-to-user admin developer1 -n dev1
+oc adm policy add-role-to-user admin developer2 -n dev1
+oc adm policy add-role-to-user admin developer3 -n dev2
+oc adm policy add-role-to-user admin developer4 -n dev2
 oc adm policy add-role-to-group admin administrators -n dev1
 oc adm policy add-role-to-group admin administrators -n dev2
 oc adm policy add-role-to-group admin administrators -n test
@@ -66,7 +64,6 @@ oc adm policy add-role-to-group admin administrators -n prod
 oc adm policy add-role-to-group edit test-approvers -n test
 oc adm policy add-role-to-group edit prod-approvers -n prod
 oc adm policy add-role-to-group view developers -n test
-oc adm policy add-role-to-group view developers -n prod
 
 oc adm policy add-role-to-user view system:serviceaccount:test:jenkins -n dev1
 oc adm policy add-role-to-user view system:serviceaccount:test:jenkins -n dev2
@@ -106,7 +103,3 @@ oc new-project prod
 # Creates an admin service account for deployments, etc
 oc create sa admin -n prod
 oc adm policy add-role-to-user admin system:serviceaccount:prod:admin -n prod
-
-PROD_CLUSTER_URL="https://$(minishift ip):8443"
-PROD_CLUSTER_SA="admin"
-PROD_CLUSTER_TOKEN="$(oc sa get-token admin)"
