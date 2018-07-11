@@ -126,7 +126,7 @@ pipeline {
                     def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT_NAME}/${env.APP_NAME}:${env.TAG}";
                     def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT_NAME}/${env.APP_NAME}:${env.TAG}";
 
-                    sh "skopeo copy --src-tls-verify false --dest-tls-verify --src-creds ${srcCreds} --dest-creds ${dstCreds} ${src} ${dst}";
+                    sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds=${srcCreds} --dest-creds=${dstCreds} ${src} ${dst}";
                 }
             }
         }
