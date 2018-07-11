@@ -61,8 +61,13 @@ pipeline {
         stage("Checkout Code") {
             steps {
                 script {
-                    if (env.GIT_SECRET && env.GIT_SECRET != "" && env.GIT_SECRET != "none") 
-                        git(branch: env.GIT_BRANCH, url: env.GIT_REPO, credentialsId: "${openshift.project()}-${env.GIT_SECRET}");
+                    if (env.GIT_SECRET && env.GIT_SECRET != "" && env.GIT_SECRET != "none") {
+                        openshift.withCluster() {
+                            openshift.withProject {
+                                git(branch: env.GIT_BRANCH, url: env.GIT_REPO, credentialsId: "${openshift.project()}-${env.GIT_SECRET}");
+                            }
+                        }
+                    }
                     else
                         git(branch: env.GIT_BRANCH, url: env.GIT_REPO);
                 }
