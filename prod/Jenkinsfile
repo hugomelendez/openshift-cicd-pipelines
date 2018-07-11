@@ -121,7 +121,12 @@ pipeline {
             }
             steps {
                 script {
-                    sh "skopeo copy -h"
+                    def srcCreds = "unused:${env.SRC_REGISTRY_TOKEN}";
+                    def dstCreds = "unused:${env.DEST_REGISTRY_TOKEN}";
+                    def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT}/${env.APP_NAME}:${env.TAG}";
+                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT}/${env.APP_NAME}:${env.TAG}";
+
+                    sh "skopeo copy --src-creds ${srcCreds} --dest-creds ${dstCreds} ${src} ${dst}";
                 }
             }
         }
@@ -153,7 +158,7 @@ pipeline {
         stage("Deploy Application") {
             steps {
                 script {
-                    openshift.withCluster(env.DST_CLUSTER, env.DST_CLUSTER_TOKEN) {
+                    openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
                         openshift.withProject(env.DST_PROJECT_NAME) {
                             // Adds a trigger for deploying the tag, this will cause an automatic rollout
                             openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.IMAGE_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
