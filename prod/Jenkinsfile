@@ -123,8 +123,8 @@ pipeline {
                 script {
                     def srcCreds = "unused:${env.SRC_REGISTRY_TOKEN}";
                     def dstCreds = "unused:${env.DEST_REGISTRY_TOKEN}";
-                    def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT}/${env.APP_NAME}:${env.TAG}";
-                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT}/${env.APP_NAME}:${env.TAG}";
+                    def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT_NAME}/${env.APP_NAME}:${env.TAG}";
+                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT_NAME}/${env.APP_NAME}:${env.TAG}";
 
                     sh "skopeo copy --src-creds ${srcCreds} --dest-creds ${dstCreds} ${src} ${dst}";
                 }
