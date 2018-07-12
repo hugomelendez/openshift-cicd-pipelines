@@ -10,6 +10,8 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
+    labels:
+      app: ${PARAM_APP_NAME}-develop-pipeline
     name: ${PARAM_APP_NAME}-develop-pipeline
   spec:
     source:
@@ -55,6 +57,8 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
+    labels:
+      app: ${PARAM_APP_NAME}-release-pipeline
     name: ${PARAM_APP_NAME}-release-pipeline
   spec:
     source:
@@ -91,8 +95,6 @@ objects:
         - name: RELEASE_COMMAND
           value: ${PARAM_RELEASE_COMMAND}
         - name: MANUAL_TAG
-          value: "true"
-        - name: APPLY_TEMPLATE_FILE
           value: "true"
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline

@@ -53,8 +53,8 @@ pipeline {
             steps {
                 script {
                     env.GIT_BRANCH = input(id: "secret",
-                                           message: "Set credentiales to deploy",
-                                           parameters: [string(defaultValue: "", name: "Branch", description: "Must be project/secret")]);
+                                           message: "Set credentials to deploy (OpenShift secret)",
+                                           parameters: [string(defaultValue: "", name: "Branch", description: "Must be an OpenShift secret")]);
                 }
             }
         }
@@ -100,9 +100,6 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            // If set creates or replace (apply) into the development prjoect the application template for later use
-                            if (env.APPLY_TEMPLATE_FILE)
-                                openshift.apply("-f", env.APP_TEMPLATE_FILE);
                             // Uses the template to create the application
                             openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP_NAME=${env.APP_NAME}"));
                         }

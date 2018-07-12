@@ -16,8 +16,10 @@ oc new-project test
 oc new-project prod
 
 # Creates the development templates
-oc create -f ../dev/dev-pipelines-template.yaml -n openshift
-oc create -f ../dev/branch-pipeline-template.yaml -n openshift
+oc create -f ../dev/dev-pipelines-template.yaml -n dev1
+oc create -f ../dev/branch-pipeline-template.yaml -n dev1
+oc create -f ../dev/dev-pipelines-template.yaml -n dev2
+oc create -f ../dev/branch-pipeline-template.yaml -n dev2
 
 # Creates the test template
 oc create -f ../test/test-pipeline-template.yaml -n test
