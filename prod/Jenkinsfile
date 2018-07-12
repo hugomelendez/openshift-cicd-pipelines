@@ -16,8 +16,74 @@ pipeline {
                 }
             }
         }
+        // If Git repository environment variable is not set, asks for it
+        stage("Set Repository") {
+            when {
+                not {
+                    expression {
+                        return env.GIT_REPO
+                    }
+                }
+            }
+            steps {
+                script {
+                    env.GIT_REPO = input(id: 'repository',
+                                         message: 'Select Git repository where the application template resides',
+                                         parameters: [string(defaultValue: '', name: 'Repository')]);
+                }
+            }
+        }
+        // If Git branch environment variable is not set, asks for it
+        stage("Set Branch") {
+            when {
+                not {
+                    expression {
+                        return env.GIT_BRANCH
+                    }
+                }         
+            }
+            steps {
+                script {
+                    env.GIT_BRANCH = input(id: 'branch',
+                                           message: 'Select Git branch',
+                                           parameters: [string(defaultValue: 'master', name: 'Branch')]);
+                }
+            }
+        }
+        // If Git credentials environment variable is not set, asks for it
+        stage("Set Credentials") {
+            when {
+                not {
+                    expression {
+                        return env.GIT_SECRET
+                    }
+                }         
+            }
+            steps {
+                script {
+                    env.GIT_BRANCH = input(id: "secret",
+                                           message: "Set Git credentials (OpenShift secret)",
+                                           parameters: [string(defaultValue: "", name: "Branch", description: "Must be an OpenShift secret")]);
+                }
+            }
+        }
+        stage("Checkout Code") {
+            steps {
+                script {
+                    if (env.GIT_SECRET && env.GIT_SECRET != "" && env.GIT_SECRET != "none") {
+                        openshift.withCluster() {
+                            openshift.withProject {
+                                git(branch: env.GIT_BRANCH, url: env.GIT_REPO, credentialsId: "${openshift.project()}-${env.GIT_SECRET}");
+                            }
+                        }
+                    }
+                    else
+                        git(branch: env.GIT_BRANCH, url: env.GIT_REPO);
+                }
+            }
+        }
         // If project environment variable is not set, asks for it
-        stage("Set Project (Src)") {
+        stage("Set Project (SRC)") {
             when {
                 not {
                     expression {
@@ -33,7 +99,7 @@ pipeline {
                 }
             }
         }
-        stage("Set Project (Dst)") {
+        stage("Set Project (DST)") {
             when {
                 not {
                     expression {
@@ -71,8 +137,8 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            // Uses the template from testing project to generate the application in test
-                            objects = openshift.process("${env.SRC_PROJECT_NAME}//${env.APP_TEMPLATE_NAME}", "-p", "PARAM_APP_NAME=${env.APP_NAME}");
+                            // Uses the template to create the application
+                            objects = openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP_NAME=${env.APP_NAME}");
 
                             openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
                                 openshift.withProject(env.DST_PROJECT_NAME) {

@@ -111,6 +111,7 @@ parameters:
 - description: The application template file (YAML) to create the application objects
   displayName: Application Template File
   name: PARAM_APP_TEMPLATE_FILE
+  required: true
 - description: The application Git repository
   displayName: Git Repository
   name: PARAM_GIT_REPO

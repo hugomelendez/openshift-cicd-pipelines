@@ -5,6 +5,17 @@ pipeline {
         disableConcurrentBuilds()
     }
     stages {
+        stage("Initialize") {
+            steps {
+                script {
+                    if (!env.APPROVAL_GROUP)
+                        env.APPROVAL_GROUP = "test-approvers"
+
+                    if (!env.IMAGE_NAME)
+                        env.IMAGE_NAME = env.APP_NAME
+                }
+            }
+        }
         // If Git repository environment variable is not set, asks for it
         stage("Set Repository") {
             when {
@@ -17,7 +28,7 @@ pipeline {
             steps {
                 script {
                     env.GIT_REPO = input(id: 'repository',
-                                         message: 'Select repository where the application template resides',
+                                         message: 'Select Git repository where the application template resides',
                                          parameters: [string(defaultValue: '', name: 'Repository')]);
                 }
             }
@@ -34,7 +45,7 @@ pipeline {
             steps {
                 script {
                     env.GIT_BRANCH = input(id: 'branch',
-                                           message: 'Select branch',
+                                           message: 'Select Git branch',
                                            parameters: [string(defaultValue: 'master', name: 'Branch')]);
                 }
             }
@@ -51,7 +62,7 @@ pipeline {
             steps {
                 script {
                     env.GIT_BRANCH = input(id: "secret",
-                                           message: "Set credentials to deploy (OpenShift secret)",
+                                           message: "Set Git credentials (OpenShift secret)",
                                            parameters: [string(defaultValue: "", name: "Branch", description: "Must be an OpenShift secret")]);
                 }
             }
@@ -68,17 +79,6 @@ pipeline {
                     }
                     else
                         git(branch: env.GIT_BRANCH, url: env.GIT_REPO);
-                }
-            }
-        }
-        stage("Initialize") {
-            steps {
-                script {
-                    if (!env.APPROVAL_GROUP)
-                        env.APPROVAL_GROUP = "test-approvers"
-
-                    if (!env.IMAGE_NAME)
-                        env.IMAGE_NAME = env.APP_NAME
                 }
             }
         }

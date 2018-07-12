@@ -7,6 +7,23 @@ pipeline {
         disableConcurrentBuilds()
     }
     stages {
+        stage("Initialize") {
+            steps {
+                script {
+                    // If tag environment variable is not set, uses latest
+                    if (!env.TAG)
+                        env.TAG = "latest"
+                    
+                    // Unless set, automatically tags the image with environment variable tag
+                    if (!env.MANUAL_TAG)
+                        env.MANUAL_TAG = "false"
+
+                    // If image name is not set, image name will be app name
+                    if (!env.IMAGE_NAME) 
+                        env.IMAGE_NAME = env.APP_NAME;    
+                }
+            }
+        }
         // If Git repository environment variable is not set, asks for it
         stage("Set Repository") {
             when {
@@ -70,23 +87,6 @@ pipeline {
                     }
                     else
                         git(branch: env.GIT_BRANCH, url: env.GIT_REPO);
-                }
-            }
-        }
-        stage("Initialize") {
-            steps {
-                script {
-                    // If tag environment variable is not set, uses latest
-                    if (!env.TAG)
-                        env.TAG = "latest"
-                    
-                    // Unless set, automatically tags the image with environment variable tag (could be latest)
-                    if (!env.MANUAL_TAG)
-                        env.MANUAL_TAG = "false"
-
-                    // If image name is not set, image name will be app name
-                    if (!env.IMAGE_NAME) 
-                        env.IMAGE_NAME = env.APP_NAME;    
                 }
             }
         }

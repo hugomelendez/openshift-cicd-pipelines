@@ -27,8 +27,8 @@ objects:
           value: ${PARAM_APP_NAME}
         - name: APP_IMAGE
           value: ${PARAM_APP_NAME}
-        - name: APP_TEMPLATE_NAME
-          value: ${PARAM_APP_TEMPLATE_NAME}
+        - name: APP_TEMPLATE_FILE
+          value: ${PARAM_APP_TEMPLATE_FILE}
         - name: SRC_PROJECT_NAME
           value: ${PARAM_SRC_PROJECT_NAME}
         - name: SRC_REGISTRY_URL
@@ -45,6 +45,10 @@ objects:
           value: ${PARAM_DST_CLUSTER_URL}
         - name: DST_CLUSTER_TOKEN
           value: ${PARAM_DST_CLUSTER_TOKEN}
+        - name: GIT_REPO
+          value: ${PARAM_GIT_REPO}
+        - name: GIT_SECRET
+          value: ${PARAM_GIT_SECRET}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
@@ -57,9 +61,17 @@ parameters:
   displayName: Application Name
   name: PARAM_APP_NAME
   required: true
-- description: The template to create the application objects (must exists in source project)
-  displayName: Template Name
-  name: PARAM_APP_TEMPLATE_NAME
+- description: The application template file (YAML) to create the application objects
+  displayName: Application Template File
+  name: PARAM_APP_TEMPLATE_FILE
+  required: true
+- description: The application Git repository
+  displayName: Git Repository
+  name: PARAM_GIT_REPO
+  required: true
+- description: The Git credentials (must be the name of an OpenShift Secret or "none" if credentials are not needed)
+  displayName: Git Credentials
+  name: PARAM_GIT_SECRET
   required: true
 - description: The source project for image and objects promotion
   displayName: Source Project
