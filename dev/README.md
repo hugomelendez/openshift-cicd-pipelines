@@ -2,10 +2,16 @@
 
 Development pipelines to use based on the Gitflow model.
 
-The pipelines are:
+## Pipeline to deploy from develop branch
 
-* Deploy from develop branch
-* Deploy and generate a release from a release branch
+![dev-pipeline-develop](../demo/img/dev-pipeline-develop.png)
 
-![Dev Pipeline](../demo/img/dev.png)
+## Pipeline to deploy a feature/bug branch 
+
+![dev-pipeline-feature](../demo/img/dev-pipeline-feature.png)
+
+## Pipeline to generate a release 
+
+![dev-pipeline-release](../demo/img/dev-pipeline-release.png)
+
 
