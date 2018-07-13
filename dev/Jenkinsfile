@@ -36,8 +36,8 @@ pipeline {
             steps {
                 script {
                     env.GIT_REPO = input(id: 'repository',
-                                         message: 'Select repository to deploy',
-                                         parameters: [string(defaultValue: '', name: 'Repository')]);
+                                         message: 'Select repository',
+                                         parameters: [string(name: 'Repository')]);
                 }
             }
         }
@@ -53,8 +53,8 @@ pipeline {
             steps {
                 script {
                     env.GIT_BRANCH = input(id: 'branch',
-                                           message: 'Select branch to deploy',
-                                           parameters: [string(defaultValue: 'master', name: 'Branch')]);
+                                           message: 'Select branch',
+                                           parameters: [string(name: 'Branch')]);
                 }
             }
         }
@@ -70,23 +70,27 @@ pipeline {
             steps {
                 script {
                     env.GIT_BRANCH = input(id: "secret",
-                                           message: "Set credentials to deploy (OpenShift secret)",
-                                           parameters: [string(defaultValue: "", name: "Branch", description: "Must be an OpenShift secret")]);
+                                           message: "Set credentials",
+                                           parameters: [string(name: "Secret")]);
                 }
             }
         }
         stage("Checkout Code") {
             steps {
                 script {
-                    if (env.GIT_SECRET && env.GIT_SECRET != "" && env.GIT_SECRET != "none") {
-                        openshift.withCluster() {
-                            openshift.withProject {
-                                git(branch: env.GIT_BRANCH, url: env.GIT_REPO, credentialsId: "${openshift.project()}-${env.GIT_SECRET}");
-                            }
+                    openshift.withCluster() {
+                        openshift.withProject {
+                            def gitInfo = [:]
+
+                            gitInfo['url'] = env.GIT_REPO
+                            gitInfo['branch'] = env.GIT_BRANCH
+
+                            if (env.GIT_SECRET && !env.GIT_SECRET.equals("none"))
+                                gitInfo['credentialsId'] = "${openshift.project()}-${env.GIT_SECRET}"
+
+                            git(gitInfo);
                         }
                     }
-                    else
-                        git(branch: env.GIT_BRANCH, url: env.GIT_REPO);
                 }
             }
         }
