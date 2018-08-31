@@ -180,8 +180,10 @@ pipeline {
         }
         stage("Set Promote Tag") {
             when {
-                expression {
-                    return env.PROMOTE_TAG
+                not {
+                    expression {
+                        return env.PROMOTE_TAG
+                    }
                 }
             }
             steps {
