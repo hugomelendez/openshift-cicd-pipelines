@@ -1,1 +1,1 @@
-# comafi-openshift-pipelines
+# openshift-pipelines

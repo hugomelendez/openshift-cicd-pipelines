@@ -1,0 +1,116 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: prod-pipeline-template
+  annotations:
+    openshift.io/display-name: Application Pipeline (Prod)
+    iconClass: fa fa-code
+    description: Template to generate a production pipeline
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: ${PARAM_APP_NAME}
+    name: ${PARAM_APP_NAME}-pipeline
+  spec:
+    source:
+      type: Git
+      git:
+        uri: https://github.com/redhatcsargentina/openshift-pipelines.git
+        ref: master
+      contextDir: environments/prod
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+        - name: APP_NAME
+          value: ${PARAM_APP_NAME}
+        - name: APP_IMAGE
+          value: ${PARAM_APP_NAME}
+        - name: APP_TEMPLATE_FILE
+          value: ${PARAM_APP_TEMPLATE_FILE}
+        - name: SRC_PROJECT_NAME
+          value: ${PARAM_SRC_PROJECT_NAME}
+        - name: SRC_REGISTRY_URL
+          value: ${PARAM_SRC_REGISTRY_URL}
+        - name: SRC_REGISTRY_TOKEN
+          value: ${PARAM_SRC_REGISTRY_TOKEN}
+        - name: DST_PROJECT_NAME
+          value: ${PARAM_DST_PROJECT_NAME}
+        - name: DST_REGISTRY_URL
+          value: ${PARAM_DST_REGISTRY_URL}
+        - name: DST_REGISTRY_TOKEN
+          value: ${PARAM_DST_REGISTRY_TOKEN}
+        - name: DST_CLUSTER_URL
+          value: ${PARAM_DST_CLUSTER_URL}
+        - name: DST_CLUSTER_TOKEN
+          value: ${PARAM_DST_CLUSTER_TOKEN}
+        - name: GIT_REPO
+          value: ${PARAM_GIT_REPO}
+        - name: GIT_SECRET
+          value: ${PARAM_GIT_SECRET}
+        - name: APPROVAL_GROUP
+          value: prod-approvers
+        jenkinsfilePath: Jenkinsfile
+      type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${PARAM_WEBHOOK_SECRET}
+        type: Generic
+parameters:
+- description: The name for the application to deploy (must exists in source project)
+  displayName: Application Name
+  name: PARAM_APP_NAME
+  required: true
+- description: The application template file (YAML) to create the application objects
+  displayName: Application Template File
+  name: PARAM_APP_TEMPLATE_FILE
+  required: true
+- description: The application Git repository
+  displayName: Git Repository
+  name: PARAM_GIT_REPO
+  required: true
+- description: The Git credentials (must be the name of an OpenShift Secret or "none" if credentials are not needed)
+  displayName: Git Credentials
+  name: PARAM_GIT_SECRET
+  required: true
+- description: The source project for image and objects promotion
+  displayName: Source Project
+  name: PARAM_SRC_PROJECT_NAME
+  required: true
+  value: test
+- description: The source registry URL
+  displayName: Source Registry URL
+  name: PARAM_SRC_REGISTRY_URL
+  required: true
+- description: The source registry token
+  displayName: Source Registry Token
+  name: PARAM_SRC_REGISTRY_TOKEN
+  required: true
+- description: The destination project for image and objects promotion
+  displayName: Destination Project
+  name: PARAM_DST_PROJECT_NAME
+  required: true
+  value: prod
+- description: The destination registry URL
+  displayName: Destination Registry URL
+  name: PARAM_DST_REGISTRY_URL
+  required: true
+- description: The destination registry token
+  displayName: Destination Registry Token
+  name: PARAM_DST_REGISTRY_TOKEN
+  required: true
+- description: The destination cluster URL
+  displayName: Destination Cluster URL
+  name: PARAM_DST_CLUSTER_URL
+  required: true
+- description: The destination cluster token
+  displayName: Destination Cluster Token
+  name: PARAM_DST_CLUSTER_TOKEN
+  required: true
+- description: A secret string used to configure the webhook
+  displayName: Webhook Secret
+  name: PARAM_WEBHOOK_SECRET
+  generate: expression 
+  from: "[a-zA-Z0-9]{40}"
