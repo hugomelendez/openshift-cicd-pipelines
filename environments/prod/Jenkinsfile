@@ -178,6 +178,21 @@ pipeline {
                 }
             }
         }
+        stage("Set Promote Tag") {
+            when {
+                expression {
+                    return env.PROMOTE_TAG
+                }
+            }
+            steps {
+                script {
+                    env.TAG = input(id: 'promoteTag',
+                                    message: 'Value for the tag to promote',
+                                    parameters: [string(defaultValue: '', name: 'Tag')]);
+                }
+                
+            }
+        } 
         stage("Promote Tag") {
             agent {
                 label "skopeo"
@@ -190,7 +205,7 @@ pipeline {
 
                     // Paths 
                     def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT_NAME}/${env.APP_NAME}:${env.TAG}";
-                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT_NAME}/${env.APP_NAME}:${env.TAG}";
+                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT_NAME}/${env.APP_NAME}:${env.PROMOTE_TAG}";
 
                     // Executes skopeo command
                     sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds=${srcCreds} --dest-creds=${dstCreds} ${src} ${dst}";
@@ -228,7 +243,7 @@ pipeline {
                     openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
                         openshift.withProject(env.DST_PROJECT_NAME) {
                             // Adds a trigger for deploying the tag, this will cause an automatic rollout
-                            openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.IMAGE_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
+                            openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.IMAGE_NAME}:${env.PROMOTE_TAG}", "-c ${env.APP_NAME}");
                         } 
                     }
                 }
