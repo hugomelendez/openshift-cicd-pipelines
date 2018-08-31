@@ -188,9 +188,9 @@ pipeline {
             }
             steps {
                 script {
-                    env.TAG = input(id: 'promoteTag',
-                                    message: 'Value for the tag to promote',
-                                    parameters: [string(defaultValue: '', name: 'Tag')]);
+                    env.PROMOTE_TAG = input(id: 'promoteTag',
+                                            message: 'Value for the tag to promote',
+                                            parameters: [string(defaultValue: '', name: 'Tag')]);
                 }
                 
             }
