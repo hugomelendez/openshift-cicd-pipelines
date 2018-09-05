@@ -44,7 +44,9 @@ The following diagram shows the pipelines used in development:
 
 ![openshift-pipelines-gitflow](./docs/openshift-pipelines-gitflow.png)
 
-The following image shows this pipelines created in a development project for a hello world application:
+The following images show these pipelines created in a development project for a hello world application:
 
-![openshift-development-pipelines](./docs/openshift-development-pipelines.png)
+![hello-develop-pipeline](./docs/hello-develop-pipeline.png)
+![hello-release-pipeline](./docs/hello-release-pipeline.png)
+![hello-feature-1-pipeline](./docs/hello-feature-1-pipeline.png)
 
