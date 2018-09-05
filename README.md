@@ -54,8 +54,14 @@ The following images show these pipelines created in a development project for a
 
 ### TEST
 
-TBD
+#### Templates
+
+In testing there is a template to create the pipelines which take the images generated in development and deploy them into testing. This pipelines are intended to be used by operators/developers.
+
+## Pipelines
+
+![hello-test-pipeline](./docs/hello-test-pipeline.png)
 
 ### PROD
 
-TBD
+![hello-prod-pipeline](./docs/hello-prod-pipeline.png)
