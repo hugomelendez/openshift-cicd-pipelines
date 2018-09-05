@@ -68,13 +68,19 @@ The following images show these pipelines created in a development project for a
 
 In testing there is a template to create the pipelines which take the images generated in development and deploy them into testing. This pipelines are intended to be used by operators/developers.
 
-## Pipelines
+#### Pipelines
 
 This pipeline deploys the release candidate, after test approves the release, a new general availability tag is created, ready to be deployed in production.
 
 ![hello-test-pipeline](./docs/hello-test-pipeline.png)
 
 ### PROD
+
+#### Templates
+
+Similar to testing.
+
+#### Pipelines
 
 This pipeline copies the image generated in the non-prod cluster to the prod cluster, then it performs the deployment (among other things).
 
