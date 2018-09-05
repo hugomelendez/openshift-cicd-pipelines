@@ -16,7 +16,7 @@ This is an easy way to show the OpenShift (containers) capabilities, in the old 
 
 The following diagram shows the pipelines used in development:
 
-![openshift-pipelines-gitflow](./docs/openshift-pipeline-gitflow.png)
+![openshift-pipelines-gitflow](./docs/openshift-pipelines-gitflow.png)
 
 ## Pipelines
 
