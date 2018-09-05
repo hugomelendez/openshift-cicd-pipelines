@@ -1,1 +1,23 @@
 # openshift-pipelines
+
+## Introduction
+
+This demonstration shows a set of basic CI/CD pipelines. It is intended to be used by different groups of developers and operators (DevOps). 
+
+A set of templates exists to expose the self-service capability of OpenShift, meaning that a developer can create its own pipelines without having to create a ticket that a given operator would be attending.
+
+There is a template for each environment. 
+
+For example, the template for development creates a pipeline for basic continous integration (CI) and a pipeline which generates a release candidate (RC) to be deployed in testing.
+
+In development stage, we encourage the use of Gitflow metodology, that being said, the CI pipeline will checkout the code from develop branch, the release pipeline will checkout an specific release branch and there is an extra template, which creates a feature pipeline, allowing developers to deploy an specific branch into the OpenShift development project.
+
+This is an easy way to show the OpenShift (containers) capabilities, in the old VM model, having an application deployed twice (or more) at the same time, required more virtual machines. Nowadays with containers it is easy to accomplish this with less effort and hardware.
+
+The following diagram shows the pipelines used in development:
+
+![openshift-pipelines-gitflow](./docs/openshift-pipeline-gitflow.png)
+
+## Pipelines
+
+### DEV
