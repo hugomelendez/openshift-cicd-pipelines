@@ -14,6 +14,16 @@ In development stage, we encourage the use of Gitflow metodology, that being sai
 
 This is an easy way to show the OpenShift (containers) capabilities, in the old VM model, having an application deployed twice (or more) at the same time, required more virtual machines. Nowadays with containers it is easy to accomplish this with less effort and hardware.
 
+## Demo
+
+The repository contains the **setup.sh** script used to generate the two clusters (a non-prod and a prod cluster), both cluster are MiniShift clusters.
+
+
+### Requirements
+
+* MiniShift
+* oc CLI command
+
 ## Environments
 
 ### DEV
@@ -60,8 +70,12 @@ In testing there is a template to create the pipelines which take the images gen
 
 ## Pipelines
 
+This pipeline deploys the release candidate, after test approves the release, a new general availability tag is created, ready to be deployed in production.
+
 ![hello-test-pipeline](./docs/hello-test-pipeline.png)
 
 ### PROD
+
+This pipeline copies the image generated in the non-prod cluster to the prod cluster, then it performs the deployment (among other things).
 
 ![hello-prod-pipeline](./docs/hello-prod-pipeline.png)
