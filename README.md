@@ -14,10 +14,37 @@ In development stage, we encourage the use of Gitflow metodology, that being sai
 
 This is an easy way to show the OpenShift (containers) capabilities, in the old VM model, having an application deployed twice (or more) at the same time, required more virtual machines. Nowadays with containers it is easy to accomplish this with less effort and hardware.
 
+## Environments
+
+### DEV
+
+### Templates
+
+The development templates are:
+
+* Application Pipelines (Dev) - dev-pipelines-template 
+
+Creates the develop and release pipelines for a given application.
+
+* Application Pipeline (Branch) - branch-pipeline-template 
+
+Creates a pipeline to deploy a given branch, a feature for example. This template can be used multiple times because it is common to develop multiple features at the same time, so multiple pipelines and deployments (pods) can be used simultaneously.
+
+They can be seen in the OpenShift catalog ready to used by developers:
+
+![openshift-development-templates](./docs/openshift-development-templates.png)
+
+The development pipelines (crated by templates shown before) per application are:
+
+* Deployment from develop branch (CI)
+* Deployment from a feature branch
+* Deployment and release generation from a release branch (RC)
+
 The following diagram shows the pipelines used in development:
 
 ![openshift-pipelines-gitflow](./docs/openshift-pipelines-gitflow.png)
 
-## Pipelines
+The following image shows this pipelines created in a development project for a hello world application:
 
-### DEV
+![openshift-development-pipelines](./docs/openshift-development-pipelines.png)
+
