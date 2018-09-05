@@ -18,7 +18,7 @@ This is an easy way to show the OpenShift (containers) capabilities, in the old 
 
 ### DEV
 
-### Templates
+#### Templates
 
 The development templates are:
 
