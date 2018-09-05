@@ -34,6 +34,8 @@ They can be seen in the OpenShift catalog ready to used by developers:
 
 ![openshift-development-templates](./docs/openshift-development-templates.png)
 
+#### Pipelines
+
 The development pipelines (crated by templates shown before) per application are:
 
 * Deployment from develop branch (CI)
@@ -50,3 +52,10 @@ The following images show these pipelines created in a development project for a
 ![hello-release-pipeline](./docs/hello-release-pipeline.png)
 ![hello-feature-1-pipeline](./docs/hello-feature-1-pipeline.png)
 
+### TEST
+
+TBD
+
+### PROD
+
+TBD
