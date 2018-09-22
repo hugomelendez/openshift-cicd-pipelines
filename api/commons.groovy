@@ -54,3 +54,5 @@ def verifyDeployment(app) {
         return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
     }
 }
+
+return this

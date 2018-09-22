@@ -48,7 +48,7 @@ objects:
         - name: RELEASE_COMMAND
           value: ${PARAM_RELEASE_COMMAND}
         - name: COMMONS_API_URL
-          value: 
+          value: http://gogs-gogs.192.168.64.59.nip.io/leandroberetta/openshift-pipelines/raw/master/api/commons.groovy
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
