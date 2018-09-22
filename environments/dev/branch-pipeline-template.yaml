@@ -37,8 +37,8 @@ objects:
           value: ${PARAM_BASE_IMAGE}
         - name: ARTIFACTS_DIR
           value: ${PARAM_ARTIFACTS_DIR}
-        - name: JENKINS_SLAVE_IMAGE
-          value: ${PARAM_JENKINS_SLAVE_IMAGE}
+        - name: JENKINS_AGENT
+          value: ${PARAM_JENKINS_AGENT}
         - name: COMPILE_COMMAND
           value: ${PARAM_COMPILE_COMMAND}
         - name: TEST_COMMAND
@@ -47,6 +47,8 @@ objects:
           value: ${PARAM_CODE_ANALYSIS_COMMAND}
         - name: RELEASE_COMMAND
           value: ${PARAM_RELEASE_COMMAND}
+        - name: COMMONS_API_URL
+          value: 
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
@@ -104,9 +106,9 @@ parameters:
   name: PARAM_RELEASE_COMMAND
   required: true
   value: none
-- description: The Jenkins slave image that will be used to compile the application (maven, nodejs or custom)
-  displayName: Jenkins Slave Image
-  name: PARAM_JENKINS_SLAVE_IMAGE
+- description: The Jenkins agent image that will be used to compile the application (maven, nodejs or custom)
+  displayName: Jenkins Agent Image
+  name: PARAM_JENKINS_AGENT
   required: true
   value: maven
 - description: A secret string used to configure the webhook

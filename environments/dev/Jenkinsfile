@@ -1,6 +1,8 @@
+def commons = load(fileLoader.fromGit(env.COMMONS_API_URL))
+
 pipeline {
     agent {
-        label env.JENKINS_SLAVE_IMAGE
+        label env.JENKINS_AGENT
     }
     options {
         skipDefaultCheckout()
@@ -21,57 +23,7 @@ pipeline {
                     // If image name is not set, image name will be app name
                     if (!env.IMAGE_NAME) 
                         env.IMAGE_NAME = env.APP_NAME;    
-                }
-            }
-        }
-        // If Git repository environment variable is not set, asks for it
-        stage("Set Repository") {
-            when {
-                not {
-                    expression {
-                        return env.GIT_REPO
-                    }
-                }
-            }
-            steps {
-                script {
-                    env.GIT_REPO = input(id: 'repository',
-                                         message: 'Select repository',
-                                         parameters: [string(name: 'Repository')]);
-                }
-            }
-        }
-        // If Git branch environment variable is not set, asks for it
-        stage("Set Branch") {
-            when {
-                not {
-                    expression {
-                        return env.GIT_BRANCH
-                    }
-                }         
-            }
-            steps {
-                script {
-                    env.GIT_BRANCH = input(id: 'branch',
-                                           message: 'Select branch',
-                                           parameters: [string(name: 'Branch')]);
-                }
-            }
-        }
-        // If Git credentials environment variable is not set, asks for it
-        stage("Set Credentials") {
-            when {
-                not {
-                    expression {
-                        return env.GIT_SECRET
-                    }
-                }         
-            }
-            steps {
-                script {
-                    env.GIT_BRANCH = input(id: "secret",
-                                           message: "Set credentials",
-                                           parameters: [string(name: "Secret")]);
+   
                 }
             }
         }
@@ -80,15 +32,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject {
-                            def gitInfo = [:]
-
-                            gitInfo['url'] = env.GIT_REPO
-                            gitInfo['branch'] = env.GIT_BRANCH
-
-                            if (env.GIT_SECRET && !env.GIT_SECRET.equals("none"))
-                                gitInfo['credentialsId'] = "${openshift.project()}-${env.GIT_SECRET}"
-
-                            git(gitInfo);
+                            gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
                         }
                     }
                 }
@@ -164,11 +108,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            // If artifacts dir is set, binary s2i build is used
-                            if (env.ARTIFACTS_DIR)
-                                openshift.selector("bc", env.APP_NAME).startBuild("--from-dir=${env.ARTIFACTS_DIR}", "--wait=true");
-                            else 
-                                openshift.selector("bc", env.APP_NAME).startBuild("--wait=true");
+                            buildImage(env.APP_NAME, env.ARTIFACTS_DIR)
                         }
                     }
                 }
@@ -213,8 +153,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            // Adds a trigger for deploying the tag, this will cause an automatic rollout
-                            openshift.set("triggers", "dc/${env.APP_NAME}", "--from-image=${env.IMAGE_NAME}:${env.TAG}", "-c ${env.APP_NAME}");
+                            deployApplication(env.APP_NAME, env.TAG)
                         } 
                     }
                 }
