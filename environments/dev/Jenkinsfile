@@ -198,7 +198,7 @@ def deployApplication(app, tag) {
         updateApplication(app, tag)
     }   
 
-    verifyDeployment(env.APP)
+    verifyDeployment(app)
 }
 
 def updateApplication(app, tag) {
