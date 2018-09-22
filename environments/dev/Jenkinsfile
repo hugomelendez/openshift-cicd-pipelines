@@ -1,3 +1,5 @@
+echo env.COMMONS_API_URL
+
 def commons = load(fileLoader.fromGit(env.COMMONS_API_URL))
 
 pipeline {
