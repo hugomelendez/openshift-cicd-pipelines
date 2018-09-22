@@ -165,7 +165,7 @@ pipeline {
 }
 
 def gitCheckout(repo, branch, secret) {
-    /*
+    
     def gitInfo = [:]
 
     gitInfo['url'] = repo
@@ -175,18 +175,18 @@ def gitCheckout(repo, branch, secret) {
         gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
 
     git(gitInfo)
-    */
+    
 }
 
-def buildImage(app, artifactsDir) {
+def buildImage(app, artifactsDir) {
 
     // If artifacts dir is set, binary s2i build is used
-    /*
+    
     if (artifactsDir)
         openshift.selector("bc", app).startBuild("--from-dir=${artifactsDir}", "--wait=true")
     else 
         openshift.selector("bc", app).startBuild("--wait=true")
-        */
+        
 }
 
 def deployApplication(app, tag) {
