@@ -190,6 +190,7 @@ def buildImage(app, artifactsDir) {
 }
 
 def deployApplication(app, tag) {
+    openshift.verbose()
     if (!openshift.selector("dc", app).exists()) {
         // The creation starts a deployment
         createApplication(app, tag)                 
