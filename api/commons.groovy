@@ -59,4 +59,34 @@ def verifyDeployment(app) {
     }
 }
 
+def buildSelectVersionInput(app) {
+    def is = openshift.selector("is", app).object();
+    def tags = "";
+    
+    for (version in is.status.tags)
+        tags = version.tag + "\n" + tags; 
+    
+    env.TAG = input(message: "Select version",
+                    parameters: [choice(choices: tags, description: 'Select a tag to deploy', name: 'Versions')]);
+}
+
+def resolveApproval(approvalGroups) {
+    def submitter = input message: 'Confirm deployment', submitterParameter: 'submitter';
+    def user = submitter.substring(0, submitter.lastIndexOf("-"));
+    def canApprove = false;
+    def groups = openshift.selector("groups").objects();
+
+    for (g in groups) {
+        if (g.metadata.name.equals(approvalGroups) && g.users.contains(user)) {
+            canApprove = true;
+            echo "User ${user} from group ${g.metadata.name} approved the deployment"
+        } 
+    }
+
+    if (canApprove == false)
+        error "User ${user} is not allowed to approve the deployment"
+
+    return canApprove
+}
+
 return this
