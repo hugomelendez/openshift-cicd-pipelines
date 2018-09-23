@@ -1,4 +1,5 @@
-def gitCheckout(repo, branch, secret) {
+def gitCheckout(repo, branch, secret) {
+    
     def gitInfo = [:]
 
     gitInfo['url'] = repo
@@ -7,18 +8,23 @@ def gitCheckout(repo, branch, secret) {
     if (env.GIT_SECRET && !secret.equals("none"))
         gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
 
-    git(gitInfo);
+    git(gitInfo)
+    
 }
 
-def buildImage(app, artifactsDir) {
+def buildImage(app, artifactsDir) {
+
     // If artifacts dir is set, binary s2i build is used
+    
     if (artifactsDir)
-        openshift.selector("bc", app).startBuild("--from-dir=${artifactsDir}", "--wait=true");
+        openshift.selector("bc", app).startBuild("--from-dir=${artifactsDir}", "--wait=true")
     else 
-        openshift.selector("bc", app).startBuild("--wait=true");
+        openshift.selector("bc", app).startBuild("--wait=true")
+        
 }
 
 def deployApplication(app, tag) {
+    openshift.verbose()
     if (!openshift.selector("dc", app).exists()) {
         // The creation starts a deployment
         createApplication(app, tag)                 
@@ -26,7 +32,7 @@ def deployApplication(app, tag) {
         updateApplication(app, tag)
     }   
 
-    verifyDeployment(env.APP)
+    //verifyDeployment(app)
 }
 
 def updateApplication(app, tag) {
