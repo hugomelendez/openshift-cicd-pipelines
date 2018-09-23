@@ -1,5 +1,4 @@
 def gitCheckout(repo, branch, secret) {
-    
     def gitInfo = [:]
 
     gitInfo['url'] = repo
