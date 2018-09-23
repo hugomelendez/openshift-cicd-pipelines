@@ -24,7 +24,7 @@ pipeline {
                     if (!env.IMAGE_NAME) 
                         env.IMAGE_NAME = env.APP_NAME;    
 
-                    sh "wget http://gogs-gogs.192.168.64.59.nip.io/leandroberetta/openshift-pipelines/raw/master/api/commons.groovy"
+                    sh "wget ${env.API_COMMONS_URL}"
                     commons = load("commons.groovy")
                 }
             }
@@ -34,7 +34,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject {
-                            gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
                         }
                     }
                 }
@@ -110,7 +110,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            buildImage(env.APP_NAME, env.ARTIFACTS_DIR)
+                            commons.buildImage(env.APP_NAME, env.ARTIFACTS_DIR)
                         }
                     }
                 }
@@ -155,7 +155,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            deployApplication(env.APP_NAME, env.TAG)
+                            commons.deployApplication(env.APP_NAME, env.TAG)
                         } 
                     }
                 }
