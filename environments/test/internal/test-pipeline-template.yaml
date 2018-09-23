@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: test-pipeline-template
   annotations:
-    openshift.io/display-name: Application Pipeline (Test - Internal)
+    openshift.io/display-name: Application Pipeline (Test)
     iconClass: fa fa-code
     description: Template to generate a testing pipeline for an application.
 objects:
@@ -11,8 +11,8 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      app: ${PARAM_APP_NAME}
-    name: ${PARAM_APP_NAME}-pipeline
+      app: ${PARAM_APP}
+    name: ${PARAM_APP}-pipeline
   spec:
     source:
       type: Git

@@ -79,7 +79,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject("${env.SRC_PROJECT}") {
                             // Generates a list of tags to deploy
-                            commons.buildSelectVersionInput(env.APP)
+                            commons.selectVersionInput(env.APP)
                         }
                     }
                 }
