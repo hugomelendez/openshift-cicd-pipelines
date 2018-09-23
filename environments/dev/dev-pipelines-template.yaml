@@ -11,7 +11,7 @@ objects:
   kind: BuildConfig
   metadata:
     annotations:
-        pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP}-develop-pipeline", "namespace": "", "kind": "DeploymentConfig"}]'
+        pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP}-develop", "namespace": "", "kind": "DeploymentConfig"}]'
     labels:
       app: ${PARAM_APP}
     name: ${PARAM_APP}-develop-pipeline
@@ -21,7 +21,7 @@ objects:
       sourceSecret:
         name: github
       git:
-        uri: https://github.com/redhatcsargentina/openshift-pipelines.git
+        uri: http://gogs-gogs.192.168.64.59.nip.io/leandroberetta/openshift-pipelines.git
         ref: master
       contextDir: environments/dev
     strategy:
@@ -51,6 +51,8 @@ objects:
           value: ${PARAM_CODE_ANALYSIS_COMMAND}
         - name: RELEASE_COMMAND
           value: ${PARAM_RELEASE_COMMAND}
+        - name: COMMONS_API_URL
+          value: http://gogs-gogs.192.168.64.59.nip.io/leandroberetta/openshift-pipelines/raw/master/api/commons.groovy
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
@@ -62,7 +64,7 @@ objects:
   kind: BuildConfig
   metadata:
     annotations:
-        pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP}-release-pipeline", "namespace": "", "kind": "DeploymentConfig"}]'
+        pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP}-release", "namespace": "", "kind": "DeploymentConfig"}]'
     labels:
       app: ${PARAM_APP}
     name: ${PARAM_APP}-release-pipeline
@@ -70,7 +72,7 @@ objects:
     source:
       type: Git
       git:
-        uri: https://github.com/redhatcsargentina/openshift-pipelines.git
+        uri: http://gogs-gogs.192.168.64.59.nip.io/leandroberetta/openshift-pipelines.git
         ref: master
       contextDir: environments/dev
     strategy:
@@ -102,6 +104,8 @@ objects:
           value: ${PARAM_RELEASE_COMMAND}
         - name: MANUAL_TAG
           value: "true"
+        - name: COMMONS_API_URL
+          value: http://gogs-gogs.192.168.64.59.nip.io/leandroberetta/openshift-pipelines/raw/master/api/commons.groovy
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:

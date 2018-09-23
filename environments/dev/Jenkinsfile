@@ -35,6 +35,23 @@ pipeline {
                 }
             }
         }
+        // If Git branch environment variable is not set, asks for it
+        stage("Set Branch") {
+            when {
+                not {
+                    expression {
+                        return env.GIT_BRANCH
+                    }
+                }         
+            }
+            steps {
+                script {
+                    env.GIT_BRANCH = input(id: 'branch',
+                                           message: 'Select branch',
+                                           parameters: [string(name: 'Branch')]);
+                }
+            }
+        }
         stage("Checkout Code") {
             steps {
                 script {
