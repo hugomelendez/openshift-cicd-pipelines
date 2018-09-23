@@ -2,13 +2,16 @@ def gitCheckout(repo, branch, secret) {
     def gitInfo = [:]
 
     gitInfo['url'] = repo
-    gitInfo['branch'] = branch
 
     if (env.GIT_SECRET && !secret.equals("none"))
         gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
 
-    git(gitInfo)
-    
+    checkout([$class: 'GitSCM', 
+             branches: [[name: branch]], 
+             doGenerateSubmoduleConfigurations: false, 
+             extensions: [], 
+             submoduleCfg: [], 
+             userRemoteConfigs: [gitInfo]])
 }
 
 def buildImage(app, artifactsDir) {
