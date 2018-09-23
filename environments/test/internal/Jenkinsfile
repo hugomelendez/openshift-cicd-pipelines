@@ -19,7 +19,7 @@ pipeline {
                     if (!env.IMAGE_NAME)
                         env.IMAGE_NAME = env.APP_NAME
 
-                    sh "wget ${env.COMMONS_API_URL}"
+                    sh "curl ${env.COMMONS_API_URL} > commons.groovy"
                     commons = load("commons.groovy")
                 }
             }
