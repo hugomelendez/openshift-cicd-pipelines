@@ -1,4 +1,4 @@
-def commons = load(fileLoader.fromGit("api/commons.groovy", env.COMMONS_API_URL))
+def commons
 
 pipeline {
     agent {
@@ -23,7 +23,8 @@ pipeline {
                     // If image name is not set, image name will be app name
                     if (!env.IMAGE_NAME) 
                         env.IMAGE_NAME = env.APP_NAME;    
-   
+
+                    commons = load(fileLoader.fromGit("api/commons.groovy", env.COMMONS_API_URL))
                 }
             }
         }
