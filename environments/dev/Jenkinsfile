@@ -24,7 +24,8 @@ pipeline {
                     if (!env.IMAGE_NAME) 
                         env.IMAGE_NAME = env.APP_NAME;    
 
-                    commons = load(fileLoader.fromGit("api/commons.groovy", env.COMMONS_API_URL))
+                    sh "wget http://gogs-gogs.192.168.64.59.nip.io/leandroberetta/openshift-pipelines/raw/master/api/commons.groovy"
+                    commons = load("commons.groovy")
                 }
             }
         }
