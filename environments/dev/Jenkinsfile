@@ -57,7 +57,9 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject {
-                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                            //commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                            checkout([$class: 'GitSCM', branches: [[name: '1.0.0']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'http://gogs-gogs.192.168.64.59.nip.io/leandroberetta/openshift-hello-world.git']]])
+
                         }
                     }
                 }
