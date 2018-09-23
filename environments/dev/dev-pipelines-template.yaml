@@ -64,7 +64,7 @@ objects:
   kind: BuildConfig
   metadata:
     annotations:
-        pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP}-release", "namespace": "", "kind": "DeploymentConfig"}]'
+        pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP}", "namespace": "", "kind": "DeploymentConfig"}]'
     labels:
       app: ${PARAM_APP}
     name: ${PARAM_APP}-release-pipeline
