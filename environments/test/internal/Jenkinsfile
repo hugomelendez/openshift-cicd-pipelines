@@ -16,8 +16,8 @@ pipeline {
         stage("Initialize") {
             steps {
                 script {
-                    if (!env.IMAGE_NAME)
-                        env.IMAGE_NAME = env.APP_NAME
+                    if (!env.IMAGE)
+                        env.IMAGE = env.APP_NAME
 
                     sh "wget -O commons.groovy ${env.COMMONS_API_URL}"
                     sh "cat commons.groovy"
@@ -78,7 +78,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject() {
                             // Tags image from development to test, this operation creates the ImageStream
-                            openshift.tag("${env.SRC_PROJECT}/${env.APP_NAME}:${env.TAG}", "${env.IMAGE_NAME}:${env.TAG}");
+                            openshift.tag("${env.SRC_PROJECT}/${env.APP}:${env.TAG}", "${env.IMAGE}:${env.TAG}");
                         }
                     } 
                 }

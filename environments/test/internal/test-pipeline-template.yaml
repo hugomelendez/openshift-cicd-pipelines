@@ -25,7 +25,7 @@ objects:
         env:
         - name: APP
           value: ${PARAM_APP}
-        - name: APP_IMAGE
+        - name: IMAGE
           value: ${PARAM_APP}
         - name: SRC_PROJECT
           value: ${PARAM_SRC_PROJECT}    
