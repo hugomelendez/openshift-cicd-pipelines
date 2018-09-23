@@ -1,4 +1,3 @@
-def commons
 
 pipeline {
     agent {
@@ -25,7 +24,7 @@ pipeline {
                         env.IMAGE_NAME = env.APP_NAME;    
 
                     sh "wget ${env.COMMONS_API_URL}"
-                    commons = load("commons.groovy")
+                    params.commons = load("commons.groovy")
                 }
             }
         }
@@ -34,7 +33,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject {
-                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                            params.commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
                         }
                     }
                 }
