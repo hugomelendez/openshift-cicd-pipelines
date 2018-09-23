@@ -25,20 +25,23 @@ pipeline {
                 }
             }
         }
-        // If Git tag environment variable is not set, asks for it
-        stage("Set Git Tag") {
+        stage("Select Tag") {
             when {
                 not {
                     expression {
-                        return env.GIT_TAG
+                        return env.TAG
                     }
-                }         
+                }
             }
             steps {
                 script {
-                    env.GIT_TAG = input(id: 'tag',
-                                        message: 'Select Git tag',
-                                        parameters: [string(defaultValue: '', name: 'Tag')]);
+                    openshift.withCluster() {
+                        openshift.withProject(env.SRC_PROJECT) {
+                            // Generates a list of tags to deploy
+                            env.TAG = commons.getVersion(env.APP)
+                            env.GIT_TAG = env.TAG
+                        }
+                    }
                 }
             }
         }
@@ -62,25 +65,6 @@ pipeline {
                                 if (o.kind != "BuildConfig" && o.kind != "ImageStream") 
                                     openshift.apply(o);
                             }
-                        }
-                    }
-                }
-            }
-        }
-        stage("Select Tag") {
-            when {
-                not {
-                    expression {
-                        return env.TAG
-                    }
-                }
-            }
-            steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.SRC_PROJECT) {
-                            // Generates a list of tags to deploy
-                            commons.getVersion(env.APP)
                         }
                     }
                 }
