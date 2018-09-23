@@ -20,6 +20,7 @@ pipeline {
                         env.IMAGE_NAME = env.APP_NAME
 
                     sh "wget -O commons.groovy ${env.COMMONS_API_URL}"
+                    sh "cat commons.groovy"
                     commons = load("commons.groovy")
                 }
             }

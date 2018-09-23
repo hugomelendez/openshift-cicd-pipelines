@@ -59,7 +59,7 @@ def verifyDeployment(app) {
     }
 }
 
-def selectVersion(app) {
+def getVersion(app) {
     def is = openshift.selector("is", app).object()
     def tags = ""
     
