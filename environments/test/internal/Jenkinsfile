@@ -39,7 +39,9 @@ pipeline {
                         openshift.withProject(env.SRC_PROJECT) {
                             // Generates a list of tags to deploy
                             env.TAG = commons.getVersion(env.APP)
-                            env.GIT_TAG = env.TAG
+                            env.GIT_BRANCH = env.TAG
+
+                            echo env.TAG
                         }
                     }
                 }
