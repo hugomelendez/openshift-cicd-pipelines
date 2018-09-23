@@ -20,12 +20,12 @@ def buildImage(app, artifactsDir) {
         openshift.selector("bc", app).startBuild("--wait=true")       
 }
 
-def deployApplication(app, tag) {
+def deployApplication(app, image, tag) {
     if (!openshift.selector("dc", app).exists()) {
         // The creation starts a deployment
-        createApplication(app, tag)                 
+        createApplication(app, image, tag)                 
     } else {
-        updateApplication(app, tag)
+        updateApplication(app, image, tag)
     }   
 
     //verifyDeployment(app)
