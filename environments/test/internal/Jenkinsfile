@@ -77,7 +77,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                        openshift.withProject("${env.SRC_PROJECT}") {
+                        openshift.withProject(env.SRC_PROJECT) {
                             // Generates a list of tags to deploy
                             commons.selectVersionInput(env.APP)
                         }
