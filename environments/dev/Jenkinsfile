@@ -1,3 +1,10 @@
+/*
+ * Jenkinsfile
+ *
+ */
+
+// Global variable to hold the commons library
+def commons = null
 
 pipeline {
     agent {
@@ -20,11 +27,11 @@ pipeline {
                         env.MANUAL_TAG = "false"
 
                     // If image name is not set, image name will be app name
-                    if (!env.IMAGE_NAME) 
-                        env.IMAGE_NAME = env.APP_NAME;    
+                    if (!env.IMAGE) 
+                        env.IMAGE = env.APP;    
 
                     sh "wget ${env.COMMONS_API_URL}"
-                    params.commons = load("commons.groovy")
+                    commons = load("commons.groovy")
                 }
             }
         }
@@ -33,7 +40,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject {
-                            params.commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
                         }
                     }
                 }
@@ -50,7 +57,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject() {
                             // Uses the template to create the application
-                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP_NAME=${env.APP_NAME}"));
+                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP=${env.APP}"));
                         }
                     }
                 }
@@ -109,7 +116,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            commons.buildImage(env.APP_NAME, env.ARTIFACTS_DIR)
+                            commons.buildImage(env.APP, env.ARTIFACTS_DIR)
                         }
                     }
                 }
@@ -143,7 +150,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            openshift.tag("${env.APP_NAME}:latest", "${env.IMAGE_NAME}:${env.TAG}");
+                            openshift.tag("${env.APP}:latest", "${env.IMAGE}:${env.TAG}");
                         }
                     }
                 } 
@@ -154,7 +161,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject() {
-                            commons.deployApplication(env.APP_NAME, env.TAG)
+                            commons.deployApplication(env.APP, env.IMAGE, env.TAG)
                         } 
                     }
                 }
