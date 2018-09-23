@@ -10,8 +10,10 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
+    annotations:
+        pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP}-develop-pipeline", "namespace": "", "kind": "DeploymentConfig"}]'
     labels:
-      app: ${PARAM_APP}-develop-pipeline
+      app: ${PARAM_APP}
     name: ${PARAM_APP}-develop-pipeline
   spec:
     source:
@@ -59,8 +61,10 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
+    annotations:
+        pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP}-release-pipeline", "namespace": "", "kind": "DeploymentConfig"}]'
     labels:
-      app: ${PARAM_APP}-release-pipeline
+      app: ${PARAM_APP}
     name: ${PARAM_APP}-release-pipeline
   spec:
     source:
