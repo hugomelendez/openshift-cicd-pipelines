@@ -20,8 +20,10 @@ pipeline {
                         env.IMAGE = env.APP_NAME
 
                     sh "wget -O commons.groovy ${env.COMMONS_API_URL}"
-                    sh "cat commons.groovy"
                     commons = load("commons.groovy")
+
+                    // Gets the application project
+                    env.PROJECT = env.JOB_NAME.split("/")[0]    
                 }
             }
         }
@@ -58,7 +60,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster {
-                        openshift.withProject() {
+                        openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
                             objects = openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP=${env.APP}");
 
@@ -76,7 +78,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                        openshift.withProject() {
+                        openshift.withProject(env.PROJECT) {
                             // Tags image from development to test, this operation creates the ImageStream
                             openshift.tag("${env.SRC_PROJECT}/${env.APP}:${env.TAG}", "${env.IMAGE}:${env.TAG}");
                         }
@@ -97,7 +99,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                        openshift.withProject() {
+                        openshift.withProject(env.PROJECT) {
                             commons.deployApplication(env.APP, env.IMAGE, env.TAG)
                         } 
                     }
