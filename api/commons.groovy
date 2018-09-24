@@ -77,7 +77,7 @@ def resolveApproval(approvalGroups) {
     def user = submitter.substring(0, submitter.lastIndexOf("-"))
     def canApprove = false
     def groups = openshift.selector("groups").objects()
-
+    echo user
     for (g in groups) {
         if (g.metadata.name.equals(approvalGroups) && g.users.contains(user)) {
             canApprove = true

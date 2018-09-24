@@ -102,11 +102,8 @@ oc adm policy add-role-to-group admin administrators -n apis-prod-management
 oc adm policy add-role-to-group admin administrators -n jenkins
 oc adm policy add-role-to-group admin administrators -n gogs
 
-oc adm policy add-role-to-group edit test-approvers -n core-test
-oc adm policy add-role-to-group edit test-approvers -n apis-test
-
-oc adm policy add-role-to-group edit prod-approvers -n core-prod-management
-oc adm policy add-role-to-group edit prod-approvers -n apis-prod-management
+oc adm policy add-role-to-group edit prod-approvers -n jenkins
+oc adm policy add-role-to-group edit test-approvers -n jenkins
 
 # Exposes the non-prod cluster registry
 minishift addons apply registry-route
