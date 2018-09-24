@@ -17,9 +17,9 @@ objects:
     source:
       type: Git
       git:
-        uri: http://gogs-gogs.192.168.64.59.nip.io/leandroberetta/openshift-pipelines.git
+        uri: https://github.com/redhatcsargentina/openshift-pipelines.git
         ref: master
-      contextDir: environments/test/internal
+      contextDir: environments/test
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -40,7 +40,7 @@ objects:
         - name: APPROVAL_GROUP
           value: test-approvers
         - name: COMMONS_API_URL
-          value: http://gogs-gogs.192.168.64.59.nip.io/leandroberetta/openshift-pipelines/raw/master/api/commons.groovy
+          value: https://github.com/redhatcsargentina/openshift-pipelines/raw/master/api/commons.groovy
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
