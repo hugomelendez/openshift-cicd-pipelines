@@ -151,5 +151,9 @@ oc create sa admin -n prod-management
 oc adm policy add-role-to-user admin system:serviceaccount:prod-management:admin -n core-prod
 oc adm policy add-role-to-user admin system:serviceaccount:prod-management:admin -n apis-prod
 
+oc adm policy add-role-to-user system:registry system:serviceaccount:prod-management:admin
+oc adm policy add-role-to-user system:image-builder system:serviceaccount:prod-management:admin
+
+
 # Exposes the prod cluster registry
 minishift addons apply registry-route
