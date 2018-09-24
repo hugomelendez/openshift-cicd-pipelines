@@ -76,6 +76,7 @@ parameters:
 - description: The Git credentials (must be the name of an OpenShift Secret or "none" if credentials are not needed)
   displayName: Git Credentials
   name: PARAM_GIT_SECRET
+  value: none
   required: true
 - description: The base image for the application (S2I Binary will be used)
   displayName: S2I (Binary) Base Image

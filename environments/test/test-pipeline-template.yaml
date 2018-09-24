@@ -68,6 +68,7 @@ parameters:
 - description: The Git credentials (must be the name of an OpenShift Secret or "none" if credentials are not needed)
   displayName: Git Credentials
   name: PARAM_GIT_SECRET
+  value: none
   required: true
 - description: The name of the development project where the image to deploy resides
   displayName: Development Project
