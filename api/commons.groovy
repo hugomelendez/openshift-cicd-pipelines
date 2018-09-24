@@ -77,8 +77,12 @@ def resolveApproval(approvalGroups) {
     def user = submitter.substring(0, submitter.lastIndexOf("-"))
     def canApprove = false
     def groups = openshift.selector("groups").objects()
+    
     echo user
+    echo approvalGroups
+
     for (g in groups) {
+        echo g.metadata.name
         if (g.metadata.name.equals(approvalGroups) && g.users.contains(user)) {
             canApprove = true
             echo "User ${user} from group ${g.metadata.name} approved the deployment"
