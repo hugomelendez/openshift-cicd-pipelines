@@ -19,7 +19,7 @@ objects:
     source:
       type: Git
       sourceSecret:
-        name: github
+        name: git-secret
       git:
         uri: https://github.com/redhatcsargentina/openshift-pipelines.git
         ref: master
@@ -51,8 +51,6 @@ objects:
           value: ${PARAM_CODE_ANALYSIS_COMMAND}
         - name: RELEASE_COMMAND
           value: ${PARAM_RELEASE_COMMAND}
-        - name: COMMONS_API_URL
-          value: https://github.com/redhatcsargentina/openshift-pipelines/raw/master/api/commons.groovy
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
@@ -71,6 +69,8 @@ objects:
   spec:
     source:
       type: Git
+      sourceSecret:
+        name: git-secret
       git:
         uri: https://github.com/redhatcsargentina/openshift-pipelines.git
         ref: master

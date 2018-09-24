@@ -154,6 +154,5 @@ oc adm policy add-role-to-user admin system:serviceaccount:prod-management:admin
 oc adm policy add-role-to-user system:registry system:serviceaccount:prod-management:admin
 oc adm policy add-role-to-user system:image-builder system:serviceaccount:prod-management:admin
 
-
 # Exposes the prod cluster registry
 minishift addons apply registry-route

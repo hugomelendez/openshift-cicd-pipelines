@@ -12,6 +12,9 @@ pipeline {
         skipDefaultCheckout()
         disableConcurrentBuilds()
     }
+    environment {
+        COMMONS_API_URL="<GIT_REPO>/openshift-pipelines/raw/master/api/commons.groovy"
+    }
     stages {
         stage("Initialize") {
             steps {

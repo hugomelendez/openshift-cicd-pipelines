@@ -5,12 +5,13 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        SRC_REGISTRY_URL="docker://docker-registry-default.192.168.64.60.nip.io"
-        SRC_REGISTRY_TOKEN="eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJjb3JlLXRlc3QiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiYnVpbGRlci10b2tlbi02cnQ3NSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJidWlsZGVyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiMjBkOGYzZDAtYmY5Ny0xMWU4LWIxNjMtMWUzYzZmNDhjMTY3Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmNvcmUtdGVzdDpidWlsZGVyIn0.vweF55XOuWMeUkOiVogqZK6UMAUrO-OgFANgws8pJLR0w4WRbLG7t5T5qUSGCPt1yZAkUn3QFWyJ6LN-RrHOndMxgtX1_Eb6Q6l46yNitHjKBTktj-ipejwyJV0EyTlnN95T04brbT5PloZ9x3kjFntXX_zSKjQ8tBhqufOX7KyRJ_m30PnweYb9tSDQY_0I3ms6A5J7ApLUzrEBxc_kAhWoyVyr-Jc6FcGIQYpDcCPkMJUKE-P4RyHf94sqhnapDQyskuUYYxl2wp7Q1f6uR7cxDfKQqkTFiEsgEL_LApL7PYpy4gU8Lw4ftrS78ISlaogA5hFM2hRbTa2fFBQaXA"
-        DST_REGISTRY_URL="docker://docker-registry-default.192.168.64.63.nip.io"
-        DST_REGISTRY_TOKEN="eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJwcm9kLW1hbmFnZW1lbnQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiYWRtaW4tdG9rZW4tbmo5cGQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiYWRtaW4iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJkYmM4ZDNjOS1jMDIwLTExZTgtYjczMC1jMmQ2MGZmZWQwOWUiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6cHJvZC1tYW5hZ2VtZW50OmFkbWluIn0.PFULsfbZ09yLm0BHIn0xST1qJtxst6zzP0fVV7l5vcZbtaLS17grFMRW7yH314xg2ZAnuHmlTuEg03ObW5UyAYSjLKwB7j_txEUfU2Wsd93JrhM3000IIoNqkQsbFFxkBEUk45mDmAOkylxKqWd9Pp8fTqIT24KCpC0-m9Z7A7YnBXGqeaMiNI3sDzTT8Y6XmzWmZukVWex3lRCTXw1kqnX8VAP97nh5OmgXRTuyf7db2phljVaL2JyIQ--7mwVs8mTXy_aGG6xofLPEIEso96SMqTROTv017nbv3pJpY-SxjolwJhPn37ngmcSGmx2k4k7jL3T56uXvI0DGhyJpJg"
-        DST_CLUSTER_URL="insecure://192.168.64.63:8443"
-        DST_CLUSTER_TOKEN="eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJwcm9kLW1hbmFnZW1lbnQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiYWRtaW4tdG9rZW4tbmo5cGQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiYWRtaW4iLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJkYmM4ZDNjOS1jMDIwLTExZTgtYjczMC1jMmQ2MGZmZWQwOWUiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6cHJvZC1tYW5hZ2VtZW50OmFkbWluIn0.PFULsfbZ09yLm0BHIn0xST1qJtxst6zzP0fVV7l5vcZbtaLS17grFMRW7yH314xg2ZAnuHmlTuEg03ObW5UyAYSjLKwB7j_txEUfU2Wsd93JrhM3000IIoNqkQsbFFxkBEUk45mDmAOkylxKqWd9Pp8fTqIT24KCpC0-m9Z7A7YnBXGqeaMiNI3sDzTT8Y6XmzWmZukVWex3lRCTXw1kqnX8VAP97nh5OmgXRTuyf7db2phljVaL2JyIQ--7mwVs8mTXy_aGG6xofLPEIEso96SMqTROTv017nbv3pJpY-SxjolwJhPn37ngmcSGmx2k4k7jL3T56uXvI0DGhyJpJg"
+        SRC_REGISTRY_URL="docker://<SRC_REGISTRY_URL>"
+        SRC_REGISTRY_TOKEN="<SRC_REGISTRY_TOKEN>"
+        DST_REGISTRY_URL="docker://<DST_REGISTRY_URL>"
+        DST_REGISTRY_TOKEN="<DST_REGISTRY_TOKEN>"
+        DST_CLUSTER_URL="insecure://<DST_CLUSTER_URL>"
+        DST_CLUSTER_TOKEN="<DST_CLUSTER_TOKEN>"
+        COMMONS_API_URL="<GIT_REPO>/openshift-pipelines/raw/master/api/commons.groovy"
     }
     stages {
         stage("Initialize") {
@@ -20,10 +21,7 @@ pipeline {
                         env.IMAGE = env.APP
 
                     sh "wget -O commons.groovy ${env.COMMONS_API_URL}"
-                    commons = load("commons.groovy")
-
-                    // Gets the application project
-                    //env.DST_PROJECT = env.JOB_NAME.split("/")[0]    
+                    commons = load("commons.groovy")   
                 }
             }
         }
@@ -42,8 +40,6 @@ pipeline {
                             // Generates a list of tags to deploy
                             env.TAG = commons.getVersion(env.APP)
                             env.GIT_BRANCH = env.TAG
-
-                            echo env.TAG
                         }
                     }
                 }
@@ -109,7 +105,7 @@ pipeline {
                     def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT}/${env.APP}:${env.TAG}";
                     def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT}/${env.APP}:${env.PROMOTE_TAG}";
 
-                    // Executes skopeo command
+                    // Executes the Skopeo command
                     sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds=${srcCreds} --dest-creds=${dstCreds} ${src} ${dst}";
                 }
             }
