@@ -36,7 +36,7 @@ objects:
         - name: APPROVAL_GROUP
           value: prod-approvers
         - name: COMMONS_API_URL
-        value: https://github.com/redhatcsargentina/openshift-pipelines/raw/master/api/commons.groovy
+          value: https://github.com/redhatcsargentina/openshift-pipelines/raw/master/api/commons.groovy
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
