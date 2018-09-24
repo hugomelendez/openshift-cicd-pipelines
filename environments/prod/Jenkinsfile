@@ -65,7 +65,7 @@ pipeline {
                             objects = openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP=${env.APP}");
 
                             openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
-                                openshift.withProject(env.DST_PROJECT_NAME) {
+                                openshift.withProject(env.DST_PROJECT) {
                                     for (o in objects) {
                                         // Prevents to promote the BuildConfig and ImageSream, the build is only done in development stages
                                         if (o.kind != "BuildConfig" && o.kind != "ImageStream") 
