@@ -23,7 +23,7 @@ pipeline {
                     commons = load("commons.groovy")
 
                     // Gets the application project
-                    env.DST_PROJECT = env.JOB_NAME.split("/")[0]    
+                    //env.DST_PROJECT = env.JOB_NAME.split("/")[0]    
                 }
             }
         }

@@ -29,6 +29,8 @@ objects:
           value: ${PARAM_APP_TEMPLATE_FILE}
         - name: SRC_PROJECT
           value: ${PARAM_SRC_PROJECT}
+        - name: DST_PROJECT
+          value: ${PARAM_DST_PROJECT}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
         - name: GIT_SECRET
@@ -65,6 +67,10 @@ parameters:
 - description: The source project for image and objects promotion
   displayName: Source Project
   name: PARAM_SRC_PROJECT
+  required: true
+- description: The destination project for image and objects promotion
+  displayName: Destination Project
+  name: PARAM_DST_PROJECT
   required: true
 - description: A secret string used to configure the webhook
   displayName: Webhook Secret
