@@ -4,6 +4,14 @@ pipeline {
         skipDefaultCheckout()
         disableConcurrentBuilds()
     }
+    environment {
+        PARAM_SRC_REGISTRY_URL=""
+        PARAM_SRC_REGISTRY_TOKEN=""
+        PARAM_DST_REGISTRY_URL=""
+        PARAM_DST_REGISTRY_TOKEN=""
+        PARAM_DST_CLUSTER_URL=""
+        PARAM_DST_CLUSTER_TOKEN=""
+    }
     stages {
         stage("Initialize") {
             steps {
@@ -15,7 +23,7 @@ pipeline {
                     commons = load("commons.groovy")
 
                     // Gets the application project
-                    env.PROJECT = env.JOB_NAME.split("/")[0]    
+                    env.DST_PROJECT = env.JOB_NAME.split("/")[0]    
                 }
             }
         }
@@ -98,8 +106,8 @@ pipeline {
                     def dstCreds = "unused:${env.DST_REGISTRY_TOKEN}";
 
                     // Paths 
-                    def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT_NAME}/${env.APP}:${env.TAG}";
-                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT_NAME}/${env.APP}:${env.PROMOTE_TAG}";
+                    def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT}/${env.APP}:${env.TAG}";
+                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT}/${env.APP}:${env.PROMOTE_TAG}";
 
                     // Executes skopeo command
                     sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds=${srcCreds} --dest-creds=${dstCreds} ${src} ${dst}";
@@ -119,7 +127,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
-                        openshift.withProject(env.DST_PROJECT_NAME) {
+                        openshift.withProject(env.DST_PROJECT) {
                             commons.deployApplication(env.APP, env.IMAGE, env.TAG)
                         } 
                     }

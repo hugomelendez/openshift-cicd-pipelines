@@ -25,26 +25,10 @@ objects:
         env:
         - name: APP
           value: ${PARAM_APP}
-        - name: APP_IMAGE
-          value: ${PARAM_APP}
         - name: APP_TEMPLATE_FILE
           value: ${PARAM_APP_TEMPLATE_FILE}
-        - name: SRC_PROJECT_NAME
-          value: ${PARAM_SRC_PROJECT_NAME}
-        - name: SRC_REGISTRY_URL
-          value: ${PARAM_SRC_REGISTRY_URL}
-        - name: SRC_REGISTRY_TOKEN
-          value: ${PARAM_SRC_REGISTRY_TOKEN}
-        - name: DST_PROJECT_NAME
-          value: ${PARAM_DST_PROJECT_NAME}
-        - name: DST_REGISTRY_URL
-          value: ${PARAM_DST_REGISTRY_URL}
-        - name: DST_REGISTRY_TOKEN
-          value: ${PARAM_DST_REGISTRY_TOKEN}
-        - name: DST_CLUSTER_URL
-          value: ${PARAM_DST_CLUSTER_URL}
-        - name: DST_CLUSTER_TOKEN
-          value: ${PARAM_DST_CLUSTER_TOKEN}
+        - name: SRC_PROJECT
+          value: ${PARAM_SRC_PROJECT}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
         - name: GIT_SECRET
@@ -80,37 +64,7 @@ parameters:
   required: true
 - description: The source project for image and objects promotion
   displayName: Source Project
-  name: PARAM_SRC_PROJECT_NAME
-  required: true
-  value: test
-- description: The source registry URL
-  displayName: Source Registry URL
-  name: PARAM_SRC_REGISTRY_URL
-  required: true
-- description: The source registry token
-  displayName: Source Registry Token
-  name: PARAM_SRC_REGISTRY_TOKEN
-  required: true
-- description: The destination project for image and objects promotion
-  displayName: Destination Project
-  name: PARAM_DST_PROJECT_NAME
-  required: true
-  value: prod
-- description: The destination registry URL
-  displayName: Destination Registry URL
-  name: PARAM_DST_REGISTRY_URL
-  required: true
-- description: The destination registry token
-  displayName: Destination Registry Token
-  name: PARAM_DST_REGISTRY_TOKEN
-  required: true
-- description: The destination cluster URL
-  displayName: Destination Cluster URL
-  name: PARAM_DST_CLUSTER_URL
-  required: true
-- description: The destination cluster token
-  displayName: Destination Cluster Token
-  name: PARAM_DST_CLUSTER_TOKEN
+  name: PARAM_SRC_PROJECT
   required: true
 - description: A secret string used to configure the webhook
   displayName: Webhook Secret

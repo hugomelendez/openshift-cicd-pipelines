@@ -137,16 +137,19 @@ minishift start
 # Logs in as admin to create projects
 oc login https://$(minishift ip):8443 -u admin -p admin
 
+# Creates the project where the admin sa will be
+oc new-project prod-management
+
 # Creates the prod projects
 oc new-project core-prod
 oc new-project apis-prod
 
 # Creates an admin service account for deployments, etc
-oc create sa admin -n prod
+oc create sa admin -n prod-management
 
 # Sets permissions
-oc adm policy add-role-to-user admin system:serviceaccount:prod:admin -n core-prod
-oc adm policy add-role-to-user admin system:serviceaccount:prod:admin -n apis-prod
+oc adm policy add-role-to-user admin system:serviceaccount:prod-management:admin -n core-prod
+oc adm policy add-role-to-user admin system:serviceaccount:prod-management:admin -n apis-prod
 
 # Exposes the prod cluster registry
 minishift addons apply registry-route
