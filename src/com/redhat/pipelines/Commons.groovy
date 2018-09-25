@@ -21,11 +21,9 @@ class Commons implements Serializable {
         if (env.GIT_SECRET && !secret.equals("none"))
             gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
 
-        this.steps.echo(this.env.WORKSPACE)
-        this.steps.sh("ls")
         steps.checkout([$class: 'GitSCM', 
-                branches: [[name: branch]], 
-                userRemoteConfigs: [gitInfo]])
+                       branches: [[name: branch]], 
+                       userRemoteConfigs: [gitInfo]])
     }
 
     def buildImage(app, artifactsDir) {

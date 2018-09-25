@@ -135,7 +135,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            buildImage(env.APP, env.ARTIFACTS_DIR)
+                            commons.buildImage(env.APP, env.ARTIFACTS_DIR)
                         }
                     }
                 }
@@ -180,7 +180,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            deployApplication(env.APP, env.IMAGE, env.TAG)
+                            commons.deployApplication(env.APP, env.IMAGE, env.TAG)
                         } 
                     }
                 }
