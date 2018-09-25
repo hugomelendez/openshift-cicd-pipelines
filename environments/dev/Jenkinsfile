@@ -3,8 +3,8 @@
  *
  */
 
-@Library("pipeline-library") import com.redhat.pipelines.Commons
-def commons = Commons(openshift)
+@Library("pipeline-library") 
+def commons = new Commons(openshift)
 
 pipeline {
     agent {
