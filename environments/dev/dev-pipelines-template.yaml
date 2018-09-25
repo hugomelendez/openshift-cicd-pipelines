@@ -104,8 +104,6 @@ objects:
           value: ${PARAM_RELEASE_COMMAND}
         - name: MANUAL_TAG
           value: "true"
-        - name: COMMONS_API_URL
-          value: https://github.com/redhatcsargentina/openshift-pipelines/raw/master/api/commons.groovy
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
