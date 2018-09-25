@@ -4,7 +4,7 @@
  */
 
 //@Library("pipeline-library") import com.redhat.pipelines.Commons
-//def commons = new Commons(openshift, env, steps)
+//def commons = new Commons(openshift, env)
 
 pipeline {
     agent {
@@ -57,9 +57,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                                checkout([$class: 'GitSCM', 
-                                         branches: [[name: env.GIT_BRANCH]], 
-                                         userRemoteConfigs: [getGitConfig(env.GIT_REPO, env.GIT_BRANCH, ${openshift.project()}-${env.GIT_SECRET})]])
+                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
                         }
                     }
                 }
@@ -135,7 +133,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            openshift.selector("bc", app).startBuild("--from-dir=${artifactsDir}", "--wait=true")
+                            buildImage(env.APP, env.ARTIFACTS_DIR)
                         }
                     }
                 }
@@ -187,4 +185,20 @@ pipeline {
             }
         }
     }
+}
+
+def gitCheckout(repo, branch, secret) {
+    def gitInfo = [:]
+
+    gitInfo['url'] = repo
+
+    if (env.GIT_SECRET && !secret.equals("none"))
+        gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
+
+    checkout([$class: 'GitSCM', 
+             branches: [[name: branch]], 
+             doGenerateSubmoduleConfigurations: false, 
+             extensions: [], 
+             submoduleCfg: [], 
+             userRemoteConfigs: [gitInfo]])
 }
