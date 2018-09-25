@@ -2,9 +2,11 @@ package com.redhat.pipelines
 
 class Commons implements Serializable {
     def openshift
+    def env
 
-    Commons(openshift) {
+    Commons(openshift, env) {
         this.openshift = openshift
+        this.env = env
     }   
 
     def gitCheckout(repo, branch, secret) {
