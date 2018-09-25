@@ -3,9 +3,7 @@
  *
  */
 
-@Library("pipeline-library") 
-import com.redhat.pipelines.Commons
-
+@Library("pipeline-library") import com.redhat.pipelines.Commons
 def commons = Commons(openshift)
 
 pipeline {
