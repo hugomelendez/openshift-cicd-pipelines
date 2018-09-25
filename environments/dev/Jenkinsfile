@@ -57,7 +57,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                            gitCheckout(env.GIT_REPO, env.GIT_BRANCH, ${openshift.project()}-${env.GIT_SECRET})
                         }
                     }
                 }
