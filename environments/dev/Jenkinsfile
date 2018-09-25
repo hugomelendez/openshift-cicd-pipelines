@@ -6,7 +6,7 @@
 //@Library("pipeline-library") import com.redhat.pipelines.Commons
 //def commons = new Commons(openshift, env)
 
-def commons = library("pipeline-library")
+library("pipeline-library")
 
 pipeline {
     agent {
