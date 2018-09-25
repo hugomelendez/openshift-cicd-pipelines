@@ -1,12 +1,7 @@
-/*
- * Jenkinsfile
- *
- */
+@Library("pipeline-library") 
+import com.redhat.openshift.pipelines.Commons
 
-@Library("pipeline-library") import com.redhat.pipelines.Commons
 def commons = new Commons(this)
-
-library("pipeline-library")
 
 pipeline {
     agent {
@@ -33,7 +28,7 @@ pipeline {
                         env.IMAGE = env.APP;    
 
                     // Gets the application project
-                    env.PROJECT = env.JOB_NAME.split("/")[0]                                
+                    env.PROJECT = commons.getApplicationProject()                         
                 }
             }
         }

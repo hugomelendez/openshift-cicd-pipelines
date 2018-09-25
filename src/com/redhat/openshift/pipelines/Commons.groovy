@@ -13,6 +13,10 @@ class Commons implements Serializable {
         this.steps = script.steps
     }   
 
+    def getApplicationProject() {
+        return env.JOB_NAME.split("/")[0]
+    }
+
     def gitCheckout(repo, branch, secret) {
         def gitInfo = [:]
 
@@ -78,14 +82,14 @@ class Commons implements Serializable {
         for (version in is.status.tags)
             tags = version.tag + "\n" + tags
         
-        def tag = input(message: "Select version",
-                        parameters: [choice(choices: tags, description: 'Select a tag to deploy', name: 'Versions')])
+        def tag = steps.input(message: "Select version",
+                              parameters: [choice(choices: tags, description: 'Select a tag to deploy', name: 'Versions')])
 
         return tag
     }
 
     def resolveApproval(approvalGroups) {
-        def submitter = input message: 'Confirm deployment', submitterParameter: 'submitter'
+        def submitter = steps.input message: 'Confirm deployment', submitterParameter: 'submitter'
         def user = submitter.substring(0, submitter.lastIndexOf("-"))
         def canApprove = false
         def groups = openshift.selector("groups").objects()
@@ -93,11 +97,11 @@ class Commons implements Serializable {
         for (g in groups) {
             if (g.metadata.name.equals(approvalGroups) && g.users.contains(user)) {
                 canApprove = true
-                echo "User ${user} from group ${g.metadata.name} approved the deployment"
+                steps.echo "User ${user} from group ${g.metadata.name} approved the deployment"
             } 
         }
 
         if (canApprove == false)
-            error "User ${user} is not allowed to approve the deployment"
+            steps.error "User ${user} is not allowed to approve the deployment"
     }
 }
