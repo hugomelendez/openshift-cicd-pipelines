@@ -23,9 +23,6 @@ class Commons implements Serializable {
 
         steps.checkout([$class: 'GitSCM', 
                 branches: [[name: branch]], 
-                doGenerateSubmoduleConfigurations: false, 
-                extensions: [[$class: 'CloneOption', depth: 0, noTags: false, reference: this.env.WORKSPACE, shallow: false]],
-                submoduleCfg: [], 
                 userRemoteConfigs: [gitInfo]])
     }
 
