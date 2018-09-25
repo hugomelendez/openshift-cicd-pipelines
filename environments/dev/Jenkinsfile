@@ -3,7 +3,11 @@
  *
  */
 
-@Library("pipeline-library") _
+@Library("pipeline-library") 
+import com.redhat.pipelines.Commons
+
+def commons = Commons(openshift)
+
 pipeline {
     agent {
         label env.JENKINS_AGENT
@@ -55,7 +59,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
                         }
                     }
                 }
