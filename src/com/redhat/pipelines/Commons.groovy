@@ -3,6 +3,7 @@ package com.redhat.pipelines
 class Commons implements Serializable {
     def openshift
     def env
+    def steps
 
     Commons(openshift, env, steps) {
         this.openshift = openshift
