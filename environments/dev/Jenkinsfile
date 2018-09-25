@@ -189,18 +189,11 @@ pipeline {
     }
 }
 
-def gitCheckout(repo, branch, secret) {
-    def gitInfo = [:]
-
-    gitInfo['url'] = repo
-
-    if (env.GIT_SECRET && !secret.equals("none"))
-        gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
-
+def gitCheckout(gitConfig) {
     checkout([$class: 'GitSCM', 
-             branches: [[name: branch]], 
+             branches: [[name: gitConfig['branch']]], 
              doGenerateSubmoduleConfigurations: false, 
              extensions: [], 
              submoduleCfg: [], 
-             userRemoteConfigs: [gitInfo]])
+             userRemoteConfigs: [gitConfig]])
 }
