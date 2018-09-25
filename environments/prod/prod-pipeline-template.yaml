@@ -62,7 +62,7 @@ parameters:
 - description: The Git credentials (must be the name of an OpenShift Secret or "none" if credentials are not needed)
   displayName: Git Credentials
   name: PARAM_GIT_SECRET
-  value: none
+  value: git-secret
   required: true
 - description: The source project for image and objects promotion
   displayName: Source Project

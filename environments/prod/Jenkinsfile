@@ -11,7 +11,7 @@ pipeline {
         DST_REGISTRY_TOKEN="<DST_REGISTRY_TOKEN>"
         DST_CLUSTER_URL="insecure://<DST_CLUSTER_URL>"
         DST_CLUSTER_TOKEN="<DST_CLUSTER_TOKEN>"
-        COMMONS_API_URL="<GIT_REPO>/openshift-pipelines/raw/master/api/commons.groovy"
+        COMMONS_API_URL="https://github.com/redhatcsargentina/openshift-pipelines/raw/master/api/commons.groovy"
     }
     stages {
         stage("Initialize") {

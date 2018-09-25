@@ -3,9 +3,7 @@
  *
  */
 
-// Global variable to hold the commons library
-def commons = null
-
+@Library("pipeline-library")
 pipeline {
     agent {
         label env.JENKINS_AGENT
@@ -13,9 +11,6 @@ pipeline {
     options {
         skipDefaultCheckout()
         disableConcurrentBuilds()
-    }
-    environment {
-        COMMONS_API_URL="<GIT_REPO>/openshift-pipelines/raw/master/api/commons.groovy"
     }
     stages {
         stage("Initialize") {
@@ -32,9 +27,6 @@ pipeline {
                     // If image name is not set, image name will be app name
                     if (!env.IMAGE) 
                         env.IMAGE = env.APP;    
-
-                    sh "wget ${env.COMMONS_API_URL}"
-                    commons = load("commons.groovy")
 
                     // Gets the application project
                     env.PROJECT = env.JOB_NAME.split("/")[0]                                
@@ -63,7 +55,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                            gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
                         }
                     }
                 }
@@ -139,7 +131,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.buildImage(env.APP, env.ARTIFACTS_DIR)
+                            buildImage(env.APP, env.ARTIFACTS_DIR)
                         }
                     }
                 }
@@ -184,7 +176,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.deployApplication(env.APP, env.IMAGE, env.TAG)
+                            deployApplication(env.APP, env.IMAGE, env.TAG)
                         } 
                     }
                 }

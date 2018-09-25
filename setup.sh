@@ -4,7 +4,7 @@
 minishift profile set non-prod
 
 # Starts the non-prod cluster
-minishift start
+minishift start --skip-registration
 
 # Logs in as admin to create projects
 oc login "https://$(minishift ip):8443" -u admin -p admin
@@ -34,12 +34,6 @@ oc create -f ./environments/test/test-pipeline-template.yaml -n apis-test
 # Creates the prod template in the prod projects
 oc create -f ./environments/prod/prod-pipeline-template.yaml -n core-prod-management
 oc create -f ./environments/prod/prod-pipeline-template.yaml -n apis-prod-management
-
-# Gogs
-
-oc new-project gogs
-
-oc new-app -f http://bit.ly/openshift-gogs-persistent-template --param=HOSTNAME="gogs-gogs.$(minishift ip).nip.io" -n gogs
 
 # Jenkins
 

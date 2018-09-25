@@ -13,7 +13,7 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        COMMONS_API_URL="<GIT_REPO>/openshift-pipelines/raw/master/api/commons.groovy"
+        COMMONS_API_URL="https://github.com/redhatcsargentina/openshift-pipelines/raw/master/api/commons.groovy"
     }
     stages {
         stage("Initialize") {
