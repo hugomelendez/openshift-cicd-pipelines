@@ -8,10 +8,5 @@ def call(repo, branch, secret) {
     if (env.GIT_SECRET && !secret.equals("none"))
         gitInfo['credentialsId'] = secret
 
-    checkout([$class: 'GitSCM', 
-             branches: [[name: branch]], 
-             doGenerateSubmoduleConfigurations: false, 
-             extensions: [], 
-             submoduleCfg: [], 
-             userRemoteConfigs: [gitInfo]])
+    return gitInfo
 }
