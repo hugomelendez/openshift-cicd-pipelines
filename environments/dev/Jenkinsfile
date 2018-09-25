@@ -3,7 +3,7 @@
  *
  */
 
-@Library("pipeline-library")
+@Library("pipeline-library") _
 pipeline {
     agent {
         label env.JENKINS_AGENT
