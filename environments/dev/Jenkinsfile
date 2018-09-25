@@ -3,8 +3,8 @@
  *
  */
 
-//@Library("pipeline-library") import com.redhat.pipelines.Commons
-//def commons = new Commons(openshift, env)
+@Library("pipeline-library") import com.redhat.pipelines.Commons
+def commons = new Commons(this)
 
 library("pipeline-library")
 
@@ -187,13 +187,4 @@ pipeline {
             }
         }
     }
-}
-
-def gitCheckout(gitConfig) {
-    checkout([$class: 'GitSCM', 
-             branches: [[name: gitConfig['branch']]], 
-             doGenerateSubmoduleConfigurations: false, 
-             extensions: [], 
-             submoduleCfg: [], 
-             userRemoteConfigs: [gitConfig]])
 }

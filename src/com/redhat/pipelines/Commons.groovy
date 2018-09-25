@@ -1,14 +1,16 @@
 package com.redhat.pipelines
 
 class Commons implements Serializable {
+    def script
     def openshift
     def env
     def steps
 
-    Commons(openshift, env, steps) {
-        this.openshift = openshift
-        this.env = env
-        this.steps = steps
+    Commons(script) {
+        this.script = script
+        this.openshift = script.openshift
+        this.env = script.env
+        this.steps = script.steps
     }   
 
     def gitCheckout(repo, branch, secret) {
@@ -22,7 +24,7 @@ class Commons implements Serializable {
         steps.checkout([$class: 'GitSCM', 
                 branches: [[name: branch]], 
                 doGenerateSubmoduleConfigurations: false, 
-                extensions: [], 
+                extensions: [[$class: 'CloneOption', depth: 0, noTags: false, reference: this.env.WORKSPACE, shallow: false]],
                 submoduleCfg: [], 
                 userRemoteConfigs: [gitInfo]])
     }
