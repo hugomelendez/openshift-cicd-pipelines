@@ -4,9 +4,10 @@ class Commons implements Serializable {
     def openshift
     def env
 
-    Commons(openshift, env) {
+    Commons(openshift, env, steps) {
         this.openshift = openshift
         this.env = env
+        this.steps = steps
     }   
 
     def gitCheckout(repo, branch, secret) {
@@ -17,7 +18,7 @@ class Commons implements Serializable {
         if (env.GIT_SECRET && !secret.equals("none"))
             gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
 
-        checkout([$class: 'GitSCM', 
+        steps.checkout([$class: 'GitSCM', 
                 branches: [[name: branch]], 
                 doGenerateSubmoduleConfigurations: false, 
                 extensions: [], 
