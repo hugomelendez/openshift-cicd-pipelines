@@ -103,6 +103,13 @@ oc adm policy add-role-to-group admin administrators -n gogs
 oc adm policy add-role-to-group edit prod-approvers -n jenkins
 oc adm policy add-role-to-group edit test-approvers -n jenkins
 
+oc rollout pause dc/jenkins
+
+oc set env dc/jenkins SRC_REGISTRY_URL=$(oc get route docker-registry -n default --template={{.spec.host}}) -n jenkins
+oc set env dc/jenkins SRC_REGISTRY_TOKEN=$(oc sa get-token jenkins -n jenkins) -n jenkins
+
+oc rollout resume dc/jenkins
+
 # Exposes the non-prod cluster registry
 minishift addons apply registry-route
 
@@ -154,3 +161,19 @@ oc adm policy add-cluster-role-to-user system:image-builder system:serviceaccoun
 
 # Exposes the prod cluster registry
 minishift addons apply registry-route
+
+export DST_REGISTRY_URL=$(oc get route docker-registry -n default --template={{.spec.host}})
+export DST_REGISTRY_TOKEN=$(oc sa get-token admin -n prod-management)
+
+minishift profile set non-prod
+
+oc login https://$(minishift ip):8443 -u admin -p admin
+
+oc rollout pause dc/jenkins -n jenkins
+
+oc set env dc/jenkins DST_REGISTRY_URL=$DST_REGISTRY_URL -n jenkins
+oc set env dc/jenkins DST_REGISTRY_TOKEN=$DST_REGISTRY_TOKEN -n jenkins
+oc set env dc/jenkins DST_CLUSTER_URL=$DST_REGISTRY_URL -n jenkins
+oc set env dc/jenkins DST_CLUSTER_TOKEN=$DST_REGISTRY_TOKEN -n jenkins
+
+oc rollout resume dc/jenkins -n jenkins
