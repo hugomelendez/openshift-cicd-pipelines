@@ -33,6 +33,7 @@ TBD
 
 TBD
 
+##### Jenkins and Skopeo configuration
 
-
+TBD
 
