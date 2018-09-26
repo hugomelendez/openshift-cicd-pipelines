@@ -22,8 +22,8 @@ pipeline {
                     if (!env.IMAGE)
                         env.IMAGE = env.APP
 
-                        echo env.SRC_REGISTRY_TOKEN
-
+                    // Gets the application project
+                    env.PROJECT = commons.getApplicationProject()
                 }
             }
         }
