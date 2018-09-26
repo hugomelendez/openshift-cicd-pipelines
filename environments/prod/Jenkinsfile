@@ -4,9 +4,7 @@ import com.redhat.openshift.pipelines.Commons
 def commons = new Commons(this)
 
 pipeline {
-    agent {
-        label "skopeo"
-    }
+    agent any
     options {
         skipDefaultCheckout()
         disableConcurrentBuilds()
@@ -94,6 +92,9 @@ pipeline {
             }
         } 
         stage("Promote Tag") {
+            agent {
+                label "skopeo"
+            }
             steps {
                 script {
                     // Credentials
