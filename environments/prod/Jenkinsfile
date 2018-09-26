@@ -74,23 +74,6 @@ pipeline {
                 }
             }
         }
-        stage("Set Promote Tag") {
-            when {
-                not {
-                    expression {
-                        return env.PROMOTE_TAG
-                    }
-                }
-            }
-            steps {
-                script {
-                    env.PROMOTE_TAG = input(id: 'promoteTag',
-                                            message: 'Value for the tag to promote',
-                                            parameters: [string(defaultValue: '', name: 'Tag')]);
-                }
-                
-            }
-        } 
         stage("Promote Tag") {
             agent {
                 label "skopeo"
@@ -103,7 +86,7 @@ pipeline {
 
                     // Paths 
                     def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT}/${env.APP}:${env.TAG}";
-                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT}/${env.APP}:${env.PROMOTE_TAG}";
+                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT}/${env.APP}:${env.TAG}";
 
                     // Executes the Skopeo command
                     sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds=${srcCreds} --dest-creds=${dstCreds} ${src} ${dst}";
