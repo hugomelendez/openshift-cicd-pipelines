@@ -1,39 +1,39 @@
 # openshift-pipelines
 
-## Setup
+Common scenario regarding CI/CD pipelines in OpenShift with Jenkins.
 
-### Requirements
+## Requirements
 
 * MiniShift ([CDK 3.5](https://developers.redhat.com/products/cdk/overview))
 * OpenShift oc CLI 
 
-### Steps
+## Setup
 
-#### Running the setup.sh script
+### Running the setup.sh script
 
 Almost everything is done by the following script:
 
     sh setup.sh
 
-#### Manual steps
+### Manual steps
 
-#####  Git Secret creation
-
-TBD
-
-##### OpenShift Sync plugin configuration
+####  Git Secret creation
 
 TBD
 
-##### Pipeline Shared Library configuration
+#### OpenShift Sync plugin configuration
 
 TBD
 
-##### Maven Agent .m2 PV configuration
+#### Pipeline Shared Library configuration
 
 TBD
 
-##### Jenkins and Skopeo configuration
+#### Maven Agent .m2 PV configuration
+
+TBD
+
+#### Jenkins and Skopeo configuration
 
 TBD
 
