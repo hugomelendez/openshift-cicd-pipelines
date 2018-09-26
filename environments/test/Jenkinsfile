@@ -129,13 +129,6 @@ pipeline {
             }
         }
         stage("Set Tag") {
-            when {
-                not {
-                    expression {
-                        return env.TAG
-                    }
-                }
-            }
             steps {
                 script {
                     env.PROMOTION_TAG = input(id: 'branch',
