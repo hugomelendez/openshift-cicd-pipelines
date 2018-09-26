@@ -61,7 +61,7 @@ pipeline {
                         openshift.withProject() {
                             // Uses the template to create the application
                             objects = openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP=${env.APP}");
-                            openshift.verbose()
+
                             openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
                                 openshift.withProject(env.DST_PROJECT) {
                                     for (o in objects) {
