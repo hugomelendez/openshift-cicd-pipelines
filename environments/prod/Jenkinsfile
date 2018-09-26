@@ -9,12 +9,6 @@ pipeline {
         skipDefaultCheckout()
         disableConcurrentBuilds()
     }
-    environment {
-        DST_REGISTRY_URL="docker://<DST_REGISTRY_URL>"
-        DST_REGISTRY_TOKEN="<DST_REGISTRY_TOKEN>"
-        DST_CLUSTER_URL="insecure://<DST_CLUSTER_URL>"
-        DST_CLUSTER_TOKEN="<DST_CLUSTER_TOKEN>"
-    }
     stages {
         stage("Initialize") {
             steps {
