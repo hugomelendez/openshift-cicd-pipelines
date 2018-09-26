@@ -1,19 +1,13 @@
-/*
- * Jenkinsfile
- *
- */
+@Library("pipeline-library") 
+import com.redhat.openshift.pipelines.Commons
 
-// Global variable to hold the commons library
-def commons = null
+def commons = new Commons(this)
 
 pipeline {
     agent any
     options {
         skipDefaultCheckout()
         disableConcurrentBuilds()
-    }
-    environment {
-        COMMONS_API_URL="https://github.com/redhatcsargentina/openshift-pipelines/raw/master/api/commons.groovy"
     }
     stages {
         stage("Initialize") {
@@ -22,11 +16,8 @@ pipeline {
                     if (!env.IMAGE)
                         env.IMAGE = env.APP_NAME
 
-                    sh "wget -O commons.groovy ${env.COMMONS_API_URL}"
-                    commons = load("commons.groovy")
-
                     // Gets the application project
-                    env.PROJECT = env.JOB_NAME.split("/")[0]    
+                    env.PROJECT = commons.getApplicationProject()      
                 }
             }
         }

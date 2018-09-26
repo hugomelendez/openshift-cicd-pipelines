@@ -1,10 +1,12 @@
 #! /usr/bin/env bash
 
+minishift setup-cdk
+
 # Sets the MiniShift profile for the non-prod cluster
 minishift profile set non-prod
 
 # Starts the non-prod cluster
-minishift start --skip-registration
+minishift start
 
 # Logs in as admin to create projects
 oc login "https://$(minishift ip):8443" -u admin -p admin
@@ -44,12 +46,14 @@ oc new-project jenkins
 oc new-app jenkins-persistent -n jenkins
 
 # Sets Jenkins service account permissions
-oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n core-dev
-oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n apis-dev
-oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n core-test
-oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n apis-test
-oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n core-prod-management
-oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n apis-prod-management
+oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n core-dev
+oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n apis-dev
+oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n core-test
+oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n apis-test
+oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n core-prod-management
+oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n apis-prod-management
+oc adm policy add-cluster-role-to-user system:registry system:serviceaccount:jenkins:jenkins
+oc adm policy add-cluster-role-to-user system:image-builder system:serviceaccount:jenkins:jenkins
 
 # Creates a new cluster role for reading groups in the cluster
 oc create -f ./configuration/roles/group-reader.yaml
@@ -145,8 +149,8 @@ oc create sa admin -n prod-management
 oc adm policy add-role-to-user admin system:serviceaccount:prod-management:admin -n core-prod
 oc adm policy add-role-to-user admin system:serviceaccount:prod-management:admin -n apis-prod
 
-oc adm policy add-role-to-user system:registry system:serviceaccount:prod-management:admin
-oc adm policy add-role-to-user system:image-builder system:serviceaccount:prod-management:admin
+oc adm policy add-cluster-role-to-user system:registry system:serviceaccount:prod-management:admin
+oc adm policy add-cluster-role-to-user system:image-builder system:serviceaccount:prod-management:admin
 
 # Exposes the prod cluster registry
 minishift addons apply registry-route
