@@ -2,7 +2,7 @@
 
 Common scenario regarding CI/CD pipelines in OpenShift with Jenkins.
 
-## Requirements
+## Requirements
 
 * MiniShift ([CDK 3.5](https://developers.redhat.com/products/cdk/overview))
 * OpenShift oc CLI 
