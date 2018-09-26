@@ -1,3 +1,8 @@
+@Library("pipeline-library") 
+import com.redhat.openshift.pipelines.Commons
+
+def commons = new Commons(this)
+
 pipeline {
     agent any
     options {
@@ -6,12 +11,10 @@ pipeline {
     }
     environment {
         SRC_REGISTRY_URL="docker://<SRC_REGISTRY_URL>"
-        SRC_REGISTRY_TOKEN="<SRC_REGISTRY_TOKEN>"
         DST_REGISTRY_URL="docker://<DST_REGISTRY_URL>"
         DST_REGISTRY_TOKEN="<DST_REGISTRY_TOKEN>"
         DST_CLUSTER_URL="insecure://<DST_CLUSTER_URL>"
         DST_CLUSTER_TOKEN="<DST_CLUSTER_TOKEN>"
-        COMMONS_API_URL="https://github.com/redhatcsargentina/openshift-pipelines/raw/master/api/commons.groovy"
     }
     stages {
         stage("Initialize") {
@@ -20,8 +23,8 @@ pipeline {
                     if (!env.IMAGE)
                         env.IMAGE = env.APP
 
-                    sh "wget -O commons.groovy ${env.COMMONS_API_URL}"
-                    commons = load("commons.groovy")   
+                        echo env.SRC_REGISTRY_TOKEN
+
                 }
             }
         }
