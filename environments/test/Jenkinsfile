@@ -46,7 +46,11 @@ pipeline {
         stage("Checkout Code") {
             steps {
                 script {
-                    commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                    openshift.withCluster() {
+                        openshift.withProject(env.PROJECT) {
+                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                        }
+                    }
                 }
             }
         }
