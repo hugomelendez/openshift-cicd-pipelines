@@ -83,7 +83,7 @@ class Commons implements Serializable {
             tags = version.tag + "\n" + tags
         
         def tag = steps.input(message: "Select version",
-                              parameters: [choice(choices: tags, description: 'Select a tag to deploy', name: 'Versions')])
+                              parameters: [steps.choice(choices: tags, description: 'Select a tag to deploy', name: 'Versions')])
 
         return tag
     }
