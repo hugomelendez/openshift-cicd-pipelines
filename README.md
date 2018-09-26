@@ -29,7 +29,7 @@ TBD
 
 TBD
 
-#### Maven Agent .m2 PV configuration
+#### Maven Agent .m2 PV configuration
 
 TBD
 
