@@ -21,25 +21,19 @@ pipeline {
                 }
             }
         }
-        stage("Select Tag") {
+        stage("Set Branch") {
             when {
                 not {
                     expression {
-                        return env.TAG
+                        return env.GIT_BRANCH
                     }
                 }
             }
             steps {
                 script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.SRC_PROJECT) {
-                            // Generates a list of tags to deploy
-                            env.TAG = commons.getVersion(env.APP)
-                            env.GIT_BRANCH = env.TAG
-
-                            echo env.TAG
-                        }
-                    }
+                    env.GIT_BRANCH = input(id: 'branch',
+                                           message: 'Select branch',
+                                           parameters: [string(name: 'Branch')]);
                 }
             }
         }
@@ -67,6 +61,27 @@ pipeline {
                                 if (o.kind != "BuildConfig" && o.kind != "ImageStream") 
                                     openshift.apply(o);
                             }
+                        }
+                    }
+                }
+            }
+        }
+        stage("Select Tag") {
+            when {
+                not {
+                    expression {
+                        return env.TAG
+                    }
+                }
+            }
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject(env.SRC_PROJECT) {
+                            // Generates a list of tags to deploy
+                            env.TAG = commons.getVersion(env.APP)
+
+                            echo env.TAG
                         }
                     }
                 }
