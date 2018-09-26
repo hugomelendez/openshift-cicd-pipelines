@@ -33,7 +33,7 @@ pipeline {
                 script {
                     env.GIT_BRANCH = input(id: 'branch',
                                            message: 'Select branch',
-                                           parameters: [string(name: 'Branch')]);
+                                           parameters: [string(name: 'Branch')])
                 }
             }
         }
@@ -54,7 +54,7 @@ pipeline {
                     openshift.withCluster {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
-                            objects = openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP=${env.APP}");
+                            objects = openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP=${env.APP}")
 
                             for (o in objects) {
                                 // Prevents to promote the BuildConfig and ImageSream, the build is only done in development stages
@@ -91,7 +91,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
                             // Tags image from development to test, this operation creates the ImageStream
-                            openshift.tag("${env.SRC_PROJECT}/${env.APP}:${env.TAG}", "${env.IMAGE}:${env.TAG}");
+                            openshift.tag("${env.SRC_PROJECT}/${env.APP}:${env.TAG}", "${env.IMAGE}:${env.TAG}")
                         }
                     } 
                 }
@@ -128,14 +128,18 @@ pipeline {
                 }
             }
         }
-        stage("Set Tag") {
+        stage("Set Tag to Promote") {
             steps {
                 script {
-                    env.PROMOTION_TAG = input(id: 'branch',
-                                              message: 'Select branch',
-                                              parameters: [string(name: 'Branch')]);
+                    env.PROMOTION_TAG = input(id: 'tag',
+                                              message: 'Set tag',
+                                              parameters: [string(name: 'Tag')])
 
-                    openshift.tag("${env.APP}:${env.TAG}", "${env.IMAGE}:${env.PROMOTION_TAG}");
+                    openshift.withCluster() {
+                        openshift.withProject(env.PROJECT) {
+                            openshift.tag("${env.APP}:${env.TAG}", "${env.IMAGE}:${env.PROMOTION_TAG}")
+                        }
+                    }
                 }
             }
         }
