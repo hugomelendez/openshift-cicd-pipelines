@@ -84,8 +84,6 @@ objects:
           value: ${PARAM_GIT_SECRET}
         - name: APP
           value: ${PARAM_APP}
-        - name: IMAGE
-          value: ${PARAM_APP}
         - name: APP_TEMPLATE_FILE
           value: ${PARAM_APP_TEMPLATE_FILE}
         - name: BASE_IMAGE

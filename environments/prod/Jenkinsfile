@@ -13,9 +13,6 @@ pipeline {
         stage("Initialize") {
             steps {
                 script {
-                    if (!env.IMAGE)
-                        env.IMAGE = env.APP
-
                     // Gets the application project
                     env.PROJECT = commons.getApplicationProject()
                 }
@@ -107,7 +104,7 @@ pipeline {
                 script {
                     openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
                         openshift.withProject(env.DST_PROJECT) {
-                            commons.deployApplication(env.APP, env.IMAGE, env.TAG)
+                            commons.deployApplication(env.APP, env.TAG)
                         } 
                     }
                 }

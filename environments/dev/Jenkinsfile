@@ -23,10 +23,6 @@ pipeline {
                     if (!env.MANUAL_TAG)
                         env.MANUAL_TAG = "false"
 
-                    // If image name is not set, image name will be app name
-                    if (!env.IMAGE) 
-                        env.IMAGE = env.APP;    
-
                     // Gets the application project
                     env.PROJECT = commons.getApplicationProject()                         
                 }
@@ -164,7 +160,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            openshift.tag("${env.APP}:latest", "${env.IMAGE}:${env.TAG}");
+                            openshift.tag("${env.APP}:latest", "${env.APP}:${env.TAG}");
                         }
                     }
                 } 
@@ -175,7 +171,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.deployApplication(env.APP, env.IMAGE, env.TAG)
+                            commons.deployApplication(env.APP, env.TAG)
                         } 
                     }
                 }

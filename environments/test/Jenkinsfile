@@ -91,7 +91,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
                             // Tags image from development to test, this operation creates the ImageStream
-                            openshift.tag("${env.SRC_PROJECT}/${env.APP}:${env.TAG}", "${env.IMAGE}:${env.TAG}")
+                            openshift.tag("${env.SRC_PROJECT}/${env.APP}:${env.TAG}", "${env.APP}:${env.TAG}")
                         }
                     } 
                 }
@@ -111,7 +111,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.deployApplication(env.APP, env.IMAGE, env.TAG)
+                            commons.deployApplication(env.APP, env.TAG)
                         } 
                     }
                 }
@@ -137,7 +137,7 @@ pipeline {
 
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            openshift.tag("${env.APP}:${env.TAG}", "${env.IMAGE}:${env.PROMOTION_TAG}")
+                            openshift.tag("${env.APP}:${env.TAG}", "${env.APP}:${env.PROMOTION_TAG}")
                         }
                     }
                 }
