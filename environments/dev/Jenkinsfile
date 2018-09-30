@@ -6,7 +6,7 @@ def lib = library identifier: 'pipeline-library@master', retriever: modernSCM(
    remote: 'https://github.com/redhatcsargentina/openshift-pipelines.git',
    credentialsId: 'incubator-git-secret'])
 
-def commons = new lib.com.redhat.openshift.pipelines.Commons(this)
+def commons = new com.redhat.openshift.pipelines.Commons(this)
 
 pipeline {
     agent {
