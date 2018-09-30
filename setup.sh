@@ -22,18 +22,16 @@ oc new-project core-prod-management
 oc new-project apis-prod-management
 
 # Creates the development templates in the development projects
-oc create -f ./environments/dev/dev-pipelines-template.yaml -n core-dev
-oc create -f ./environments/dev/branch-pipeline-template.yaml -n core-dev
-oc create -f ./environments/dev/dev-pipelines-template.yaml -n apis-dev
-oc create -f ./environments/dev/branch-pipeline-template.yaml -n apis-dev
+oc create -f ./environments/dev/java-application-template.yaml -n core-dev
+oc create -f ./environments/dev/java-application-template.yaml -n apis-dev
 
 # Creates the test template in the test projects
-oc create -f ./environments/test/test-pipeline-template.yaml -n core-test
-oc create -f ./environments/test/test-pipeline-template.yaml -n apis-test
+oc create -f ./environments/test/test-application-template.yaml -n core-test
+oc create -f ./environments/test/test-application-template.yaml -n apis-test
 
 # Creates the prod template in the prod projects
-oc create -f ./environments/prod/prod-pipeline-template.yaml -n core-prod-management
-oc create -f ./environments/prod/prod-pipeline-template.yaml -n apis-prod-management
+oc create -f ./environments/prod/prod-application-template.yaml -n core-prod-management
+oc create -f ./environments/prod/prod-application-template.yaml -n apis-prod-management
 
 # Jenkins
 
