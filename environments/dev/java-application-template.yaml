@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: java-application-template
+  annotations:
+    openshift.io/display-name: Java Application
+    iconClass: fa fa-code
+    description: Template to create a Java application (and its pipeline) based on an specific branch.
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: ${PARAM_APP_NAME}-pipeline
+    name: ${PARAM_APP_NAME}-pipeline
+  spec:
+    source:
+      type: Git
+      sourceSecret:
+        name: git-secret
+      git:
+        uri: https://github.com/redhatcsargentina/openshift-pipelines.git
+        ref: master
+      contextDir: environments/dev
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+        - name: GIT_BRANCH
+          value: ${PARAM_GIT_BRANCH}
+        - name: GIT_REPO
+          value: ${PARAM_GIT_REPO}
+        - name: GIT_SECRET
+          value: git-secret
+        - name: APP_NAME
+          value: ${PARAM_APP_NAME}
+        - name: APP_TEMPLATE_FILE
+          value: ${PARAM_APP_TEMPLATE_FILE}
+        - name: BASE_IMAGE
+          value: redhat-openjdk18-openshift:1.2
+        - name: ARTIFACTS_DIR
+          value: ./target
+        - name: JENKINS_AGENT
+          value: maven
+        - name: COMPILE_COMMAND
+          value: "mvn package -DskipTests"
+        - name: TEST_COMMAND
+          value: "mvn test"
+        - name: CODE_ANALYSIS_COMMAND
+          value: none
+        - name: RELEASE_COMMAND
+          value: none
+        - name: TECH
+          value: java
+        - name: TAG_VERSION
+          value: ${PARAM_TAG_VERSION}
+        jenkinsfilePath: Jenkinsfile
+      type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${PARAM_WEBHOOK_SECRET}
+        type: Generic
+parameters:
+- description: The name for the application
+  displayName: Application Name
+  name: PARAM_APP_NAME
+  required: true
+- description: The application template file (YAML) to create the application objects (when "none" objects will be created automatically)
+  displayName: Application Template File
+  name: PARAM_APP_TEMPLATE_FILE
+  value: none
+  required: true
+- description: The application Git repository
+  displayName: Git Repository
+  name: PARAM_GIT_REPO
+  required: true
+- description: The application branch
+  displayName: Git Branch
+  name: PARAM_GIT_BRANCH
+  required: true
+- description: Tag image with application version
+  displayName: Tag Image
+  name: PARAM_TAG_VERSION
+  value: "false"
+  required: true
+- description: A secret string used to configure the webhook
+  displayName: Webhook Secret
+  name: PARAM_WEBHOOK_SECRET
+  generate: expression 
+  from: "[a-zA-Z0-9]{40}"
