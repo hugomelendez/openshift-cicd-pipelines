@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     env.TAG = "latest"
-                    
+
                     // Gets the application project
                     env.PROJECT = commons.getApplicationProject()                         
                 }
@@ -61,8 +61,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
-                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP_NAME=${env.APP_NAME}",
-                                                                                                     "-p", "PARAM_IMAGE_NAME=${env.IMAGE_NAME}"));
+                            openshift.apply(commons.processTemplate(env.APP_TEMPLATE_FILE, env.APP_NAME, env.IMAGE_NAME));
                         }
                     }
                 }

@@ -13,6 +13,10 @@ class Commons implements Serializable {
         this.steps = script.steps
     }   
 
+    def processTemplate(template, app, image) {
+        return openshift.process(readFile(file: template), "-p", "PARAM_APP_NAME=${app}", "-p", "PARAM_IMAGE_NAME=${image}")
+    }
+
     def getTag(tech) {
         if (tech.equals("java"))
             return steps.readMavenPom().getVersion()

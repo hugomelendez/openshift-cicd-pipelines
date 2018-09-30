@@ -13,27 +13,32 @@ pipeline {
         stage("Initialize") {
             steps {
                 script {
-                    if (!env.IMAGE)
-                        env.IMAGE = env.APP_NAME
+                    if (!env.IMAGE_NAME)
+                        env.IMAGE_NAME = env.APP_NAME
 
                     // Gets the application project
                     env.PROJECT = commons.getApplicationProject()      
                 }
             }
         }
-        stage("Set Branch") {
+        stage("Select Tag") {
             when {
                 not {
                     expression {
-                        return env.GIT_BRANCH
+                        return env.TAG
                     }
                 }
             }
             steps {
                 script {
-                    env.GIT_BRANCH = input(id: 'branch',
-                                           message: 'Select branch',
-                                           parameters: [string(name: 'Branch')])
+                    openshift.withCluster() {
+                        openshift.withProject(env.SRC_PROJECT) {
+                            // Generates a list of tags to deploy
+                            env.TAG = commons.getVersion(env.APP_NAME)
+                            // Checkout same tag from Git
+                            env.GIT_BRANCH = env.TAG
+                        }
+                    }
                 }
             }
         }
@@ -54,7 +59,7 @@ pipeline {
                     openshift.withCluster {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
-                            objects = openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP=${env.APP}")
+                            objects = commons.processTemplate(env.APP_TEMPLATE_FILE, env.APP_NAME, env.IMAGE_NAME)
 
                             for (o in objects) {
                                 // Prevents to promote the BuildConfig and ImageSream, the build is only done in development stages
@@ -66,32 +71,13 @@ pipeline {
                 }
             }
         }
-        stage("Select Tag") {
-            when {
-                not {
-                    expression {
-                        return env.TAG
-                    }
-                }
-            }
-            steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.SRC_PROJECT) {
-                            // Generates a list of tags to deploy
-                            env.TAG = commons.getVersion(env.APP)
-                        }
-                    }
-                }
-            }
-        }
         stage("Promote Tag") {
             steps {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
                             // Tags image from development to test, this operation creates the ImageStream
-                            openshift.tag("${env.SRC_PROJECT}/${env.APP}:${env.TAG}", "${env.APP}:${env.TAG}")
+                            openshift.tag("${env.SRC_PROJECT}/${env.IMAGE_NAME}:${env.TAG}", "${env.IMAGE_NAME}:${env.TAG}")
                         }
                     } 
                 }
@@ -101,7 +87,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                        commons.resolveApproval(env.APPROVAL_GROUP)
+                        commons.resolveApproval(env.APP_NAMEROVAL_GROUP)
                     }
                 }
             }
@@ -111,34 +97,8 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.deployApplication(env.APP, env.TAG)
+                            commons.deployApplication(env.APP_NAME, env.TAG)
                         } 
-                    }
-                }
-            }
-        }
-        stage("Approve QA Testing") {
-            steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.PROJECT) {
-                            commons.resolveApproval(env.APPROVAL_GROUP)
-                        } 
-                    }
-                }
-            }
-        }
-        stage("Set Tag to Promote") {
-            steps {
-                script {
-                    env.PROMOTION_TAG = input(id: 'tag',
-                                              message: 'Set tag',
-                                              parameters: [string(name: 'Tag')])
-
-                    openshift.withCluster() {
-                        openshift.withProject(env.PROJECT) {
-                            openshift.tag("${env.APP}:${env.TAG}", "${env.APP}:${env.PROMOTION_TAG}")
-                        }
                     }
                 }
             }
