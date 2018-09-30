@@ -67,7 +67,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
-                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP=${env.APP}"));
+                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP=${env.APP_NAME}"));
                         }
                     }
                 }
@@ -126,7 +126,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.buildImage(env.APP, env.ARTIFACTS_DIR)
+                            commons.buildImage(env.APP_NAME, env.ARTIFACTS_DIR)
                         }
                     }
                 }
@@ -142,7 +142,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            openshift.tag("${env.APP}:latest", "${env.APP}:${commons.getTag(env.TECH)}");
+                            openshift.tag("${env.APP_NAME}:latest", "${env.APP_NAME}:${commons.getTag(env.TECH)}");
                         }
                     }
                 } 
@@ -153,7 +153,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.deployApplication(env.APP, env.TAG)
+                            commons.deployApplication(env.APP_NAME, env.TAG)
                         } 
                     }
                 }
