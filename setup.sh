@@ -1,7 +1,5 @@
 #! /usr/bin/env bash
 
-minishift setup-cdk
-
 # Sets the MiniShift profile for the non-prod cluster
 minishift profile set non-prod
 

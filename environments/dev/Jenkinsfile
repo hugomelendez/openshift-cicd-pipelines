@@ -132,35 +132,17 @@ pipeline {
                 }
             }
         }
-        // If manual tag is set, asks for the tag to use
-        stage("Set Tag") {
-            when {
-                expression {
-                    return env.MANUAL_TAG.equals("true")
-                }
-            }
-            steps {
-                script {
-                    env.TAG = input(id: 'tag',
-                                    message: 'Value for the tag',
-                                    parameters: [string(defaultValue: '', name: 'Tag')]);
-                }
-                
-            }
-        } 
         stage("Tag Image") {
             when {
-                not {
-                    expression {
-                        return env.TAG.equals("latest")
-                    }
-                }
+                expression {
+                    return env.TAG_VERSION
+                }   
             }
             steps {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            openshift.tag("${env.APP}:latest", "${env.APP}:${env.TAG}");
+                            openshift.tag("${env.APP}:latest", "${env.APP}:${commons.getTag(env.TECH)}");
                         }
                     }
                 } 

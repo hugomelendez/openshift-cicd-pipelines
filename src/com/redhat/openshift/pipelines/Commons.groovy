@@ -13,6 +13,11 @@ class Commons implements Serializable {
         this.steps = script.steps
     }   
 
+    def getTag(env.TECH) {
+        if (env.TECH.equals("java"))
+            return steps.readMavenPom().getVersion()
+    }
+
     def getApplicationProject() {
         return env.JOB_NAME.split("/")[0]
     }
