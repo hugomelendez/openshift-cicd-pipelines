@@ -54,6 +54,13 @@ pipeline {
             }
         }
         stage("Promote Template") {
+            when {
+                not {
+                    expression {
+                        return env.APP_TEMPLATE_FILE.equals("none")
+                    }
+                }
+            }
             steps {
                 script {
                     openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
