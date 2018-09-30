@@ -1,6 +1,6 @@
 # openshift-pipelines
 
-Common scenario regarding CI/CD pipelines in OpenShift with Jenkins.
+CI/CD pipelines in OpenShift.
 
 ## Requirements
 
@@ -17,7 +17,7 @@ Almost everything is done by the following script:
 
 ### Manual steps
 
-####  Git Secret creation
+####  Git Secret creation in projects
 
 TBD
 
@@ -33,7 +33,7 @@ TBD
 
 TBD
 
-#### Jenkins and Skopeo configuration
+#### Jenkins and Skopeo agent configuration
 
 TBD
 

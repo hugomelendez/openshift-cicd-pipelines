@@ -3,9 +3,9 @@ kind: Template
 metadata:
   name: test-application-template
   annotations:
-    openshift.io/display-name: Application (Test)
+    openshift.io/display-name: Application (TEST)
     iconClass: fa fa-code
-    description: Template to generate an application for testing and its pipeline.
+    description: Template to generate an application and its pipeline.
 objects:
 - apiVersion: v1
   kind: BuildConfig
