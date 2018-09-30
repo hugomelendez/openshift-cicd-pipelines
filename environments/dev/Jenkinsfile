@@ -135,7 +135,7 @@ pipeline {
         stage("Tag Image") {
             when {
                 expression {
-                    return env.TAG_VERSION
+                    return env.TAG_VERSION.equals("true")
                 }   
             }
             steps {
