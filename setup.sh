@@ -158,18 +158,13 @@ oc adm policy add-cluster-role-to-user system:image-builder system:serviceaccoun
 # Exposes the prod cluster registry
 minishift addons apply registry-route
 
-export DST_REGISTRY_URL=$(oc get route docker-registry -n default --template={{.spec.host}})
-export DST_REGISTRY_TOKEN=$(oc sa get-token admin -n prod-management)
-
 minishift profile set non-prod
 
 oc login https://$(minishift ip):8443 -u admin -p admin
 
 oc rollout pause dc/jenkins -n jenkins
 
-oc set env dc/jenkins DST_REGISTRY_URL=$DST_REGISTRY_URL -n jenkins
-oc set env dc/jenkins DST_REGISTRY_TOKEN=$DST_REGISTRY_TOKEN -n jenkins
-oc set env dc/jenkins DST_CLUSTER_URL=$DST_REGISTRY_URL -n jenkins
-oc set env dc/jenkins DST_CLUSTER_TOKEN=$DST_REGISTRY_TOKEN -n jenkins
+oc set env dc/jenkins DST_CLUSTER_URL="insecure://$(minishift ip):8443" -n jenkins
+oc set env dc/jenkins DST_CLUSTER_TOKEN=$(oc sa get-token admin -n prod-management) -n jenkins
 
 oc rollout resume dc/jenkins -n jenkins

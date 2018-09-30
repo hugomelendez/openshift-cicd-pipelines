@@ -56,8 +56,8 @@ pipeline {
         stage("Promote Template") {
             steps {
                 script {
-                    openshift.withCluster {
-                        openshift.withProject(env.PROJECT) {
+                    openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
+                        openshift.withProject(env.DST_PROJECT) {
                              // Uses the template to create the application
                             openshift.apply(commons.processTemplateWithoutBuildObjects(env.APP_TEMPLATE_FILE, env.APP_NAME, env.IMAGE_NAME))
                         }
