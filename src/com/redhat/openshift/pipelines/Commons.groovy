@@ -14,7 +14,7 @@ class Commons implements Serializable {
     }   
 
     def processTemplate(template, app, image) {
-        return openshift.process(readFile(file: template), "-p", "PARAM_APP_NAME=${app}", "-p", "PARAM_IMAGE_NAME=${image}")
+        return openshift.process(steps.readFile(file: template), "-p", "PARAM_APP_NAME=${app}", "-p", "PARAM_IMAGE_NAME=${image}")
     }
 
     def getTag(tech) {
