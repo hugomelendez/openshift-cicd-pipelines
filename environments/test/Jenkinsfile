@@ -59,13 +59,7 @@ pipeline {
                     openshift.withCluster {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
-                            objects = commons.processTemplate(env.APP_TEMPLATE_FILE, env.APP_NAME, env.IMAGE_NAME)
-
-                            for (o in objects) {
-                                // Prevents to promote the BuildConfig and ImageSream, the build is only done in development stages
-                                if (o.kind != "BuildConfig" && o.kind != "ImageStream") 
-                                    openshift.apply(o);
-                            }
+                            openshift.apply(commons.processTemplateWithoutBuildObjects(env.APP_TEMPLATE_FILE, env.APP_NAME, env.IMAGE_NAME))
                         }
                     }
                 }
@@ -87,7 +81,7 @@ pipeline {
             steps {
                 script {
                     openshift.withCluster() {
-                        commons.resolveApproval(env.APP_NAMEROVAL_GROUP)
+                        commons.resolveApproval(env.APPROVAL_GROUP)
                     }
                 }
             }
@@ -97,7 +91,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.deployApplication(env.APP_NAME, env.TAG)
+                            commons.deployApplication(env.APP_NAME, env.IMAGE_NAME, env.TAG)
                         } 
                     }
                 }

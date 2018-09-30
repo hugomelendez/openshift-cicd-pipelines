@@ -17,6 +17,19 @@ class Commons implements Serializable {
         return openshift.process(steps.readFile(file: template), "-p", "PARAM_APP_NAME=${app}", "-p", "PARAM_IMAGE_NAME=${image}")
     }
 
+    def processTemplateWithoutBuildObjects(template, app, image) {
+        def objects = openshift.process(steps.readFile(file: template), "-p", "PARAM_APP_NAME=${app}", "-p", "PARAM_IMAGE_NAME=${image}")
+        def filteredObjects = []
+
+        for (o in objects) {
+            // Prevents to promote the BuildConfig and ImageSream, the build is only done in development stages
+            if (o.kind != "BuildConfig" && o.kind != "ImageStream") 
+                filteredObjects.add(o)
+        }
+
+        return filteredObjects
+    }
+
     def getTag(tech) {
         if (tech.equals("java"))
             return steps.readMavenPom().getVersion()

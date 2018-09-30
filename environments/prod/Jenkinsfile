@@ -13,6 +13,9 @@ pipeline {
         stage("Initialize") {
             steps {
                 script {
+                    if (!env.IMAGE_NAME)
+                        env.IMAGE_NAME = env.APP_NAME
+
                     // Gets the application project
                     env.PROJECT = commons.getApplicationProject()
                 }
@@ -31,7 +34,8 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.SRC_PROJECT) {
                             // Generates a list of tags to deploy
-                            env.TAG = commons.getVersion(env.APP)
+                            env.TAG = commons.getVersion(env.APP_NAME)
+                            // Checkout same tag from Git
                             env.GIT_BRANCH = env.TAG
                         }
                     }
@@ -49,23 +53,13 @@ pipeline {
                 }
             }
         }
-        stage("Promote Objects") {
+        stage("Promote Template") {
             steps {
                 script {
-                    openshift.withCluster() {
-                        openshift.withProject() {
-                            // Uses the template to create the application
-                            objects = openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP=${env.APP}");
-
-                            openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
-                                openshift.withProject(env.DST_PROJECT) {
-                                    for (o in objects) {
-                                        // Prevents to promote the BuildConfig and ImageSream, the build is only done in development stages
-                                        if (o.kind != "BuildConfig" && o.kind != "ImageStream") 
-                                            openshift.apply(o);
-                                    }
-                                }
-                            }
+                    openshift.withCluster {
+                        openshift.withProject(env.PROJECT) {
+                             // Uses the template to create the application
+                            openshift.apply(commons.processTemplateWithoutBuildObjects(env.APP_TEMPLATE_FILE, env.APP_NAME, env.IMAGE_NAME))
                         }
                     }
                 }
@@ -82,8 +76,8 @@ pipeline {
                     def dstCreds = "unused:${env.DST_REGISTRY_TOKEN}";
 
                     // Paths 
-                    def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT}/${env.APP}:${env.TAG}";
-                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT}/${env.APP}:${env.TAG}";
+                    def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT}/${env.IMAGE_NAME}:${env.TAG}";
+                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT}/${env.IMAGE_NAME}:${env.TAG}";
 
                     // Executes the Skopeo command
                     sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds=${srcCreds} --dest-creds=${dstCreds} ${src} ${dst}";
@@ -104,7 +98,7 @@ pipeline {
                 script {
                     openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
                         openshift.withProject(env.DST_PROJECT) {
-                            commons.deployApplication(env.APP, env.TAG)
+                            commons.deployApplication(env.APP_NAME, env.IMAGE_NAME, env.TAG)
                         } 
                     }
                 }
