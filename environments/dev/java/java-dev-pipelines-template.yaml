@@ -104,6 +104,8 @@ objects:
           value: ${PARAM_RELEASE_COMMAND}
         - name: TAG_VERSION
           value: "true"
+        - name: TECH
+          value: java
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
