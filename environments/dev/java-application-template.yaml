@@ -33,6 +33,8 @@ objects:
           value: git-secret
         - name: APP_NAME
           value: ${PARAM_APP_NAME}
+        - name: IMAGE_NAME
+          value: ${PARAM_IMAGE_NAME}
         - name: APP_TEMPLATE_FILE
           value: ${PARAM_APP_TEMPLATE_FILE}
         - name: BASE_IMAGE
@@ -65,16 +67,20 @@ parameters:
   displayName: Application Name
   name: PARAM_APP_NAME
   required: true
+- description: The name for the image
+  displayName: Image Name
+  name: PARAM_IMAGE_NAME
+  required: true
 - description: The application template file (YAML) to create the application objects (when "none" objects will be created automatically)
   displayName: Application Template File
   name: PARAM_APP_TEMPLATE_FILE
   value: none
   required: true
-- description: The application Git repository
+- description: The Git repository
   displayName: Git Repository
   name: PARAM_GIT_REPO
   required: true
-- description: The application branch
+- description: The Git branch
   displayName: Git Branch
   name: PARAM_GIT_BRANCH
   required: true

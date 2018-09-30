@@ -43,25 +43,25 @@ class Commons implements Serializable {
             openshift.selector("bc", app).startBuild("--wait=true")       
     }
 
-    def deployApplication(app, tag) {
+    def deployApplication(app, image, tag) {
         if (!openshift.selector("dc", app).exists()) {
             // The creation starts a deployment
-            createApplication(app, tag)                 
+            createApplication(app, image, tag)                 
         } else {
-            updateApplication(app, tag)
+            updateApplication(app, image, tag)
         }   
 
         //verifyDeployment(app)
     }
 
-    def updateApplication(app, tag) {
+    def updateApplication(app, image, tag) {
         openshift.set("triggers", "dc/${app}", "--remove-all")
-        openshift.set("triggers", "dc/${app}", "--from-image=${app}:${tag}", "-c ${app}")
+        openshift.set("triggers", "dc/${app}", "--from-image=${image}:${tag}", "-c ${app}")
     }
 
-    def createApplication(app, tag) {
+    def createApplication(app, image, tag) {
         // Creates the application and get the brand new BuildConfig
-        def dc = openshift.newApp("${app}:${tag}", "--name=${app}").narrow("dc");
+        def dc = openshift.newApp("${image}:${tag}", "--name=${app}").narrow("dc");
         // Creates the app Route
         openshift.selector("svc", app).expose();                
     }

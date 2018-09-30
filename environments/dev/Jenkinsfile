@@ -15,14 +15,6 @@ pipeline {
         stage("Initialize") {
             steps {
                 script {
-                    // If tag environment variable is not set, uses latest
-                    if (!env.TAG)
-                        env.TAG = "latest"
-                    
-                    // Unless set, automatically tags the image with environment variable tag
-                    if (!env.MANUAL_TAG)
-                        env.MANUAL_TAG = "false"
-
                     // Gets the application project
                     env.PROJECT = commons.getApplicationProject()                         
                 }
@@ -67,7 +59,8 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
-                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP=${env.APP_NAME}"));
+                            openshift.apply(openshift.process(readFile(file: env.APP_TEMPLATE_FILE), "-p", "PARAM_APP_NAME=${env.APP_NAME}"),
+                                                                                                     "-p", "PARAM_IMAGE_NAME=${env.IMAGE_NAME}");
                         }
                     }
                 }
@@ -142,7 +135,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            openshift.tag("${env.APP_NAME}:latest", "${env.APP_NAME}:${commons.getTag(env.TECH)}");
+                            openshift.tag("${env.IMAGE_NAME}:latest", "${env.IMAGE_NAME}:${commons.getTag(env.TECH)}");
                         }
                     }
                 } 
@@ -153,7 +146,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.deployApplication(env.APP_NAME, env.TAG)
+                            commons.deployApplication(env.APP_NAME, env.IMAGE_NAME, env.TAG)
                         } 
                     }
                 }
