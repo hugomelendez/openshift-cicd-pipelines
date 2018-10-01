@@ -73,10 +73,9 @@ parameters:
   displayName: Image Name
   name: PARAM_IMAGE_NAME
   required: true
-- description: The application template file (YAML) to create the application objects (when "none" objects will be created automatically)
+- description: The application template file to create the application
   displayName: Application Template File
   name: PARAM_APP_TEMPLATE_FILE
-  value: none
   required: true
 - description: The Git repository
   displayName: Git Repository

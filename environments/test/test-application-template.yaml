@@ -51,7 +51,7 @@ parameters:
   displayName: Application Name
   name: PARAM_APP_NAME
   required: true
-- description: The application template file (YAML) to create the application objects
+- description: The application template file to create the application
   displayName: Application Template File
   name: PARAM_APP_TEMPLATE_FILE
   required: true
