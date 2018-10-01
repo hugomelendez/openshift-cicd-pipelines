@@ -76,6 +76,7 @@ parameters:
 - description: The application template file to create the application
   displayName: Application Template File
   name: PARAM_APP_TEMPLATE_FILE
+  value: none
   required: true
 - description: The Git repository
   displayName: Git Repository
