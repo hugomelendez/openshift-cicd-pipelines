@@ -52,13 +52,13 @@ class Commons implements Serializable {
                        userRemoteConfigs: [gitInfo]])
     }
 
-    def buildImage(app, artifactsDir, baseImage) {
+    def buildImage(app, image, artifactsDir, baseImage) {
         // If artifacts dir is set, binary s2i build is used
         if (!openshift.selector("bc", "${app}").exists()) {
             if (artifactsDir.equals("none"))
-                openshift.newBuild("--image-stream=${baseImage}", "--name=${app}");         
+                openshift.newBuild("--image-stream=${baseImage}", "--name=${app}", "-l app=${app}", "--to=${image}");         
             else 
-                openshift.newBuild("--image-stream=${baseImage}", "--name=${app}", "--binary=true");         
+                openshift.newBuild("--image-stream=${baseImage}", "--name=${app}", "--binary=true", "-l app=${app}", "--to=${image}");         
         }
 
         if (artifactsDir.equals("none"))
