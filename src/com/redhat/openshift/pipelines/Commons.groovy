@@ -33,6 +33,14 @@ class Commons implements Serializable {
     def getTag(tech) {
         if (tech.equals("java"))
             return steps.readMavenPom().getVersion()
+        else if (tech.equals("nodejs")) 
+            return getVersionFromPackageJSON()
+    }
+
+    def getVersionFromPackageJSON() {
+        sh "cat ${file} | grep version | head -1 | awk -F: '{ print \$2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]' > version"
+
+        return readFile("version").trim()
     }
 
     def getApplicationProject() {
