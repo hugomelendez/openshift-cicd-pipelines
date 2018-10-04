@@ -61,10 +61,14 @@ class Commons implements Serializable {
     }
 
     def buildImage(app, image, artifactsDir, baseImage, repo) {
+
         // If artifacts dir is set, binary s2i build is used
         if (!openshift.selector("bc", "${app}").exists()) {
-            if (artifactsDir.equals("none"))
+            if (artifactsDir.equals("none")) {
                 openshift.newBuild("--image-stream=${baseImage}", "${repo}", "--name=${app}", "-l app=${app}", "--to=${image}");         
+
+                return
+            }
             else 
                 openshift.newBuild("--image-stream=${baseImage}", "--name=${app}", "--binary=true", "-l app=${app}", "--to=${image}");         
         }
