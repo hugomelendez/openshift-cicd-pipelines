@@ -104,7 +104,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            commons.buildImage(env.APP_NAME, env.IMAGE_NAME, env.ARTIFACTS_DIR, env.BASE_IMAGE)
+                            commons.buildImage(env.APP_NAME, env.IMAGE_NAME, env.ARTIFACTS_DIR, env.BASE_IMAGE, env.GIT_REPO)
                         }
                     }
                 }
