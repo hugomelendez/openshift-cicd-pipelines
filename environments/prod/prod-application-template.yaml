@@ -32,7 +32,7 @@ objects:
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
         - name: GIT_SECRET
-          value: ${PARAM_GIT_SECRET}
+          value: git-secret
         - name: SRC_PROJECT
           value: ${PARAM_SRC_PROJECT}     
         - name: DST_PROJECT
@@ -58,11 +58,6 @@ parameters:
 - description: The application Git repository
   displayName: Git Repository
   name: PARAM_GIT_REPO
-  required: true
-- description: The Git credentials (must be the name of an OpenShift Secret or "none" if credentials are not needed)
-  displayName: Git Credentials
-  name: PARAM_GIT_SECRET
-  value: git-secret
   required: true
 - description: The source project for image and objects promotion
   displayName: Source Project
