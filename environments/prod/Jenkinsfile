@@ -92,6 +92,11 @@ pipeline {
             }
         }
         stage("Approve Deploy") {
+            when {
+                expression {
+                    return env.APPROVAL_GROUP
+                }
+            }
             steps {
                 script {
                     openshift.withCluster() {

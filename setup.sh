@@ -1,10 +1,10 @@
 #! /usr/bin/env bash
 
 # Sets the MiniShift profile for the non-prod cluster
-minishift profile set non-prod
+#minishift profile set non-prod
 
 # Starts the non-prod cluster
-minishift start
+#minishift start
 
 # Logs in as admin to create projects
 oc login "https://$(minishift ip):8443" -u admin -p admin
@@ -71,16 +71,16 @@ oc adm groups new prod-approvers
 oc adm groups add-users developers leandro carlos hugo ana
 oc adm groups add-users testers maria diego
 oc adm groups add-users administrators mario
-oc adm groups add-users test-approvers jose hernan
-oc adm groups add-users prod-approvers hernan
+oc adm groups add-users test-approvers jose mario
+oc adm groups add-users prod-approvers hernan mario
 
 # Sets permissions
 
 # Project memberships
 oc adm policy add-role-to-user admin leandro -n core-dev
 oc adm policy add-role-to-user admin hugo -n core-dev
-oc adm policy add-role-to-user admin leandro -n core-test
-oc adm policy add-role-to-user admin hugo -n core-test
+oc adm policy add-role-to-user view leandro -n core-test
+oc adm policy add-role-to-user view hugo -n core-test
 
 oc adm policy add-role-to-user admin carlos -n apis-dev
 oc adm policy add-role-to-user admin ana -n apis-dev
@@ -94,10 +94,11 @@ oc adm policy add-role-to-group admin administrators -n apis-test
 oc adm policy add-role-to-group admin administrators -n core-prod-management
 oc adm policy add-role-to-group admin administrators -n apis-prod-management
 oc adm policy add-role-to-group admin administrators -n jenkins
-oc adm policy add-role-to-group admin administrators -n gogs
 
 oc adm policy add-role-to-group edit prod-approvers -n jenkins
 oc adm policy add-role-to-group edit test-approvers -n jenkins
+
+oc adm policy add-role-to-group view developers -n jenkins
 
 # Exposes the non-prod cluster registry
 minishift addons apply registry-route
@@ -158,9 +159,3 @@ minishift profile set non-prod
 
 oc login https://$(minishift ip):8443 -u admin -p admin
 
-oc rollout pause dc/jenkins -n jenkins
-
-oc set env dc/jenkins DST_CLUSTER_URL=$DST_CLUSTER_URL -n jenkins
-oc set env dc/jenkins DST_CLUSTER_TOKEN=$DST_CLUSTER_TOKEN -n jenkins
-
-oc rollout resume dc/jenkins -n jenkins

@@ -11,3 +11,10 @@
 * https://docs.openshift.com/container-platform/3.10/dev_guide/openshift_pipeline.html#disabling-jenkins-autoprovisioning
 * https://docs.openshift.com/container-platform/3.10/dev_guide/openshift_pipeline.html#pipeline-configuring-slave-pods
 
+## Secrets 
+
+* https://docs.openshift.com/container-platform/3.9/dev_guide/builds/build_inputs.html
+
+## Issues
+
+* https://docs.openshift.com/container-platform/3.10/install_config/registry/registry_known_issues.html#known-issue-nfs-image-push-fails

@@ -17,7 +17,7 @@ pipeline {
                 script {
                     env.TAG = "latest"
                     // Gets the application project
-                    env.PROJECT = commons.getApplicationProject()                         
+                    env.PROJECT = commons.getApplicationProject()      
                 }
             }
         }

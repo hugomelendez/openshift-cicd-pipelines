@@ -16,8 +16,6 @@ objects:
   spec:
     source:
       type: Git
-      sourceSecret:
-        name: git-secret
       git:
         uri: https://github.com/redhatcsargentina/openshift-pipelines.git
         ref: master
@@ -31,14 +29,10 @@ objects:
           value: ${PARAM_APP_TEMPLATE_FILE}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
-        - name: GIT_SECRET
-          value: git-secret
         - name: SRC_PROJECT
           value: ${PARAM_SRC_PROJECT}     
         - name: DST_PROJECT
           value: ${PARAM_DST_PROJECT}
-        - name: APPROVAL_GROUP
-          value: prod-approvers
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
