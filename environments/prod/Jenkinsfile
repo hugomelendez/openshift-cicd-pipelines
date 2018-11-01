@@ -83,8 +83,8 @@ pipeline {
                     def dstCreds = "unused:${env.DST_REGISTRY_TOKEN}";
 
                     // Paths 
-                    def src = "${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT}/${env.IMAGE_NAME}:${env.TAG}";
-                    def dst = "${env.DST_REGISTRY_URL}/${env.DST_PROJECT}/${env.IMAGE_NAME}:${env.TAG}";
+                    def src = "docker://${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT}/${env.IMAGE_NAME}:${env.TAG}";
+                    def dst = "docker://${env.DST_REGISTRY_URL}/${env.DST_PROJECT}/${env.IMAGE_NAME}:${env.TAG}";
 
                     // Executes the Skopeo command
                     sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds=${srcCreds} --dest-creds=${dstCreds} ${src} ${dst}";
