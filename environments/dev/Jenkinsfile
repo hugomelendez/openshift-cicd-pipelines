@@ -47,11 +47,7 @@ pipeline {
                             // Uses the template to create the application
                             openshift.apply(commons.processTemplate(env.APP_TEMPLATE_FILE, env.APP_NAME, env.IMAGE_NAME));
 
-                            def currentDir = new File('src/main/openshift/dev')
-
-                            currentDir.eachFile {
-                                echo it.name
-                            }
+                            openshift.apply("src/main/openshift/dev")
                         }
                     }
                 }
