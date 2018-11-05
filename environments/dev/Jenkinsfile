@@ -47,7 +47,7 @@ pipeline {
                             // Uses the template to create the application
                             openshift.apply(commons.processTemplate(env.APP_TEMPLATE_FILE, env.APP_NAME, env.IMAGE_NAME));
 
-                            openshift.apply("-f", "src/main/openshift/environments/dev")
+                            openshift.apply("-f", "src/main/openshift/environments/dev", "--overwrite")
                         }
                     }
                 }
