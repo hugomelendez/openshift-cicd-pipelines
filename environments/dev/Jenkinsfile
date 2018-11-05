@@ -32,7 +32,7 @@ pipeline {
                 }
             }
         }
-        stage ("Apply Template") {
+        stage ("Apply Templates") {
             when {
                 not {
                     expression {
@@ -46,6 +46,12 @@ pipeline {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
                             openshift.apply(commons.processTemplate(env.APP_TEMPLATE_FILE, env.APP_NAME, env.IMAGE_NAME));
+
+                            def currentDir = new File('src/main/openshift/dev')
+
+                            currentDir.eachFile {
+                                echo it.name
+                            }
                         }
                     }
                 }
