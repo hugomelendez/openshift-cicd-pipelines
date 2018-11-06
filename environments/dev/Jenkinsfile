@@ -48,7 +48,8 @@ pipeline {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
                             openshift.apply(commons.processTemplate("openshift/template.yaml", env.APP_NAME, env.IMAGE_NAME));
-                            openshift.patch("cm/${env.APP_NAME}-config", readFile('openshift/environments/dev/config.yaml'))
+                            def patch = readFile('openshift/environments/dev/config.yaml')
+                            openshift.patch("cm/${env.APP_NAME}-config", '${patch}')
                         }
                     }
                 }
