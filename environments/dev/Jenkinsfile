@@ -1,3 +1,8 @@
+library identifier: 'pipeline-library@master', retriever: modernSCM(
+  [$class: 'GitSCMSource',
+   remote: 'https://github.com/redhatcsargentina/openshift-pipelines.git',
+   credentialsId: 'dev-github'])
+
 @Library("pipeline-library") 
 import com.redhat.openshift.pipelines.Commons
 
@@ -46,6 +51,8 @@ pipeline {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
                             openshift.apply(commons.processTemplate(env.APP_TEMPLATE_FILE, env.APP_NAME, env.IMAGE_NAME));
+
+                            openshift.process()
 
                             openshift.apply("-f", "src/main/openshift/environments/dev", "--overwrite")
                         }
