@@ -1,12 +1,9 @@
-library identifier: 'pipeline-library@master', retriever: modernSCM(
+def lib = library identifier: 'pipeline-library@master', retriever: modernSCM(
   [$class: 'GitSCMSource',
    remote: 'https://github.com/redhatcsargentina/openshift-pipelines.git',
    credentialsId: 'dev-github'])
 
-@Library("pipeline-library") 
-import com.redhat.openshift.pipelines.Commons
-
-def commons = new com.redhat.openshift.pipelines.Commons(this)
+def commons = new lib.com.redhat.openshift.pipelines.Commons(this)
 
 pipeline {
     agent {
