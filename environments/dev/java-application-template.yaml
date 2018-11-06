@@ -29,8 +29,6 @@ objects:
           value: ${PARAM_APP_NAME}
         - name: IMAGE_NAME
           value: ${PARAM_IMAGE_NAME}
-        - name: APP_TEMPLATE_FILE
-          value: ${PARAM_APP_TEMPLATE_FILE}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
         - name: GIT_BRANCH
@@ -68,11 +66,6 @@ parameters:
 - description: The image name
   displayName: Image Name
   name: PARAM_IMAGE_NAME
-  required: true
-- description: The application template file to create the application
-  displayName: Application Template File
-  name: PARAM_APP_TEMPLATE_FILE
-  value: none
   required: true
 - description: The Git repository
   displayName: Git Repository
