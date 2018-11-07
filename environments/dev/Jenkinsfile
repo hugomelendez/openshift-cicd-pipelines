@@ -36,8 +36,6 @@ pipeline {
             when {
                 not {
                     expression {
-
-
                         return env.APP_TEMPLATE_FILE.equals("none")
                     }
                 }
@@ -47,15 +45,18 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
-                            openshift.apply(commons.processTemplate("openshift/template.yaml", env.APP_NAME, env.IMAGE_NAME));
-                            // Replaces the config map with a new one based on the repository dev config map
-                            openshift.replace(openshift.process(readFile("openshift/environments/dev/config.yaml"), "-p", "PARAM_APP_NAME=${APP_NAME}"))
-                            // Merges the deployment config with environment specific configuration
-                            try {
-                                openshift.patch("dc/${APP_NAME}", "'${readFile("openshift/environments/dev/deployment.yaml")}'")                            
-                            } catch (Exception e) { 
-                                ;
+                            file = readFile("openshift/template2.yaml")
+                            if (file) {
+                                echo "archivo existe"
+                            } else {
+                                echo "archivo no existe"
                             }
+                            
+                            openshift.apply(commons.processTemplate("openshift/template.yaml", env.APP_NAME, env.IMAGE_NAME))
+                            // Replaces the config map with a new one based on the repository dev config map
+                            openshift.apply(commons.processConfig("openshift/environments/dev/config.yaml", env.APP_NAME))
+                            // Merges the deployment config with environment specific configuration
+                            commons.patchDeploymentConfig("openshift/environments/dev/deployment.yaml", env.APP_NAME)
                         }
                     }
                 }

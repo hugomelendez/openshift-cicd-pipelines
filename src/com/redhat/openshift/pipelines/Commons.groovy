@@ -17,6 +17,19 @@ class Commons implements Serializable {
         return openshift.process(steps.readFile(file: template), "-p", "PARAM_APP_NAME=${app}", "-p", "PARAM_IMAGE_NAME=${image}")
     }
 
+    def processConfig(template, app) {
+        return openshift.process(steps.readFile(file: template), "-p", "PARAM_APP_NAME=${app}")
+    }
+
+    def patchDeploymentConfig(deployment, app) {
+        // Until OpenShift 3.11, this workaround is necessary: https://github.com/openshift/origin/pull/20456
+        try {
+            openshift.patch("dc/${app}", "'${steps.readFile(deployment)}'")                            
+        } catch (Exception e) { 
+            ;
+        }
+    }
+
     def processTemplateWithoutBuildObjects(template, app, image) {
         def objects = openshift.process(steps.readFile(file: template), "-p", "PARAM_APP_NAME=${app}", "-p", "PARAM_IMAGE_NAME=${image}")
         def filteredObjects = []
