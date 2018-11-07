@@ -48,7 +48,10 @@ pipeline {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
                             openshift.apply(commons.processTemplate("openshift/template.yaml", env.APP_NAME, env.IMAGE_NAME));
+                            // Replaces the config map with a new one based on the repository dev config map
                             openshift.replace(openshift.process(readFile("openshift/environments/dev/config.yaml"), "-p", "PARAM_APP_NAME=${APP_NAME}"))
+                            // Merges the deployment config with environment specific configuration
+                            openshift.patch("dc/${APP_NAME}", readFile("openshift/environments/dev/deployment.yaml"))
                         }
                     }
                 }
