@@ -21,6 +21,13 @@ class Commons implements Serializable {
         return openshift.process(steps.readFile(file: template), "-p", "PARAM_APP_NAME=${app}")
     }
 
+    def applyConfigChanges(config, deploymentPatch) { 
+        // Replaces the config map with a new one based on the repository dev config map
+        openshift.apply(processConfig(config, env.APP_NAME))
+        // Merges the deployment config with environment specific configuration
+        patchDeploymentConfig(deploymentPatch, env.APP_NAME)
+    }
+
     def patchDeploymentConfig(deployment, app) {
         // Until OpenShift 3.11, this workaround is necessary: https://github.com/openshift/origin/pull/20456
         try {
@@ -28,6 +35,24 @@ class Commons implements Serializable {
         } catch (Exception e) { 
             ;
         }
+    }
+
+    def hasTemplate(template) {
+        if (steps.fileExists(template))
+            return true
+        return false
+    }
+
+    def hasConfig(config) {
+        if (steps.fileExists(config))
+            return true
+        return false
+    }
+
+    def hasDeploymentPatch(deploymentPatch) {
+        if (steps.fileExists(deploymentPatch))
+            return true
+        return false
     }
 
     def processTemplateWithoutBuildObjects(template, app, image) {

@@ -11,6 +11,11 @@ pipeline {
         skipDefaultCheckout()
         disableConcurrentBuilds()
     }
+    environment {
+        APP_TEMPLATE = "openshift/template.yaml"
+        APP_CONFIG = "openshift/environments/dev/config.yaml"
+        APP_DEPLOYMENT_PATCH = "openshift/environments/dev/deployment.yaml"
+    }
     stages {
         stage("Initialize") {
             steps {
@@ -36,7 +41,7 @@ pipeline {
             when {
                 not {
                     expression {
-                        return env.APP_TEMPLATE_FILE.equals("none")
+                        return commons.hasTemplate(env.APP_TEMPLATE)
                     }
                 }
             }
@@ -45,18 +50,25 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
-                            file = readFile("openshift/template2.yaml")
-                            if (file) {
-                                echo "archivo existe"
-                            } else {
-                                echo "archivo no existe"
-                            }
-                            
                             openshift.apply(commons.processTemplate("openshift/template.yaml", env.APP_NAME, env.IMAGE_NAME))
-                            // Replaces the config map with a new one based on the repository dev config map
-                            openshift.apply(commons.processConfig("openshift/environments/dev/config.yaml", env.APP_NAME))
-                            // Merges the deployment config with environment specific configuration
-                            commons.patchDeploymentConfig("openshift/environments/dev/deployment.yaml", env.APP_NAME)
+                        }
+                    }
+                }
+            }
+        }
+        stage ("Apply Configuration") {
+            when {
+                not {
+                    expression {
+                        return commons.hasConfig(env.APP_CONFIG) || commons.hasDeploymentPatch(env.APP_DEPLOYMENT_PATCH)  
+                    }
+                }
+            }
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject(env.PROJECT) {
+                            commons.applyConfigChanges(APP_CONFIG, APP_DEPLOYMENT_PATCH)
                         }
                     }
                 }
