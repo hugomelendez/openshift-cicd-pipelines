@@ -9,6 +9,11 @@ pipeline {
         skipDefaultCheckout()
         disableConcurrentBuilds()
     }
+    environment {
+        APP_TEMPLATE = "openshift/template.yaml"
+        APP_CONFIG = "openshift/environments/test/config.yaml"
+        APP_DEPLOYMENT_PATCH = "openshift/environments/test/deployment.yaml"
+    }
     stages {
         stage("Initialize") {
             steps {
@@ -53,20 +58,34 @@ pipeline {
                 }
             }
         }
-        stage("Promote Template") {
+        stage ("Apply Template") {
             when {
-                not {
-                    expression {
-                        return env.APP_TEMPLATE_FILE.equals("none")
-                    }
+                expression {
+                    return commons.hasTemplate(env.APP_TEMPLATE)
                 }
             }
             steps {
                 script {
-                    openshift.withCluster {
+                    openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
-                            openshift.apply(commons.processTemplateWithoutBuildObjects(env.APP_TEMPLATE_FILE, env.APP_NAME, env.IMAGE_NAME))
+                            openshift.apply(commons.processTemplate("openshift/template.yaml", env.APP_NAME, env.IMAGE_NAME))
+                        }
+                    }
+                }
+            }
+        }
+        stage ("Apply Configuration") {
+            when {
+                expression {
+                    return commons.hasConfig(env.APP_CONFIG) || commons.hasDeploymentPatch(env.APP_DEPLOYMENT_PATCH)  
+                }
+            }
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject(env.PROJECT) {
+                            commons.applyConfigChanges(APP_CONFIG, APP_DEPLOYMENT_PATCH)
                         }
                     }
                 }
