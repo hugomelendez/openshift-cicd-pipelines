@@ -120,8 +120,10 @@ class Commons implements Serializable {
     }
 
     def updateApplication(app, image, tag) {
+        def dc = openshift.selector("dc/${app}").object()
+
         openshift.set("triggers", "dc/${app}", "--remove-all")
-        openshift.set("triggers", "dc/${app}", "--from-image=${image}:${tag}")
+        openshift.set("triggers", "dc/${app}", "--from-image=${image}:${tag}", "-c ${dc.spec.template.spec.containers[0].name}")
     }
 
     def createApplication(app, image, tag) {
