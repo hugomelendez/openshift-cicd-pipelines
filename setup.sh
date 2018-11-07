@@ -1,10 +1,10 @@
 #! /usr/bin/env bash
 
 # Sets the MiniShift profile for the non-prod cluster
-#minishift profile set non-prod
+minishift profile set non-prod
 
 # Starts the non-prod cluster
-#minishift start
+minishift start
 
 # Logs in as admin to create projects
 oc login "https://$(minishift ip):8443" -u admin -p admin
