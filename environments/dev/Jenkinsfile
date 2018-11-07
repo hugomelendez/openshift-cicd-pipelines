@@ -39,10 +39,8 @@ pipeline {
         }
         stage ("Apply Template") {
             when {
-                not {
-                    expression {
-                        return commons.hasTemplate(env.APP_TEMPLATE)
-                    }
+                expression {
+                    return commons.hasTemplate(env.APP_TEMPLATE)
                 }
             }
             steps {
@@ -58,10 +56,8 @@ pipeline {
         }
         stage ("Apply Configuration") {
             when {
-                not {
-                    expression {
-                        return commons.hasConfig(env.APP_CONFIG) || commons.hasDeploymentPatch(env.APP_DEPLOYMENT_PATCH)  
-                    }
+                expression {
+                    return commons.hasConfig(env.APP_CONFIG) || commons.hasDeploymentPatch(env.APP_DEPLOYMENT_PATCH)  
                 }
             }
             steps {
