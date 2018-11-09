@@ -29,8 +29,6 @@ objects:
           value: ${PARAM_APP_NAME}
         - name: SRC_PROJECT
           value: ${PARAM_SRC_PROJECT}    
-        - name: APP_TEMPLATE_FILE
-          value: ${PARAM_APP_TEMPLATE_FILE}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
         jenkinsfilePath: Jenkinsfile
