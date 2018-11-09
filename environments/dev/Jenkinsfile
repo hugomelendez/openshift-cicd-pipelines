@@ -48,7 +48,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
-                            openshift.apply(commons.processTemplate(env.APP_TEMPLATE, env.APP_NAME, env.IMAGE_NAME))
+                            openshift.replace(commons.processTemplate(env.APP_TEMPLATE, env.APP_NAME, env.IMAGE_NAME))
                         }
                     }
                 }

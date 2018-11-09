@@ -45,10 +45,6 @@ parameters:
   displayName: Application Name
   name: PARAM_APP_NAME
   required: true
-- description: The image name
-  displayName: Image Name
-  name: PARAM_IMAGE_NAME
-  required: true
 - description: The Git repository
   displayName: Git Repository
   name: PARAM_GIT_REPO

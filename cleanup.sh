@@ -6,6 +6,6 @@ minishift delete -f
 minishift profile set non-prod
 minishift delete -f
 
-rm -rf .minishift
-rm -rf .kube
+rm -rf $HOME/.minishift
+rm -rf $HOME/.kube
 
