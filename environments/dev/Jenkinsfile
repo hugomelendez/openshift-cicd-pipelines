@@ -139,7 +139,8 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            openshift.tag("${env.IMAGE_NAME}:latest", "${env.IMAGE_NAME}:${commons.getTag(env.TECH)}");
+                            env.TAG = commons.getTag(env.TECH)
+                            openshift.tag("${env.IMAGE_NAME}:latest", "${env.IMAGE_NAME}:${env.TAG}");
                         }
                     }
                 } 
