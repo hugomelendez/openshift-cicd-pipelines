@@ -104,10 +104,10 @@ class Commons implements Serializable {
     def gitCheckout(repo, branch, secret, dir) { 
         def gitInfo = [:]
 
-        def repos = repo.split(".git")
-        steps.echo repos[0]
-        steps.echo repos[1]
-        gitInfo['url'] = "${repos[0]}-config.git"
+        repo = repo - ".git"
+        repo = repo + "-config.git"
+
+        gitInfo['url'] = repo
 
         if (env.GIT_SECRET && !secret.equals("none"))
             gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
