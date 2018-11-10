@@ -105,7 +105,6 @@ class Commons implements Serializable {
         def gitInfo = [:]
 
         def repos = repo.split(".git")
-        steps.echo repos
         steps.echo repos[0]
         steps.echo repos[1]
         gitInfo['url'] = "${repos[0]}-config.git"
