@@ -108,8 +108,8 @@ class Commons implements Serializable {
 
         if (env.GIT_SECRET && !secret.equals("none"))
             gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
-            
-        checkout([$class: 'GitSCM', 
+
+        steps.checkout([$class: 'GitSCM', 
                   branches: [[name: branch]], 
                   extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: dir]], 
                                 userRemoteConfigs: [gitInfo]])
