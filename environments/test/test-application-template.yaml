@@ -43,10 +43,6 @@ parameters:
   displayName: Application Name
   name: PARAM_APP_NAME
   required: true
-- description: The application template file to create the application
-  displayName: Application Template File
-  name: PARAM_APP_TEMPLATE_FILE
-  required: true
 - description: The application Git repository
   displayName: Git Repository
   name: PARAM_GIT_REPO

@@ -13,8 +13,6 @@ pipeline {
     }
     environment {
         APP_TEMPLATE = "openshift/template.yaml"
-        APP_CONFIG = "openshift/environments/dev/config.yaml"
-        APP_DEPLOYMENT_PATCH = "openshift/environments/dev/deployment.yaml"
     }
     stages {
         stage("Initialize") {
@@ -49,22 +47,6 @@ pipeline {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
                             openshift.apply(commons.processTemplate(env.APP_TEMPLATE, env.APP_NAME, env.IMAGE_NAME))
-                        }
-                    }
-                }
-            }
-        }
-        stage ("Apply Configuration") {
-            when {
-                expression {
-                    return commons.hasConfig(env.APP_CONFIG) || commons.hasDeploymentPatch(env.APP_DEPLOYMENT_PATCH)  
-                }
-            }
-            steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.PROJECT) {
-                            commons.applyConfigChanges(APP_CONFIG, APP_DEPLOYMENT_PATCH)
                         }
                     }
                 }

@@ -101,6 +101,21 @@ class Commons implements Serializable {
                        userRemoteConfigs: [gitInfo]])
     }
 
+    def gitCheckout(repo, branch, secret, dir) { 
+        def gitInfo = [:]
+
+        gitInfo['url'] = repo
+
+        if (env.GIT_SECRET && !secret.equals("none"))
+            gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
+            
+        checkout([$class: 'GitSCM', 
+                  branches: [[name: branch]], 
+                  extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: dir]], 
+                                userRemoteConfigs: [gitInfo]])
+
+    }
+
     def buildImage(app, image, artifactsDir, baseImage) {
         if (!openshift.selector("bc", "${app}").exists())
             openshift.newBuild("--image-stream=${baseImage}", "--name=${app}", "--binary=true", "-l app=${app}", "--to=${image}");

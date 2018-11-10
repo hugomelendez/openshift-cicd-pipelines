@@ -11,8 +11,8 @@ pipeline {
     }
     environment {
         APP_TEMPLATE = "openshift/template.yaml"
-        APP_CONFIG = "openshift/environments/test/config.yaml"
-        APP_DEPLOYMENT_PATCH = "openshift/environments/test/deployment.yaml"
+        APP_CONFIG = "config/environments/test/config.yaml"
+        APP_DEPLOYMENT_PATCH = "config/environments/test/deployment.yaml"
     }
     stages {
         stage("Initialize") {
@@ -78,13 +78,14 @@ pipeline {
         stage ("Apply Configuration") {
             when {
                 expression {
-                    return commons.hasConfig(env.APP_CONFIG) || commons.hasDeploymentPatch(env.APP_DEPLOYMENT_PATCH)  
+                    return commons.hasTemplate(env.APP_TEMPLATE)
                 }
             }
             steps {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
+                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET, "config")
                             commons.applyConfigChanges(APP_CONFIG, APP_DEPLOYMENT_PATCH)
                         }
                     }
