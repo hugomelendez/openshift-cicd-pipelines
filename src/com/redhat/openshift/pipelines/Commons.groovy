@@ -104,7 +104,7 @@ class Commons implements Serializable {
     def gitCheckout(repo, branch, secret, dir) { 
         def gitInfo = [:]
 
-        repos = repo.split(".git")
+        def repos = repo.split(".git")
 
         gitInfo['url'] = "${repos[0]}-config.git"
 
