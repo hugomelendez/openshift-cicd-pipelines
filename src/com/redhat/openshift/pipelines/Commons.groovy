@@ -117,6 +117,9 @@ class Commons implements Serializable {
                   extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: dir]], 
                                 userRemoteConfigs: [gitInfo]])
 
+        steps.sh "ls -latr"
+        steps.sh "ls -latr config"
+
     }
 
     def buildImage(app, image, artifactsDir, baseImage) {
