@@ -19,6 +19,12 @@ The applications using this pipelines must follow the next convention:
           ├── config.yaml
           └── deployment.yaml
 ```
+### Notes
 
-Note 1: Add more environment directories if needed.
-Note 2: The development configuration is located in the template designed by the developers.
+* Add more environment directories if needed.
+* The development configuration is located in the template designed by the developers.
+
+### Example repositories
+
+* [openshift-hello-world](https://github.com/redhatcsargentina/openshift-hello-world.git)
+* [openshift-hello-world-config](https://github.com/redhatcsargentina/openshift-hello-world-config.git)
