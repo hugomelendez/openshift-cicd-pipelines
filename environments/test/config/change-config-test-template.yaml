@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: change-test-config-template
+  annotations:
+    openshift.io/display-name: Change Config (TEST)
+    iconClass: fa fa-code
+    description: Template to create a pipeline to apply changes to Config Maps.
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP_NAME}", "namespace": "", "kind": "DeploymentConfig"}]'
+    labels:
+      app: ${PARAM_APP_NAME}
+    name: ${PARAM_APP_NAME}-config-change-pipeline
+  spec:
+    source:
+      type: Git
+      git:
+        uri: https://github.com/redhatcsargentina/openshift-pipelines.git
+        ref: master
+      contextDir: environments/test/config
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+        - name: APP_NAME
+          value: ${PARAM_APP_NAME}
+        - name: GIT_REPO
+          value: ${PARAM_GIT_REPO}
+        jenkinsfilePath: Jenkinsfile
+      type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${PARAM_WEBHOOK_SECRET}
+        type: Generic
+parameters:
+- description: The application name
+  displayName: Application Name
+  name: PARAM_APP_NAME
+  required: true
+- description: The Git repository
+  displayName: Git Repository
+  name: PARAM_GIT_REPO
+  required: true
+- description: A secret string used to configure the webhook
+  displayName: Webhook Secret
+  name: PARAM_WEBHOOK_SECRET
+  generate: expression 
+  from: "[a-zA-Z0-9]{40}"

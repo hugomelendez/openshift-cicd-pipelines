@@ -1,0 +1,76 @@
+@Library("pipeline-library") 
+import com.redhat.openshift.pipelines.Commons
+
+def commons = new com.redhat.openshift.pipelines.Commons(this)
+
+pipeline {
+    agent any
+    options {
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+    }
+    environment {
+        ENVIRONMENT = "test"
+        APP_CONFIG = "openshift/environments/${ENVIRONMENT}/config.yaml"
+        APP_DEPLOYMENT_PATCH = "openshift/environments/${ENVIRONMENT}/deployment.yaml"
+    }
+    stages {
+        stage("Initialize") {
+            steps {
+                script {
+                    // Gets the application project
+                    env.PROJECT = commons.getApplicationProject()      
+                }
+            }
+        }
+        stage("Set Branch") {
+            steps {
+                script {
+                    env.GIT_BRANCH = input(id: 'branch',
+                                           message: 'Set branch to deploy ',
+                                           parameters: [string(defaultValue: '', name: 'branch')]);
+                }
+            }
+        }
+        stage("Checkout Code") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject(env.PROJECT) {
+                            def tag = commons.getDeployedTag(env.APP_NAME)    
+
+                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                        }
+                    }
+                }
+            }
+        }
+        stage ("Apply Configuration") {
+            when {
+                expression {
+                    return commons.hasConfig(env.APP_CONFIG) || commons.hasDeploymentPatch(env.APP_DEPLOYMENT_PATCH)  
+                }
+            }
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject(env.PROJECT) {
+                            commons.applyConfigChanges(APP_CONFIG, APP_DEPLOYMENT_PATCH)
+                        }
+                    }
+                }
+            }
+        }
+        stage("Restart Application") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject(env.PROJECT) {
+                            openshift.selector("dc/${env.APP_NAME}").rollout().latest()
+                        } 
+                    }
+                }
+            }
+        }
+    }
+}
