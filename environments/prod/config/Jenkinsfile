@@ -1,0 +1,68 @@
+@Library("pipeline-library") 
+import com.redhat.openshift.pipelines.Commons
+
+def commons = new com.redhat.openshift.pipelines.Commons(this)
+
+pipeline {
+    agent any
+    options {
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+    }
+    environment {
+        APP_CONFIG = "openshift/environments/prod/config.yaml"
+        APP_DEPLOYMENT_PATCH = "openshift/environments/prod/deployment.yaml"
+    }
+    stages {
+        stage("Initialize") {
+            steps {
+                script {
+                    // Gets the application project
+                    env.PROJECT = commons.getApplicationProject()      
+                }
+            }
+        }
+        stage("Set Branch") {
+            steps {
+                script {
+                    env.GIT_BRANCH = input(id: 'branch',
+                                           message: 'Set branch to deploy ',
+                                           parameters: [string(defaultValue: '', name: 'branch')]);
+                }
+            }
+        }
+        stage("Checkout Code") {
+            steps {
+                script {
+                    openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
+                        openshift.withProject(env.PROJECT) {
+                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
+                        }
+                    }
+                }
+            }
+        }
+        stage ("Apply Configuration") {
+            steps {
+                script {
+                    openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
+                        openshift.withProject(env.DST_PROJECT) {
+                            commons.applyConfigChanges(APP_CONFIG, APP_DEPLOYMENT_PATCH)
+                        }
+                    }
+                }
+            }
+        }
+        stage("Refresh Application") {
+            steps {
+                script {
+                    openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
+                        openshift.withProject(env.DST_PROJECT) {
+                            openshift.selector("dc/${env.APP_NAME}").rollout().latest()
+                        } 
+                    }
+                }
+            }
+        }
+    }
+}
