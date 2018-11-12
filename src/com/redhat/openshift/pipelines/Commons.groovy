@@ -102,7 +102,7 @@ class Commons implements Serializable {
                        userRemoteConfigs: [gitInfo]])
     }
 
-    def gitCheckoutConfig(repo, branch, secret) { 
+    def gitCheckoutConfig(repo, branch, secret, dir) { 
         def gitConfig = [:]
         
         // Uses the app git, but the config repo ends with -config.git
