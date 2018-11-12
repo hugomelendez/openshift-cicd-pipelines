@@ -114,8 +114,8 @@ class Commons implements Serializable {
             gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
 
         steps.dir("config") {
-            sh "ls -latr"
-            
+            steps.sh "ls -latr"
+
             steps.checkout([$class: 'GitSCM', 
                             branches: [[name: branch]],
                             doGenerateSubmoduleConfigurations: false, 
