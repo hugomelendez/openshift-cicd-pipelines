@@ -25,8 +25,6 @@ objects:
         env:
         - name: APP_NAME
           value: ${PARAM_APP_NAME}
-        - name: APP_TEMPLATE_FILE
-          value: ${PARAM_APP_TEMPLATE_FILE}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
         - name: SRC_PROJECT
@@ -44,10 +42,6 @@ parameters:
 - description: The application name to deploy (must exists in source project)
   displayName: Application Name
   name: PARAM_APP_NAME
-  required: true
-- description: The application template file to create the application
-  displayName: Application Template File
-  name: PARAM_APP_TEMPLATE_FILE
   required: true
 - description: The application Git repository
   displayName: Git Repository
