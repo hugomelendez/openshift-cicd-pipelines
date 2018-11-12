@@ -53,7 +53,7 @@ pipeline {
                 }
             }
         }
-        stage("Restart Application") {
+        stage("Refresh Application") {
             steps {
                 script {
                     openshift.withCluster() {
