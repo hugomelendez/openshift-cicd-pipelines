@@ -2,19 +2,21 @@
 
 CI/CD pipelines in OpenShift.
 
+## Convention Over Configuration
 
-## Convention over configuration
+The applications using this pipelines must follow the next convention:
 
-en el repo git del proyecto del cliente TIENE que existir la sgte estructura de directorios y archivos
+* Two Git repositories are needed, the application and the other for configuration files
+* The application repository must have a file called **template.yaml** representing the entire application (DeploymentConfig, BuildConfig, etc.) inside a directory called **openshift**
+* The configuration repository must have the next structure:
 
-```
- openshift
- |-> template.yaml # template de la app
- |-> environments
-    |-> dev
-      |-> config.yaml # config maps para el entorno "dev"
-      |-> deployments.yaml # snippets sub secciones especificos del deployment config para "dev", se usa para cambiar partes seleccionadas en un "feature" o "release"
-    |-> test
-    |-> homo
-    |-> test
-```
+    └── environments
+        ├── prod
+        │   ├── config.yaml
+        │   └── deployment.yaml
+        └── test
+            ├── config.yaml
+            └── deployment.yaml
+
+Note 1: Add more environment directories if needed.
+Note 2: The development configuration is located in the template designed by the developers.
