@@ -96,7 +96,8 @@ class Commons implements Serializable {
         if (env.GIT_SECRET && !secret.equals("none"))
             gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
 
-        steps.checkout([$class: 'GitSCM', 
+        steps.checkout([$class: 'GitSCM',
+                       doGenerateSubmoduleConfigurations: false,
                        branches: [[name: branch]], 
                        userRemoteConfigs: [gitInfo]])
     }
@@ -113,7 +114,8 @@ class Commons implements Serializable {
             gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
 
         steps.checkout([$class: 'GitSCM', 
-                  branches: [[name: branch]], 
+                  branches: [[name: branch]],
+                  doGenerateSubmoduleConfigurations: false, 
                   extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: dir]], 
                                 userRemoteConfigs: [gitInfo]])
 
