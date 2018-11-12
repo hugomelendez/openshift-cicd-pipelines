@@ -10,13 +10,15 @@ The applications using this pipelines must follow the next convention:
 * The application repository must have a file called **template.yaml** representing the entire application (DeploymentConfig, BuildConfig, etc.) inside a directory called **openshift**
 * The configuration repository must have the next structure:
 
-    └── environments
-        ├── prod
-        │   ├── config.yaml
-        │   └── deployment.yaml
-        └── test
-            ├── config.yaml
-            └── deployment.yaml
+```
+  └── environments
+      ├── prod
+      │   ├── config.yaml
+      │   └── deployment.yaml
+      └── test
+          ├── config.yaml
+          └── deployment.yaml
+```
 
 Note 1: Add more environment directories if needed.
 Note 2: The development configuration is located in the template designed by the developers.
