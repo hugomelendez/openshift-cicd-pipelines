@@ -116,7 +116,7 @@ class Commons implements Serializable {
         steps.checkout([$class: 'GitSCM', 
                         branches: [[name: branch]],
                         doGenerateSubmoduleConfigurations: false, 
-                        //extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: dir]], 
+                        extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: dir]], 
                                         userRemoteConfigs: [gitInfo]])
 
     }
