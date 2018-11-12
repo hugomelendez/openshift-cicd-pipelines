@@ -13,6 +13,7 @@ pipeline {
         APP_TEMPLATE = "openshift/template.yaml"
         APP_CONFIG = "config/environments/test/config.yaml"
         APP_DEPLOYMENT_PATCH = "config/environments/test/deployment.yaml"
+        APP_CONFIG_DIR = "config"
     }
     stages {
         stage("Initialize") {
@@ -69,7 +70,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
                             // Uses the template to create the application
-                            openshift.apply(commons.processTemplate("openshift/template.yaml", env.APP_NAME, env.IMAGE_NAME))
+                            openshift.apply(commons.processTemplate(env.APP_TEMPLATE, env.APP_NAME, env.IMAGE_NAME))
                         }
                     }
                 }
@@ -85,10 +86,11 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            dir("config") {
-                                commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET, "config")
-                                commons.applyConfigChanges(APP_CONFIG, APP_DEPLOYMENT_PATCH)
+                            dir(env.APP_CONFIG_DIR) {
+                                commons.gitCheckoutConfig(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
                             }
+
+                            commons.applyConfigChanges(APP_CONFIG, APP_DEPLOYMENT_PATCH)
                         }
                     }
                 }

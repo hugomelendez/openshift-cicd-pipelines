@@ -102,22 +102,23 @@ class Commons implements Serializable {
                        userRemoteConfigs: [gitInfo]])
     }
 
-    def gitCheckout(repo, branch, secret, dir) { 
-        def gitInfo = [:]
-
+    def gitCheckoutConfig(repo, branch, secret) { 
+        def gitConfig = [:]
+        
+        // Uses the app git, but the config repo ends with -config.git
         repo = repo - ".git"
         repo = repo + "-config.git"
 
-        gitInfo['url'] = repo
+        gitConfig['url'] = repo
 
-        if (env.GIT_SECRET && !secret.equals("none"))
-            gitInfo['credentialsId'] = "${openshift.project()}-${secret}"
+        if (env.GIT_SECRET)
+            gitConfig['credentialsId'] = "${openshift.project()}-${secret}"
 
         steps.checkout([$class: 'GitSCM', 
                         branches: [[name: branch]],
                         doGenerateSubmoduleConfigurations: false, 
                         extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: dir]], 
-                                        userRemoteConfigs: [gitInfo]])
+                                        userRemoteConfigs: [gitConfig]])
 
     }
 
