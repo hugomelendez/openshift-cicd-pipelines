@@ -10,9 +10,8 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        ENVIRONMENT = "test"
-        APP_CONFIG = "openshift/environments/${ENVIRONMENT}/config.yaml"
-        APP_DEPLOYMENT_PATCH = "openshift/environments/${ENVIRONMENT}/deployment.yaml"
+        APP_CONFIG = "openshift/environments/test/config.yaml"
+        APP_DEPLOYMENT_PATCH = "openshift/environments/test/deployment.yaml"
     }
     stages {
         stage("Initialize") {
@@ -44,11 +43,6 @@ pipeline {
             }
         }
         stage ("Apply Configuration") {
-            when {
-                expression {
-                    return commons.hasConfig(env.APP_CONFIG) || commons.hasDeploymentPatch(env.APP_DEPLOYMENT_PATCH)  
-                }
-            }
             steps {
                 script {
                     openshift.withCluster() {
