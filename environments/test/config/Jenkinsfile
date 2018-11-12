@@ -37,8 +37,6 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            def tag = commons.getDeployedTag(env.APP_NAME)    
-
                             commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
                         }
                     }
