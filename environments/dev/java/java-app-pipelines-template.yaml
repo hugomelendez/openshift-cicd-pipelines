@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: java-app-pipelines--template
+  annotations:
+    openshift.io/display-name: Java Application Pipelines
+    iconClass: fa fa-code
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP_NAME}", "namespace": "", "kind": "DeploymentConfig"}]'
+    labels:
+      app: ${PARAM_APP_NAME}
+    name: ${PARAM_APP_NAME}-develop-pipeline
+  spec:
+    source:
+      type: Git
+      git:
+        uri: https://github.com/redhatcsargentina/openshift-pipelines.git
+        ref: master
+      contextDir: environments/dev/java
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+        - name: APP_NAME
+          value: ${PARAM_APP_NAME}-develop
+        - name: IMAGE_NAME
+          value: ${PARAM_APP_NAME}
+        - name: GIT_REPO
+          value: ${PARAM_GIT_REPO}
+        - name: GIT_BRANCH
+          value: develop
+        - name: TAG_VERSION
+          value: "false"
+        - name: BASE_IMAGE
+          value: redhat-openjdk18-openshift:1.2
+        - name: ARTIFACTS_DIR
+          value: ./target
+        - name: JENKINS_AGENT
+          value: maven
+        - name: COMPILE_COMMAND
+          value: "mvn package -DskipTests"
+        - name: TEST_COMMAND
+          value: "mvn test"
+        - name: CODE_ANALYSIS_COMMAND
+          value: none
+        - name: RELEASE_COMMAND
+          value: none
+        - name: TECH
+          value: java
+        jenkinsfilePath: Jenkinsfile
+      type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${PARAM_WEBHOOK_SECRET}
+        type: Generic
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations:
+      pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP_NAME}", "namespace": "", "kind": "DeploymentConfig"}]'
+    labels:
+      app: ${PARAM_APP_NAME}
+    name: ${PARAM_APP_NAME}-release-pipeline
+  spec:
+    source:
+      type: Git
+      git:
+        uri: https://github.com/redhatcsargentina/openshift-pipelines.git
+        ref: master
+      contextDir: environments/dev/java
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+        - name: APP_NAME
+          value: ${PARAM_APP_NAME}-release
+        - name: IMAGE_NAME
+          value: ${PARAM_APP_NAME}
+        - name: GIT_REPO
+          value: ${PARAM_GIT_REPO}
+        - name: TAG_VERSION
+          value: "true"
+        - name: BASE_IMAGE
+          value: redhat-openjdk18-openshift:1.2
+        - name: ARTIFACTS_DIR
+          value: ./target
+        - name: JENKINS_AGENT
+          value: maven
+        - name: COMPILE_COMMAND
+          value: "mvn package -DskipTests"
+        - name: TEST_COMMAND
+          value: "mvn test"
+        - name: CODE_ANALYSIS_COMMAND
+          value: none
+        - name: RELEASE_COMMAND
+          value: none
+        - name: TECH
+          value: java
+        jenkinsfilePath: Jenkinsfile
+      type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${PARAM_WEBHOOK_SECRET}
+        type: Generic
+parameters:
+- description: The application name
+  displayName: Application Name
+  name: PARAM_APP_NAME
+  required: true
+- description: The Git repository
+  displayName: Git Repository
+  name: PARAM_GIT_REPO
+  required: true
+- description: A secret string used to configure the webhook
+  displayName: Webhook Secret
+  name: PARAM_WEBHOOK_SECRET
+  generate: expression 
+  from: "[a-zA-Z0-9]{40}"
