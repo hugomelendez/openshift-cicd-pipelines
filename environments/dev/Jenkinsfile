@@ -1,7 +1,7 @@
-@Library("pipeline-library") 
-import com.redhat.openshift.pipelines.Commons
+//@Library("pipeline-library") 
+import static com.redhat.openshift.pipelines.Commons.*
 
-def commons = new com.redhat.openshift.pipelines.Commons(this)
+//def commons = new com.redhat.openshift.pipelines.Commons(this)
 
 pipeline {
     agent {
