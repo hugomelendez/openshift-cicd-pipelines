@@ -10,8 +10,8 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        APP_CONFIG = "openshift/environments/test/config.yaml"
-        APP_DEPLOYMENT_PATCH = "openshift/environments/test/deployment.yaml"
+        APP_CONFIG = "environments/test/config.yaml"
+        APP_DEPLOYMENT_PATCH = "environments/test/deployment.yaml"
     }
     stages {
         stage("Initialize") {
