@@ -86,9 +86,7 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.PROJECT) {
-                            dir(env.APP_CONFIG_DIR) {
-                                commons.gitCheckoutConfig(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET, env.APP_CONFIG_DIR)
-                            }
+                            commons.gitCheckoutConfig(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET, env.APP_CONFIG_DIR)
 
                             commons.applyConfigChanges(APP_CONFIG, APP_DEPLOYMENT_PATCH)
                         }
