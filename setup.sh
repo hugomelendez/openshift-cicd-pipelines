@@ -10,28 +10,23 @@ minishift start
 oc login "https://$(minishift ip):8443" -u admin -p admin
 
 # Creates projects for development (n areas, n projects)
-oc new-project core-dev
-oc new-project apis-dev
+oc new-project hello-dev
 
 # Creates the test projects (n areas, n projects)
-oc new-project core-test
-oc new-project apis-test
+oc new-project hello-test
 
 # Creates the prod (management) projects (n areas, n projects)
-oc new-project core-prod-management
-oc new-project apis-prod-management
+oc new-project hello-prod-management
 
 # Creates the development templates in the development projects
-oc create -f ./environments/dev/java-application-template.yaml -n core-dev
-oc create -f ./environments/dev/java-application-template.yaml -n apis-dev
+oc create -f ./environments/dev/java/java-app-pipelines-template.yaml -n hello-dev
+oc create -f ./environments/dev/java/java-app-pipeline-branch-template.yaml -n hello-dev
 
 # Creates the test template in the test projects
-oc create -f ./environments/test/test-application-template.yaml -n core-test
-oc create -f ./environments/test/test-application-template.yaml -n apis-test
+oc create -f ./environments/test/test-application-template.yaml -n hello-test
 
 # Creates the prod template in the prod projects
-oc create -f ./environments/prod/prod-application-template.yaml -n core-prod-management
-oc create -f ./environments/prod/prod-application-template.yaml -n apis-prod-management
+oc create -f ./environments/prod/prod-application-template.yaml -n hello-prod-management
 
 # Jenkins
 
@@ -42,12 +37,9 @@ oc new-project jenkins
 oc new-app jenkins-persistent -n jenkins
 
 # Sets Jenkins service account permissions
-oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n core-dev
-oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n apis-dev
-oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n core-test
-oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n apis-test
-oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n core-prod-management
-oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n apis-prod-management
+oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n hello-dev
+oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n hello-test
+oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n hello-prod-management
 oc adm policy add-cluster-role-to-user system:registry system:serviceaccount:jenkins:jenkins
 oc adm policy add-cluster-role-to-user system:image-builder system:serviceaccount:jenkins:jenkins
 
@@ -77,28 +69,16 @@ oc adm groups add-users prod-approvers hernan mario
 # Sets permissions
 
 # Project memberships
-oc adm policy add-role-to-user admin leandro -n core-dev
-oc adm policy add-role-to-user admin hugo -n core-dev
-oc adm policy add-role-to-user view leandro -n core-test
-oc adm policy add-role-to-user view hugo -n core-test
-
-oc adm policy add-role-to-user admin carlos -n apis-dev
-oc adm policy add-role-to-user admin ana -n apis-dev
-oc adm policy add-role-to-user view carlos -n apis-test
-oc adm policy add-role-to-user view ana -n apis-test
-
-oc adm policy add-role-to-group admin administrators -n core-dev
-oc adm policy add-role-to-group admin administrators -n apis-dev
-oc adm policy add-role-to-group admin administrators -n core-test
-oc adm policy add-role-to-group admin administrators -n apis-test
-oc adm policy add-role-to-group admin administrators -n core-prod-management
-oc adm policy add-role-to-group admin administrators -n apis-prod-management
+oc adm policy add-role-to-group admin developers -n hello-dev
+oc adm policy add-role-to-group view developers -n jenkins
+oc adm policy add-role-to-group view developers -n hello-test
+oc adm policy add-role-to-group view testers -n hello-test
+oc adm policy add-role-to-group admin administrators -n hello-dev
+oc adm policy add-role-to-group admin administrators -n hello-test
+oc adm policy add-role-to-group admin administrators -n hello-prod-management
 oc adm policy add-role-to-group admin administrators -n jenkins
-
 oc adm policy add-role-to-group edit prod-approvers -n jenkins
 oc adm policy add-role-to-group edit test-approvers -n jenkins
-
-oc adm policy add-role-to-group view developers -n jenkins
 
 # Exposes the non-prod cluster registry
 minishift addons apply registry-route
@@ -132,30 +112,19 @@ minishift start
 # Logs in as admin to create projects
 oc login https://$(minishift ip):8443 -u admin -p admin
 
+# Creates the prod projects
+oc new-project hello-prod
+
 # Creates the project where the admin sa will be
 oc new-project prod-management
-
-# Creates the prod projects
-oc new-project core-prod
-oc new-project apis-prod
 
 # Creates an admin service account for deployments, etc
 oc create sa admin -n prod-management
 
 # Sets permissions
-oc adm policy add-role-to-user admin system:serviceaccount:prod-management:admin -n core-prod
-oc adm policy add-role-to-user admin system:serviceaccount:prod-management:admin -n apis-prod
-
+oc adm policy add-role-to-user admin system:serviceaccount:prod-management:admin -n hello-prod
 oc adm policy add-cluster-role-to-user system:registry system:serviceaccount:prod-management:admin
 oc adm policy add-cluster-role-to-user system:image-builder system:serviceaccount:prod-management:admin
 
 # Exposes the prod cluster registry
 minishift addons apply registry-route
-
-export DST_CLUSTER_URL="insecure://$(minishift ip):8443"
-export  DST_CLUSTER_TOKEN="$(oc sa get-token admin -n prod-management)"
-
-minishift profile set non-prod
-
-oc login https://$(minishift ip):8443 -u admin -p admin
-

@@ -10,7 +10,7 @@ objects:
   kind: BuildConfig
   metadata:
     annotations:
-      pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP_NAME}", "namespace": "", "kind": "DeploymentConfig"}]'
+      pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP_NAME}-develop", "namespace": "", "kind": "DeploymentConfig"}]'
     labels:
       app: ${PARAM_APP_NAME}
     name: ${PARAM_APP_NAME}-develop-pipeline
@@ -20,14 +20,14 @@ objects:
       git:
         uri: https://github.com/redhatcsargentina/openshift-pipelines.git
         ref: master
-      contextDir: environments/dev/java
+      contextDir: environments/dev
     strategy:
       jenkinsPipelineStrategy:
         env:
         - name: APP_NAME
           value: ${PARAM_APP_NAME}-develop
         - name: IMAGE_NAME
-          value: ${PARAM_APP_NAME}
+          value: ${PARAM_APP_NAME}-develop
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
         - name: GIT_BRANCH
@@ -61,7 +61,7 @@ objects:
   kind: BuildConfig
   metadata:
     annotations:
-      pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP_NAME}", "namespace": "", "kind": "DeploymentConfig"}]'
+      pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP_NAME}-release", "namespace": "", "kind": "DeploymentConfig"}]'
     labels:
       app: ${PARAM_APP_NAME}
     name: ${PARAM_APP_NAME}-release-pipeline
@@ -71,7 +71,7 @@ objects:
       git:
         uri: https://github.com/redhatcsargentina/openshift-pipelines.git
         ref: master
-      contextDir: environments/dev/java
+      contextDir: environments/dev
     strategy:
       jenkinsPipelineStrategy:
         env:

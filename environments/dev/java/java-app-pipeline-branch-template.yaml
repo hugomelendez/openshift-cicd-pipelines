@@ -20,7 +20,7 @@ objects:
       git:
         uri: https://github.com/redhatcsargentina/openshift-pipelines.git
         ref: master
-      contextDir: environments/dev/java
+      contextDir: environments/dev
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -33,7 +33,7 @@ objects:
         - name: GIT_BRANCH
           value: ${PARAM_GIT_BRANCH}
         - name: TAG_VERSION
-          value: false
+          value: "false"
         - name: BASE_IMAGE
           value: redhat-openjdk18-openshift:1.2
         - name: ARTIFACTS_DIR
