@@ -84,7 +84,7 @@ pipeline {
             }
             steps {
                 script {
-                    openshift.withCluster() {
+                    openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
                         openshift.withProject(env.DST_PROJECT) {
                             dir(env.APP_CONFIG_DIR) {
                                 commons.gitCheckoutConfig(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET, env.APP_CONFIG_DIR)
