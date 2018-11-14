@@ -23,11 +23,11 @@ class Commons implements Serializable {
 
     def applyConfigChanges(config, deploymentPatch) { 
         // Replaces the config map with a new one based on the repository dev config map
-        if (steps.fileExists(config))
+        //if (steps.fileExists(config))
             openshift.replace(processConfig(config, env.APP_NAME))
         
         // Merges the deployment config with environment specific configuration
-        if (steps.fileExists(deploymentPatch))
+        //if (steps.fileExists(deploymentPatch))
             patchDeploymentConfig(deploymentPatch, env.APP_NAME)
     }
 
