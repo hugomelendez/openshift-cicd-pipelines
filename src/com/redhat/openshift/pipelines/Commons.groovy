@@ -26,6 +26,7 @@ class Commons implements Serializable {
         //if (steps.fileExists(config))
         steps.sh "ls -latr"
         steps.sh "ls -latr ./config"
+        steps.sh "ls -latr ./config/config"
             openshift.replace(processConfig(config, env.APP_NAME))
         
         // Merges the deployment config with environment specific configuration
