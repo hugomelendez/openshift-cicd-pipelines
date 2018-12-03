@@ -13,7 +13,7 @@ pipeline {
         CREDENTIALS = "${env.PROJECT}-${env.GIT_SECRET}"
     }
     stages {
-        stage("Set Branch") {
+        stage("Set Release Branch") {
             when {
                 not {
                     expression {
@@ -29,23 +29,12 @@ pipeline {
                 }
             }
         }
-        stage("Clone Code") {
+        stage("Checkout Code") {
             steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.PROJECT) {
-                            gitClone(repository: env.GIT_REPO, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
-                        }
-                    }
-                }
+                gitClone(repository: env.GIT_REPO, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
             }
         }
         stage ("Apply Template") {
-            when {
-                expression {
-                    return utils.hasTemplate(env.APP_TEMPLATE)
-                }
-            }
             steps {
                 applyTemplate(template: env.APP_TEMPLATE, application: env.APP_NAME, image: env.IMAGE_NAME)
             }
