@@ -51,18 +51,11 @@ pipeline {
         stage ("Apply Template") {
             when {
                 expression {
-                    return commons.hasTemplate(env.APP_TEMPLATE)
+                    return utils.hasTemplate(env.APP_TEMPLATE)
                 }
             }
             steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.PROJECT) {
-                            // Uses the template to create the application
-                            openshift.apply(commons.processTemplate(env.APP_TEMPLATE, env.APP_NAME, env.IMAGE_NAME))
-                        }
-                    }
-                }
+                applyTemplate(template: env.APP_TEMPLATE, application: env.APP_NAME, image: env.IMAGE_NAME)
             }
         }
         stage("Compile Code") {
