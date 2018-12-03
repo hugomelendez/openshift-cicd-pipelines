@@ -36,7 +36,7 @@ pipeline {
         }
         stage ("Apply Template") {
             steps {
-                applyTemplate(template: env.APP_TEMPLATE, application: env.APP_NAME, image: env.IMAGE_NAME)
+                applyTemplate(project: env.PROJECT, template: env.APP_TEMPLATE, application: env.APP_NAME, image: env.IMAGE_NAME)
             }
         }
         stage("Compile Code") {
