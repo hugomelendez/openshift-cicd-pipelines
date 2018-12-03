@@ -118,12 +118,15 @@ pipeline {
                 }   
             }
             steps {
-                tagImage(project: env.PROJECT, srcImage: env.IMAGE_NAME, dstImage: env.IMAGE_NAME, dstTag: utils.getTag(env.TECH))
+                script {
+                    env.TAG = utils.getTag(env.TECH)
+                    tagImage(project: env.PROJECT, srcImage: env.IMAGE_NAME, dstImage: env.IMAGE_NAME, dstTag: env.TAG)
+                }
             }
         }
         stage("Deploy Image") {
             steps {
-                deployImage(project: env.PROJECT, application: env.APP_NAME, image: env.IMAGE_NAME, tag: utils.getTag(env.TECH))
+                deployImage(project: env.PROJECT, application: env.APP_NAME, image: env.IMAGE_NAME, tag: env.TAG)
             }
         }
     }
