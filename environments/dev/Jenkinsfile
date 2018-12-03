@@ -101,7 +101,7 @@ pipeline {
             steps {
                 script {
                     env.TAG = utils.getTag(env.TECH)
-                    tagImage(project: env.PROJECT, srcImage: env.IMAGE_NAME, dstImage: env.IMAGE_NAME, dstTag: env.TAG)
+                    tagImage(srcProject: env.PROJECT, srcImage: env.IMAGE_NAME, srcProject: env.PROJECT, dstImage: env.IMAGE_NAME, dstTag: env.TAG)
                 }
             }
         }
