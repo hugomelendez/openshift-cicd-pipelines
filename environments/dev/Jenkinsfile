@@ -118,25 +118,12 @@ pipeline {
                 }   
             }
             steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.PROJECT) {
-                            env.TAG = commons.getTag(env.TECH)
-                            openshift.tag("${env.IMAGE_NAME}:latest", "${env.IMAGE_NAME}:${env.TAG}");
-                        }
-                    }
-                } 
+                tagImage(project: env.PROJECT, srcImage: env.IMAGE_NAME, dstImage: env.IMAGE_NAME, dstTag: utils.getTag(env.TECH))
             }
         }
-        stage("Deploy Application") {
+        stage("Deploy Image") {
             steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.PROJECT) {
-                            commons.deployApplication(env.APP_NAME, env.IMAGE_NAME, env.TAG)
-                        } 
-                    }
-                }
+                deployImage(project: env.PROJECT, application: env.APP_NAME, image: env.IMAGE_NAME, tag: utils.getTag(env.TECH))
             }
         }
     }
