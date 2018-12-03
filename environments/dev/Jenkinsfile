@@ -108,13 +108,7 @@ pipeline {
         }
         stage("Build Image") {
             steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.PROJECT) {
-                            commons.buildImage(env.APP_NAME, env.IMAGE_NAME, env.ARTIFACTS_DIR, env.BASE_IMAGE)
-                        }
-                    }
-                }
+                buildImage(project: env.PROJECT, application: env.APP_NAME, image: env.IMAGE_NAME, artifactsDir: env.ARTIFACTS_DIR)
             }
         }
         stage("Tag Image") {
