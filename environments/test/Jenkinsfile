@@ -27,13 +27,13 @@ pipeline {
                 applyTemplate(project: env.PROJECT, template: env.APP_TEMPLATE, application: env.APP_NAME, image: env.IMAGE_NAME)
             }  
         }
-        /*
+        
         stage ("Apply Configuration") {
             steps {
                 applyConfiguration(project: env.PROJECT, application: env.APP_NAME, config: env.APP_CONFIG_DIR, deploymentPatch: env.APP_DEPLOYMENT_PATCH)
             }
         }
-        */
+        
         stage("Promote Tag") {
             steps {
                 tagImage(srcProject: env.SRC_PROJECT, srcImage: env.IMAGE_NAME, srcTag: env.TAG, dstProject: env.PROJECT, dstImage: env.IMAGE_NAME, dstTag: env.TAG)
