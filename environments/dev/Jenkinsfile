@@ -1,5 +1,3 @@
-def commons = new com.redhat.openshift.pipelines.Commons(this)
-
 pipeline {
     agent {
         label env.JENKINS_AGENT
@@ -10,17 +8,11 @@ pipeline {
     }
     environment {
         APP_TEMPLATE = "openshift/template.yaml"
+        TAG = "latest"
+        PROJECT = getProject()
+        CREDENTIALS = "${env.PROJECT}-${env.GIT_SECRET}"
     }
     stages {
-        stage("Initialize") {
-            steps {
-                script {
-                    env.TAG = "latest"
-                    env.PROJECT = getProject()    
-                    env.CREDENTIALS = "${env.PROJECT}-${env.GIT_SECRET}"
-                }
-            }
-        }
         stage("Set Branch") {
             when {
                 not {
