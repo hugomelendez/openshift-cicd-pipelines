@@ -6,7 +6,11 @@ CI/CD pipelines in OpenShift.
 
 The applications using this pipelines must follow the next convention:
 
-* Two Git repositories are needed, the application and the other for configuration files
+* Two Git repositories are needed: 
+
+  * the application repo
+  * and the configuration files repo
+
 * The application repository must have a file called **template.yaml** representing the entire application (DeploymentConfig, BuildConfig, etc.) inside a directory called **openshift**
 * The configuration repository must have the next structure:
 
