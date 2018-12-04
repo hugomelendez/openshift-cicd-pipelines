@@ -17,6 +17,8 @@ pipeline {
                     env.GIT_BRANCH = input(id: 'branch',
                                            message: 'Set branch',
                                            parameters: [string(defaultValue: '', name: 'branch')]);
+                    
+                    gitClone(repository: env.GIT_REPO, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
                 }
             }
         }
