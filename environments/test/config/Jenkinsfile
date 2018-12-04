@@ -1,8 +1,3 @@
-@Library("pipeline-library") 
-import com.redhat.openshift.pipelines.Commons
-
-def commons = new com.redhat.openshift.pipelines.Commons(this)
-
 pipeline {
     agent any
     options {
@@ -12,56 +7,27 @@ pipeline {
     environment {
         APP_CONFIG = "environments/test/config.yaml"
         APP_DEPLOYMENT_PATCH = "environments/test/deployment.yaml"
+        PROJECT = getProject()
+        CREDENTIALS = "${env.PROJECT}-${env.GIT_SECRET}"
     }
     stages {
-        stage("Initialize") {
-            steps {
-                script {
-                    // Gets the application project
-                    env.PROJECT = commons.getApplicationProject()      
-                }
-            }
-        }
-        stage("Set Branch") {
+        stage("Set Config Branch") {
             steps {
                 script {
                     env.GIT_BRANCH = input(id: 'branch',
-                                           message: 'Set branch to deploy ',
+                                           message: 'Set branch',
                                            parameters: [string(defaultValue: '', name: 'branch')]);
-                }
-            }
-        }
-        stage("Checkout Code") {
-            steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.PROJECT) {
-                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
-                        }
-                    }
                 }
             }
         }
         stage ("Apply Configuration") {
             steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.PROJECT) {
-                            commons.applyConfigChanges(APP_CONFIG, APP_DEPLOYMENT_PATCH)
-                        }
-                    }
-                }
+                applyConfiguration(project: env.PROJECT, application: env.APP_NAME, config: env.APP_CONFIG, deploymentPatch: env.APP_DEPLOYMENT_PATCH)
             }
-        }
-        stage("Refresh Application") {
+        }   
+        stage("Restart Application") {
             steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.PROJECT) {
-                            openshift.selector("dc/${env.APP_NAME}").rollout().latest()
-                        } 
-                    }
-                }
+                restartApplication(project: env.PROJECT, application: env.APP_NAME)
             }
         }
     }
