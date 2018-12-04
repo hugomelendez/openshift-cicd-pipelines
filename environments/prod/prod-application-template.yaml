@@ -25,6 +25,8 @@ objects:
         env:
         - name: APP_NAME
           value: ${PARAM_APP_NAME}
+        - name: IMAGE_NAME
+          value: ${PARAM_APP_NAME}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
         - name: SRC_PROJECT

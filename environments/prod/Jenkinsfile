@@ -1,8 +1,3 @@
-@Library("pipeline-library") 
-import com.redhat.openshift.pipelines.Commons
-
-def commons = new Commons(this)
-
 pipeline {
     agent any
     options {
@@ -11,91 +6,23 @@ pipeline {
     }
     environment {
         APP_TEMPLATE = "openshift/template.yaml"
+        APP_CONFIG_DIR = "config"
         APP_CONFIG = "config/environments/prod/config.yaml"
         APP_DEPLOYMENT_PATCH = "config/environments/prod/deployment.yaml"
-        APP_CONFIG_DIR = "config"
+        PROJECT = getProject()
+        CREDENTIALS = "${env.PROJECT}-${env.GIT_SECRET}"
     }
     stages {
-        stage("Initialize") {
-            steps {
+        stage("Select Image") {
+            steps { 
                 script {
-                    if (!env.IMAGE_NAME)
-                        env.IMAGE_NAME = env.APP_NAME
-
-                    // Gets the application project
-                    env.PROJECT = commons.getApplicationProject()
+                    env.TAG = selectTag(project: env.SRC_PROJECT, image: env.IMAGE_NAME)
+                    env.GIT_BRANCH = env.TAG
+                    gitClone(repository: env.GIT_REPO, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
                 }
             }
         }
-        stage("Select Tag") {
-            when {
-                not {
-                    expression {
-                        return env.TAG
-                    }
-                }
-            }
-            steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.SRC_PROJECT) {
-                            // Generates a list of tags to deploy
-                            env.TAG = commons.getVersion(env.APP_NAME)
-                            // Checkout same tag from Git
-                            env.GIT_BRANCH = env.TAG
-                        }
-                    }
-                }
-            }
-        }
-        stage("Checkout Code") {
-            steps {
-                script {
-                    openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
-                        openshift.withProject(env.PROJECT) {
-                            commons.gitCheckout(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET)
-                        }
-                    }
-                }
-            }
-        }
-        stage ("Apply Template") {
-            when {
-                expression {
-                    return commons.hasTemplate(env.APP_TEMPLATE)
-                }
-            }
-            steps {
-                script {
-                    openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
-                        openshift.withProject(env.DST_PROJECT) {
-                            // Uses the template to create the application
-                            openshift.apply(commons.processTemplate(env.APP_TEMPLATE, env.APP_NAME, env.IMAGE_NAME))
-                        }
-                    }
-                }
-            }
-        }
-        stage ("Apply Configuration") {
-            when {
-                expression {
-                    return commons.hasTemplate(env.APP_TEMPLATE)
-                }
-            }
-            steps {
-                script {
-                    openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
-                        openshift.withProject(env.DST_PROJECT) {
-                            dir(env.APP_CONFIG_DIR) {
-                                commons.gitCheckoutConfig(env.GIT_REPO, env.GIT_BRANCH, env.GIT_SECRET, env.APP_CONFIG_DIR)
-                                commons.applyConfigChanges(APP_CONFIG, APP_DEPLOYMENT_PATCH)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage("Promote Tag") {
+        stage("Promote Image") {
             agent {
                 label "skopeo"
             }
@@ -114,29 +41,45 @@ pipeline {
                 }
             }
         }
+        stage ("Apply Template") {
+            steps {
+                applyTemplate(clusterUrl: env.DST_CLUSTER_URL, 
+                              clusterToken: env.DST_CLUSTER_TOKEN,
+                              project: env.DST_PROJECT, 
+                              template: env.APP_TEMPLATE, 
+                              application: env.APP_NAME, 
+                              image: env.IMAGE_NAME, 
+                              createBuildObjects: false)
+            }  
+        }
+        stage ("Apply Configuration") {
+            steps {
+                applyConfiguration(clusterUrl: env.DST_CLUSTER_URL, 
+                                   clusterToken: env.DST_CLUSTER_TOKEN,
+                                   project: env.DST_PROJECT, 
+                                   application: env.APP_NAME, 
+                                   config: env.APP_CONFIG, 
+                                   deploymentPatch: env.APP_DEPLOYMENT_PATCH)
+            }
+        }   
         stage("Approve Deploy") {
             when {
                 expression {
-                    return env.APPROVAL_GROUP
+                    return env.PROD_APPROVAL_GROUP
                 }
             }
             steps {
-                script {
-                    openshift.withCluster() {
-                        commons.resolveApproval(env.APPROVAL_GROUP)
-                    }
-                }
+                processApproval(env.PROD_APPROVAL_GROUP)
             }
         }
-        stage("Deploy Application") {
+        stage("Deploy Image") {
             steps {
-                script {
-                    openshift.withCluster(env.DST_CLUSTER_URL, env.DST_CLUSTER_TOKEN) {
-                        openshift.withProject(env.DST_PROJECT) {
-                            commons.deployApplication(env.APP_NAME, env.IMAGE_NAME, env.TAG)
-                        } 
-                    }
-                }
+                deployImage(clusterUrl: env.DST_CLUSTER_URL, 
+                            clusterToken: env.DST_CLUSTER_TOKEN,
+                            project: env.DST_PROJECT, 
+                            application: env.APP_NAME, 
+                            image: env.IMAGE_NAME, 
+                            tag: env.TAG)
             }
         }
     }
