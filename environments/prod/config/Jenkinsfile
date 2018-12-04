@@ -26,7 +26,7 @@ pipeline {
             steps {
                 applyConfiguration(clusterUrl: env.DST_CLUSTER_URL, 
                                    clusterToken: env.DST_CLUSTER_TOKEN, 
-                                   project: env.PROJECT, 
+                                   project: env.DST_PROJECT, 
                                    application: env.APP_NAME, 
                                    config: env.APP_CONFIG, 
                                    deploymentPatch: env.APP_DEPLOYMENT_PATCH)
