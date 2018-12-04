@@ -28,7 +28,7 @@ pipeline {
                     withDockerRegistry([credentialsId: "${PROJECT}-dst-registry-token", url: "http://${env.DST_REGISTRY_URL}"]) {
                         script {
                             openshift.withCluster {
-                                openshift.raw("image mirror ${SRC_REGISTRY_URL}/${SRC_PROJECT}/${IMAGE_NAME}:${TAG}  ${DST_REGISTRY_URL}/${DST_PROJECT}/${IMAGE_NAME}:${TAG}")
+                                openshift.raw("image mirror --insecure ${SRC_REGISTRY_URL}/${SRC_PROJECT}/${IMAGE_NAME}:${TAG} ${DST_REGISTRY_URL}/${DST_PROJECT}/${IMAGE_NAME}:${TAG}")
                             }
                         }
                     }
