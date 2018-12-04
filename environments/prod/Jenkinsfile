@@ -26,8 +26,10 @@ pipeline {
             steps {
                 withDockerRegistry([credentialsId: "${PROJECT}-src-registry-token", url: env.SRC_REGISTRY_URL]) {
                     withDockerRegistry([credentialsId: "${PROJECT}-dst-registry-token", url: env.DST_REGISTRY_URL]) {
-                        openshift.withCluster {
-                            openshift.raw("image mirror ${SRC_REGISTRY_URL}/${SRC_PROJECT}/${IMAGE_NAME}:${TAG}  ${DST_REGISTRY_URL}/${DST_PROJECT}/${IMAGE_NAME}:${TAG}")
+                        script {
+                            openshift.withCluster {
+                                openshift.raw("image mirror ${SRC_REGISTRY_URL}/${SRC_PROJECT}/${IMAGE_NAME}:${TAG}  ${DST_REGISTRY_URL}/${DST_PROJECT}/${IMAGE_NAME}:${TAG}")
+                            }
                         }
                     }
                 }   
