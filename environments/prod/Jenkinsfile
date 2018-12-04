@@ -24,7 +24,7 @@ pipeline {
                 script {
                     env.TAG = selectTag(project: env.SRC_PROJECT, image: env.IMAGE_NAME)
                     env.GIT_BRANCH = env.TAG
-                    gitClone(repository: env.GIT_REPO, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
+                    gitClone(repository: utils.getConfigRepo(env.GIT_REPO), branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
                 }
             }
         }
