@@ -1,10 +1,3 @@
-echo env.PIPELINE_LIBRARY_CREDENTIALS
-echo env.PIPELINE_LIBRARY_REPOSITORY
-library(identifier: 'openshift-pipeline-library@master', 
-        retriever: modernSCM([$class: 'GitSCMSource', 
-                              credentialsId: env.PIPELINE_LIBRARY_CREDENTIALS, 
-                              remote: env.PIPELINE_LIBRARY_REPOSITORY]))
-
 pipeline {
     agent any
     options {
@@ -20,6 +13,14 @@ pipeline {
         CREDENTIALS = "${PROJECT}-${GIT_SECRET}"
     }
     stages {
+        stage("Init") { 
+            steps {
+                library(identifier: 'openshift-pipeline-library@master', 
+        retriever: modernSCM([$class: 'GitSCMSource', 
+                              credentialsId: env.PIPELINE_LIBRARY_CREDENTIALS, 
+                              remote: env.PIPELINE_LIBRARY_REPOSITORY]))
+            }
+        }
         stage("Select Image") {
             steps { 
                 script {
