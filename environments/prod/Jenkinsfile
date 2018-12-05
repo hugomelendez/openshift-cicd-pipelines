@@ -27,6 +27,8 @@ pipeline {
                     
                     gitClone(repository: env.GIT_REPO_CONFIG, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS, subDir: env.APP_CONFIG_DIR)
                     gitClone(repository: env.GIT_REPO, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
+                    sh "ls"
+                    sh "ls ./config"
 
                 }
             }
