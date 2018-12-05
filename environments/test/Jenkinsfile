@@ -39,7 +39,7 @@ pipeline {
             steps {
                 gitClone(repository: env.GIT_REPO, branch: env.TAG, credentialsId: env.CREDENTIALS)
                 
-                applyTemplate(project: env.DST_PROJECT, 
+                applyTemplate(project: env.PROJECT, 
                               template: env.APP_TEMPLATE_FILE, 
                               application: env.APP_NAME, 
                               image: env.IMAGE_NAME, 
@@ -51,7 +51,7 @@ pipeline {
                 dir("config") {
                     gitClone(repository: env.GIT_REPO_CONFIG, branch: env.TAG, credentialsId: env.CREDENTIALS)
 
-                    applyConfiguration(project: env.DST_PROJECT, 
+                    applyConfiguration(project: env.PROJECT, 
                                        application: env.APP_NAME, 
                                        config: env.APP_CONFIG_FILE, 
                                        deploymentPatch: env.APP_DEPLOYMENT_PATCH_FILE)
@@ -61,16 +61,16 @@ pipeline {
         stage("Approve Deploy") {
             when {
                 expression {
-                    return env.PROD_APPROVAL_GROUP
+                    return env.TEST_APPROVAL_GROUP
                 }
             }
             steps {
-                processApproval(env.PROD_APPROVAL_GROUP)
+                processApproval(env.TEST_APPROVAL_GROUP)
             }
         }
         stage("Deploy Image") {
             steps {
-                deployImage(project: env.DST_PROJECT, 
+                deployImage(project: env.PROJECT, 
                             application: env.APP_NAME, 
                             image: env.IMAGE_NAME, 
                             tag: env.TAG)
