@@ -24,9 +24,15 @@ pipeline {
                 script {
                     env.TAG = selectTag(project: env.SRC_PROJECT, image: env.IMAGE_NAME)
                     env.GIT_BRANCH = env.TAG
+                    try {
+                    def repo = env.GIT_REPO
+                                        def index = repo.indexOf(".git")
+                                        echo "${repo.substring(0, index)​​​​​​​​​​​​​}-config.git"​​​​​​​​​​​​​​
 
-                    echo utils.getConfigRepo(env.GIT_REPO)
-
+                    } catch (Exception e) {
+                        echo e.toString()
+                    }
+                    
                     //gitClone(repository: utils.getConfigRepo(env.GIT_REPO), branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
                 }
             }
