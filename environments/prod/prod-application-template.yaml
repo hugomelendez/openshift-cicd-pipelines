@@ -29,6 +29,8 @@ objects:
           value: ${PARAM_APP_NAME}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
+        - name: GIT_REPO_CONFIG
+          value: ${PARAM_GIT_REPO_CONFIG}
         - name: SRC_PROJECT
           value: ${PARAM_SRC_PROJECT}     
         - name: DST_PROJECT
@@ -48,6 +50,10 @@ parameters:
 - description: The application Git repository
   displayName: Git Repository
   name: PARAM_GIT_REPO
+  required: true
+- description: The application Git repository for configuration
+  displayName: Git Config Repository
+  name: PARAM_GIT_REPO_CONFIG
   required: true
 - description: The source project for image and objects promotion
   displayName: Source Project
