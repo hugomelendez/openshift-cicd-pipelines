@@ -10,7 +10,7 @@ pipeline {
         APP_DEPLOYMENT_PATCH_FILE = "environments/prod/deployment.yaml"
     }
     stages {
-        stage("Init") {
+        stage("Initialize") {
             steps {
                 library(identifier: 'openshift-pipeline-library@master', 
                         retriever: modernSCM([$class: 'GitSCMSource', 

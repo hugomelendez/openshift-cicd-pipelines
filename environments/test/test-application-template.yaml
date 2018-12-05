@@ -33,6 +33,8 @@ objects:
           value: ${PARAM_SRC_PROJECT}    
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
+        - name: GIT_REPO_CONFIG
+          value: ${PARAM_GIT_REPO_CONFIG}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
@@ -48,6 +50,10 @@ parameters:
 - description: The application Git repository
   displayName: Git Repository
   name: PARAM_GIT_REPO
+  required: true
+- description: The application Git repository for configuration
+  displayName: Git Config Repository
+  name: PARAM_GIT_REPO_CONFIG
   required: true
 - description: The name of the development project where the image to deploy resides
   displayName: Development Project
