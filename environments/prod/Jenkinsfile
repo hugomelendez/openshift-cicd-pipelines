@@ -13,12 +13,12 @@ pipeline {
         CREDENTIALS = "${PROJECT}-${GIT_SECRET}"
     }
     stages {
-        stage("Init") { 
+        stage("Init") {
             steps {
                 library(identifier: 'openshift-pipeline-library@master', 
-        retriever: modernSCM([$class: 'GitSCMSource', 
-                              credentialsId: env.PIPELINE_LIBRARY_CREDENTIALS, 
-                              remote: env.PIPELINE_LIBRARY_REPOSITORY]))
+                        retriever: modernSCM([$class: 'GitSCMSource', 
+                                            credentialsId: env.PIPELINE_LIBRARY_CREDENTIALS, 
+                                            remote: env.PIPELINE_LIBRARY_REPOSITORY]))
             }
         }
         stage("Select Image") {
