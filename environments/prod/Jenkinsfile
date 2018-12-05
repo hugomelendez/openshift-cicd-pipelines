@@ -13,8 +13,8 @@ pipeline {
     environment {
         APP_TEMPLATE = "openshift/template.yaml"
         APP_CONFIG_DIR = "config"
-        APP_CONFIG = "config/environments/prod/config.yaml"
-        APP_DEPLOYMENT_PATCH = "config/environments/prod/deployment.yaml"
+        APP_CONFIG = "environments/prod/config.yaml"
+        APP_DEPLOYMENT_PATCH = "environments/prod/deployment.yaml"
         PROJECT = getProject()
         CREDENTIALS = "${env.PROJECT}-${env.GIT_SECRET}"
     }
@@ -76,18 +76,16 @@ pipeline {
         }
         stage ("Apply Configuration") {
             steps {
-
                 dir(env.APP_CONFIG_DIR) {
                     gitClone(repository: env.GIT_REPO_CONFIG, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
-                    sh "ls"
+
+                    applyConfiguration(clusterUrl: env.DST_CLUSTER_URL, 
+                                    clusterToken: env.DST_CLUSTER_TOKEN,
+                                    project: env.DST_PROJECT, 
+                                    application: env.APP_NAME, 
+                                    config: env.APP_CONFIG, 
+                                    deploymentPatch: env.APP_DEPLOYMENT_PATCH)
                 }
-                sh "ls"
-                applyConfiguration(clusterUrl: env.DST_CLUSTER_URL, 
-                                   clusterToken: env.DST_CLUSTER_TOKEN,
-                                   project: env.DST_PROJECT, 
-                                   application: env.APP_NAME, 
-                                   config: env.APP_CONFIG, 
-                                   deploymentPatch: env.APP_DEPLOYMENT_PATCH)
             }
         }   
         stage("Approve Deploy") {
