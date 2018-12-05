@@ -1,8 +1,7 @@
 library(identifier: 'openshift-pipeline-library@master', 
         retriever: modernSCM([$class: 'GitSCMSource', 
-                              credentialsId: 'jenkins-github', 
-                              remote: 'https://github.com/redhatcsargentina/openshift-pipeline-library.git', 
-                              traits: [[$class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait']]]))
+                              credentialsId: env.PIPELINE_LIBRARY_CREDENTIALS, 
+                              remote: env.PIPELINE_LIBRARY_REPOSITORY]))
 
 pipeline {
     agent any
@@ -11,26 +10,25 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        APP_TEMPLATE = "openshift/template.yaml"
+        APP_TEMPLATE_FILE = "openshift/template.yaml"
         APP_CONFIG_DIR = "config"
-        APP_CONFIG = "environments/prod/config.yaml"
-        APP_DEPLOYMENT_PATCH = "environments/prod/deployment.yaml"
+        APP_CONFIG_FILE = "environments/prod/config.yaml"
+        APP_DEPLOYMENT_PATCH_FILE = "environments/prod/deployment.yaml"
         PROJECT = getProject()
-        CREDENTIALS = "${env.PROJECT}-${env.GIT_SECRET}"
+        CREDENTIALS = "${PROJECT}-${GIT_SECRET}"
     }
     stages {
         stage("Select Image") {
             steps { 
                 script {
                     env.TAG = selectTag(project: env.SRC_PROJECT, image: env.IMAGE_NAME)
-                    env.GIT_BRANCH = env.TAG                
                 }
             }
         }
         stage("Promote Image") {
             steps {
-                withDockerRegistry([credentialsId: "${PROJECT}-src-registry-token", url: "http://${env.SRC_REGISTRY_URL}"]) {
-                    withDockerRegistry([credentialsId: "${PROJECT}-dst-registry-token", url: "http://${env.DST_REGISTRY_URL}"]) {
+                withDockerRegistry([credentialsId: env.SRC_REGISTRY_CREDENTIALS, url: "http://${SRC_REGISTRY_URL}"]) {
+                    withDockerRegistry([credentialsId: env.DST_REGISTRY_CREDENTIALS, url: "http://${DST_REGISTRY_URL}"]) {
                         script {
                             openshift.withCluster {
                                 openshift.raw("image mirror --insecure ${SRC_REGISTRY_URL}/${SRC_PROJECT}/${IMAGE_NAME}:${TAG} ${DST_REGISTRY_URL}/${DST_PROJECT}/${IMAGE_NAME}:${TAG}")
@@ -40,35 +38,14 @@ pipeline {
                 }   
             }
         }
-        /*
-        stage("Promote Image") {
-            agent {
-                label "skopeo"
-            }
-            steps {
-                script {
-                    // Credentials
-                    def srcCreds = "unused:${env.SRC_REGISTRY_TOKEN}";
-                    def dstCreds = "unused:${env.DST_REGISTRY_TOKEN}";
-
-                    // Paths 
-                    def src = "docker://${env.SRC_REGISTRY_URL}/${env.SRC_PROJECT}/${env.IMAGE_NAME}:${env.TAG}";
-                    def dst = "docker://${env.DST_REGISTRY_URL}/${env.DST_PROJECT}/${env.IMAGE_NAME}:${env.TAG}";
-
-                    // Executes the Skopeo command
-                    sh "skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds=${srcCreds} --dest-creds=${dstCreds} ${src} ${dst}";
-                }
-            }
-        }
-        */
         stage ("Apply Template") {
             steps {
-                gitClone(repository: env.GIT_REPO, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
-                sh "ls"
+                gitClone(repository: env.GIT_REPO, branch: env.TAG, credentialsId: env.CREDENTIALS)
+                
                 applyTemplate(clusterUrl: env.DST_CLUSTER_URL, 
                               clusterToken: env.DST_CLUSTER_TOKEN,
                               project: env.DST_PROJECT, 
-                              template: env.APP_TEMPLATE, 
+                              template: env.APP_TEMPLATE_FILE, 
                               application: env.APP_NAME, 
                               image: env.IMAGE_NAME, 
                               createBuildObjects: false)
@@ -76,15 +53,15 @@ pipeline {
         }
         stage ("Apply Configuration") {
             steps {
-                dir(env.APP_CONFIG_DIR) {
-                    gitClone(repository: env.GIT_REPO_CONFIG, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
+                dir(env.APP_CONFIG_FILE_DIR) {
+                    gitClone(repository: env.GIT_REPO_CONFIG, branch: env.TAG, credentialsId: env.CREDENTIALS)
 
                     applyConfiguration(clusterUrl: env.DST_CLUSTER_URL, 
                                     clusterToken: env.DST_CLUSTER_TOKEN,
                                     project: env.DST_PROJECT, 
                                     application: env.APP_NAME, 
-                                    config: env.APP_CONFIG, 
-                                    deploymentPatch: env.APP_DEPLOYMENT_PATCH)
+                                    config: env.APP_CONFIG_FILE, 
+                                    deploymentPatch: env.APP_DEPLOYMENT_PATCH_FILE)
                 }
             }
         }   
