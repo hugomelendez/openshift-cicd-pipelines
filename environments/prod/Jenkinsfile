@@ -64,7 +64,7 @@ pipeline {
         stage ("Apply Template") {
             steps {
                 gitClone(repository: env.GIT_REPO, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
-
+                sh "ls"
                 applyTemplate(clusterUrl: env.DST_CLUSTER_URL, 
                               clusterToken: env.DST_CLUSTER_TOKEN,
                               project: env.DST_PROJECT, 
