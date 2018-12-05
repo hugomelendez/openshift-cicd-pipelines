@@ -9,8 +9,7 @@ pipeline {
         APP_CONFIG_DIR = "config"
         APP_CONFIG_FILE = "environments/prod/config.yaml"
         APP_DEPLOYMENT_PATCH_FILE = "environments/prod/deployment.yaml"
-        PROJECT = getProject()
-        CREDENTIALS = "${PROJECT}-${GIT_SECRET}"
+        
     }
     stages {
         stage("Init") {
@@ -19,6 +18,9 @@ pipeline {
                         retriever: modernSCM([$class: 'GitSCMSource', 
                                             credentialsId: env.PIPELINE_LIBRARY_CREDENTIALS, 
                                             remote: env.PIPELINE_LIBRARY_REPOSITORY]))
+
+                env.PROJECT = getProject()
+                env.CREDENTIALS = "${PROJECT}-${GIT_SECRET}"
             }
         }
         stage("Select Image") {
