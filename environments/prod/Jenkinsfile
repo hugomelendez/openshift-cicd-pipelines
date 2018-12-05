@@ -76,9 +76,12 @@ pipeline {
         }
         stage ("Apply Configuration") {
             steps {
+
                 dir(env.APP_CONFIG_DIR) {
-                        gitClone(repository: env.GIT_REPO_CONFIG, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS, subDir: env.APP_CONFIG_DIR)
+                    gitClone(repository: env.GIT_REPO_CONFIG, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
+                    sh "ls"
                 }
+                sh "ls"
                 applyConfiguration(clusterUrl: env.DST_CLUSTER_URL, 
                                    clusterToken: env.DST_CLUSTER_TOKEN,
                                    project: env.DST_PROJECT, 
