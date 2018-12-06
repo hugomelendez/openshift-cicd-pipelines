@@ -38,7 +38,7 @@ The applications using this pipelines must follow the next convention:
 * Add more environment directories if needed.
 * The development configuration is located in the template designed by the developers.
 
-### Pipeline Library
+### Pipeline Library
 
 The pipelines use a shared library for common functionality, the code is in the following repository:
 
