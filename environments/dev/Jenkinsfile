@@ -16,7 +16,7 @@ pipeline {
             steps {
                 library(identifier: 'openshift-pipeline-library@master', 
                         retriever: modernSCM([$class: 'GitSCMSource', 
-                                             credentialsId: env.CREDENTIALS, 
+                                             credentialsId: env.REPOSITORY_CREDENTIALS, 
                                              remote: env.PIPELINE_LIBRARY_REPOSITORY]))
                 
                 script {
@@ -42,7 +42,7 @@ pipeline {
         }
         stage("Checkout Code") {
             steps {
-                gitClone(repository: env.GIT_REPO, branch: env.GIT_BRANCH, credentialsId: env.CREDENTIALS)
+                gitClone(repository: env.GIT_REPO, branch: env.GIT_BRANCH, credentialsId: env.REPOSITORY_CREDENTIALS)
             }
         }
         stage ("Apply Template") {

@@ -12,11 +12,26 @@ oc login "https://$(minishift ip):8443" -u admin -p admin
 # Creates projects for development (n areas, n projects)
 oc new-project hello-dev
 
+# The REPOSITORY_CREDENTIALS_USERNAME and REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
+oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n hello-dev
+oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n hello-dev
+oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-dev
+
 # Creates the test projects (n areas, n projects)
 oc new-project hello-test
 
+# The REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
+oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n hello-test
+oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n hello-test
+oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-dev
+
 # Creates the prod (management) projects (n areas, n projects)
 oc new-project hello-prod-management
+
+# The REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
+oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n hello-prod-management
+oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n hello-prod-management
+oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-dev
 
 # Creates the development templates in the development projects
 oc create -f ./environments/dev/java/java-app-pipelines-template.yaml -n hello-dev
@@ -46,7 +61,7 @@ oc adm policy add-cluster-role-to-user system:registry system:serviceaccount:jen
 oc adm policy add-cluster-role-to-user system:image-builder system:serviceaccount:jenkins:jenkins
 
 # Creates a new cluster role for reading groups in the cluster
-"apiVersion: v1
+echo "apiVersion: v1
 kind: ClusterRole
 metadata:
   name: group-reader
@@ -68,6 +83,8 @@ oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:jenkin
 
 # Avoids a Jenkins instance in every project a pipeline is created
 minishift openshift config set --patch '{"jenkinsPipelineConfig":{"autoProvisionEnabled":false}}'
+
+sleep 5
 
 # Creates new groups
 oc adm groups new developers
@@ -141,7 +158,7 @@ export DST_REGISTRY_TOKEN=$(oc sa get-token admin -n prod-management)
 
 export PIPELINE_LIBRARY_REPOSITORY="https://github.com/redhatcsargentina/openshift-pipeline-library.git"
 
-export CREDENTIALS="jenkins-repository-credentials"
+export REPOSITORY_CREDENTIALS="jenkins-repository-credentials"
 
 export SRC_REGISTRY_CREDENTIALS="jenkins-src-registry-credentials"
 export DST_REGISTRY_CREDENTIALS="jenkins-dst-registry-credentials"
@@ -162,15 +179,20 @@ oc set env dc/jenkins DST_REGISTRY_URL=${DST_REGISTRY_URL} -n jenkins
 oc set env dc/jenkins DST_CLUSTER_URL=${DST_CLUSTER_URL} -n jenkins
 oc set env dc/jenkins DST_CLUSTER_TOKEN=${DST_CLUSTER_TOKEN} -n jenkins
 oc set env dc/jenkins PIPELINE_LIBRARY_REPOSITORY=${PIPELINE_LIBRARY_REPOSITORY} -n jenkins
-oc set env dc/jenkins CREDENTIALS=${CREDENTIALS} -n jenkins
+oc set env dc/jenkins REPOSITORY_CREDENTIALS=${REPOSITORY_CREDENTIALS} -n jenkins
 oc set env dc/jenkins SRC_REGISTRY_CREDENTIALS=${SRC_REGISTRY_CREDENTIALS} -n jenkins
 oc set env dc/jenkins DST_REGISTRY_CREDENTIALS=${DST_REGISTRY_CREDENTIALS} -n jenkins
 
 oc create secret generic src-registry-credentials --from-literal=username=unused --from-literal=password=${SRC_REGISTRY_TOKEN} --type=kubernetes.io/basic-auth -n jenkins
-oc create secret generic dst-registry-credentials --from-literal=username=unused --from-literal=password=${DST_REGISTRY_TOKEN} --type=kubernetes.io/basic-auth -n jenkins
+oc label secret src-registry-credentials credential.sync.jenkins.openshift.io=true -n jenkins
 
-# The CREDENTIALS environment variable needs to be defined with a valid password for cloning the repositories
-oc create secret generic repository-credentials --from-literal=username=unused --from-literal=password=${CREDENTIALS} --type=kubernetes.io/basic-auth -n jenkins
+oc create secret generic dst-registry-credentials --from-literal=username=unused --from-literal=password=${DST_REGISTRY_TOKEN} --type=kubernetes.io/basic-auth -n jenkins
+oc label secret dst-registry-credentials credential.sync.jenkins.openshift.io=true -n jenkins
+
+# The REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
+oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n jenkins
+oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n jenkins
+oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n jenkins
 
 # Resumes deployments for Jenkins
 oc rollout resume dc/jenkins -n jenkins
