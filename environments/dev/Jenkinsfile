@@ -8,7 +8,6 @@ pipeline {
     }
     environment {
         APP_TEMPLATE = "openshift/template.yaml"
-        TAG = "latest"
     }
     stages {
         stage("Initialize") {
@@ -20,6 +19,7 @@ pipeline {
                                              remote: env.PIPELINE_LIBRARY_REPOSITORY]))
                 
                 script {
+                    env.TAG = "latest"
                     env.PROJECT = getProject()
                 }
             }
