@@ -6,20 +6,19 @@ pipeline {
     }
     environment {
         APP_TEMPLATE_FILE = "openshift/template.yaml"
-        APP_CONFIG_FILE = "environments/prod/config.yaml"
-        APP_DEPLOYMENT_PATCH_FILE = "environments/prod/deployment.yaml"
+        APP_CONFIG_FILE = "environments/test/config.yaml"
+        APP_DEPLOYMENT_PATCH_FILE = "environments/test/deployment.yaml"
     }
     stages {
         stage("Initialize") {
             steps {
                 library(identifier: 'openshift-pipeline-library@master', 
                         retriever: modernSCM([$class: 'GitSCMSource', 
-                                             credentialsId: env.PIPELINE_LIBRARY_CREDENTIALS, 
+                                             credentialsId: env.CREDENTIALS, 
                                              remote: env.PIPELINE_LIBRARY_REPOSITORY]))
                 
                 script {
                     env.PROJECT = getProject()
-                    env.CREDENTIALS = "${PROJECT}-${GIT_SECRET}"
                 }
             }
         }

@@ -24,9 +24,11 @@ oc create -f ./environments/dev/java/java-app-pipeline-branch-template.yaml -n h
 
 # Creates the test template in the test projects
 oc create -f ./environments/test/test-application-template.yaml -n hello-test
+oc create -f ./environments/test/config/change-config-test-template.yaml -n hello-test
 
 # Creates the prod template in the prod projects
 oc create -f ./environments/prod/prod-application-template.yaml -n hello-prod-management
+oc create -f ./environments/prod/config/change-config-prod-template.yaml -n hello-prod
 
 # Jenkins
 
@@ -44,7 +46,22 @@ oc adm policy add-cluster-role-to-user system:registry system:serviceaccount:jen
 oc adm policy add-cluster-role-to-user system:image-builder system:serviceaccount:jenkins:jenkins
 
 # Creates a new cluster role for reading groups in the cluster
-oc create -f ./configuration/roles/group-reader.yaml
+"apiVersion: v1
+kind: ClusterRole
+metadata:
+  name: group-reader
+rules:
+- apiGroups:
+  - user.openshift.io
+  resources:
+  - groups
+  - identities
+  - useridentitymappings
+  - users
+  verbs:
+  - get
+  - list
+  - watch" | oc create -f -
 
 # Allows jenkins service account to read groups from cluster
 oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:jenkins:jenkins
@@ -83,25 +100,10 @@ oc adm policy add-role-to-group edit test-approvers -n jenkins
 # Exposes the non-prod cluster registry
 minishift addons apply registry-route
 
-# Creates the skopeo image
+# Gathers information for Jenkins
 
-# Imports the jenkins slave base image
-oc import-image jenkins-slave-base-rhel7 --confirm --from=registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7 -n openshift
-
-# Creates an image stream to hold the skopeo image
-oc create is skopeo -n openshift
-
-# Creates the build config
-oc create -f ./configuration/jenkins/agents/skopeo/skopeo-bc.yaml -n openshift
-
-# Creates a new build
-oc start-build skopeo -n openshift --wait
-
-# Tags the skopeo image in the jenkins project 
-oc tag openshift/skopeo:latest skopeo:latest -n jenkins
-
-# Adds a label for the sync plugin to push the image into the jenkins instance
-oc label is skopeo role=jenkins-slave -n jenkins
+export SRC_REGISTRY_URL=$(oc get route docker-registry -n default --template={{.spec.host}})
+export SRC_REGISTRY_TOKEN=$(oc sa get-token jenkins -n jenkins)
 
 # Sets the MiniShift profile for the prod cluster
 minishift profile set prod
@@ -128,3 +130,47 @@ oc adm policy add-cluster-role-to-user system:image-builder system:serviceaccoun
 
 # Exposes the prod cluster registry
 minishift addons apply registry-route
+
+# Gathers information for Jenkins
+
+export DST_CLUSTER_URL="insecure://$(minishift ip):8443"
+export DST_CLUSTER_TOKEN=$(oc sa get-token admin -n prod-management)
+
+export DST_REGISTRY_URL=$(oc get route docker-registry -n default --template={{.spec.host}})
+export DST_REGISTRY_TOKEN=$(oc sa get-token admin -n prod-management)
+
+export PIPELINE_LIBRARY_REPOSITORY="https://github.com/redhatcsargentina/openshift-pipeline-library.git"
+
+export CREDENTIALS="jenkins-repository-credentials"
+
+export SRC_REGISTRY_CREDENTIALS="jenkins-src-registry-credentials"
+export DST_REGISTRY_CREDENTIALS="jenkins-dst-registry-credentials"
+
+# Jenkins configuration
+
+# Changes to the MiniShift profile for the non-prod cluster
+minishift profile set non-prod
+
+# Logs in as admin
+oc login "https://$(minishift ip):8443" -u admin -p admin
+
+# Pauses deployments for Jenkins
+oc rollout pause dc/jenkins -n jenkins
+
+oc set env dc/jenkins SRC_REGISTRY_URL=${SRC_REGISTRY_URL} -n jenkins
+oc set env dc/jenkins DST_REGISTRY_URL=${DST_REGISTRY_URL} -n jenkins
+oc set env dc/jenkins DST_CLUSTER_URL=${DST_CLUSTER_URL} -n jenkins
+oc set env dc/jenkins DST_CLUSTER_TOKEN=${DST_CLUSTER_TOKEN} -n jenkins
+oc set env dc/jenkins PIPELINE_LIBRARY_REPOSITORY=${PIPELINE_LIBRARY_REPOSITORY} -n jenkins
+oc set env dc/jenkins CREDENTIALS=${CREDENTIALS} -n jenkins
+oc set env dc/jenkins SRC_REGISTRY_CREDENTIALS=${SRC_REGISTRY_CREDENTIALS} -n jenkins
+oc set env dc/jenkins DST_REGISTRY_CREDENTIALS=${DST_REGISTRY_CREDENTIALS} -n jenkins
+
+oc create secret generic src-registry-credentials --from-literal=username=unused --from-literal=password=${SRC_REGISTRY_TOKEN} --type=kubernetes.io/basic-auth -n jenkins
+oc create secret generic dst-registry-credentials --from-literal=username=unused --from-literal=password=${DST_REGISTRY_TOKEN} --type=kubernetes.io/basic-auth -n jenkins
+
+# The CREDENTIALS environment variable needs to be defined with a valid password for cloning the repositories
+oc create secret generic repository-credentials --from-literal=username=unused --from-literal=password=${CREDENTIALS} --type=kubernetes.io/basic-auth -n jenkins
+
+# Resumes deployments for Jenkins
+oc rollout resume dc/jenkins -n jenkins
