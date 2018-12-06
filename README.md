@@ -8,8 +8,8 @@ The applications using this pipelines must follow the next convention:
 
 * Two Git repositories are needed: 
 
-  * the application repo
-  * and the configuration files repo
+  * The application repository
+  * The configuration files repository
 
 * The application repository must have a file called **template.yaml** representing the entire application (DeploymentConfig, BuildConfig, etc.) inside a directory called **openshift**
 
@@ -20,6 +20,7 @@ The applications using this pipelines must follow the next convention:
       ├── main...
       └── test...
 ```
+
 * The configuration repository must have the next structure:
 
 ```
@@ -31,10 +32,17 @@ The applications using this pipelines must follow the next convention:
           ├── config.yaml
           └── deployment.yaml
 ```
+
 ### Notes
 
 * Add more environment directories if needed.
 * The development configuration is located in the template designed by the developers.
+
+### Pipeline Library
+
+The pipelines use a shared library for common functionality, the code is in the following repository:
+
+* [openshift-pipeline-library](https://github.com/redhatcsargentina/openshift-pipeline-library.git)
 
 ### Example repositories
 
