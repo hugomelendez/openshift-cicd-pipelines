@@ -112,7 +112,6 @@ pipeline {
             steps {
                 script {
                     env.TAG = utils.getTag(env.TECH)
-                    echo env.TAG
                     tagImage(srcProject: env.PROJECT, srcImage: env.IMAGE_NAME, dstProject: env.PROJECT, dstImage: env.IMAGE_NAME, dstTag: env.TAG)
                 }
             }

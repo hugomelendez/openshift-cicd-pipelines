@@ -23,7 +23,7 @@ oc new-project hello-test
 # The REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
 oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n hello-test
 oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n hello-test
-oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-dev
+oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-test
 
 # Creates the prod (management) projects (n areas, n projects)
 oc new-project hello-prod-management
@@ -31,7 +31,7 @@ oc new-project hello-prod-management
 # The REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
 oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n hello-prod-management
 oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n hello-prod-management
-oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-dev
+oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-prod-management
 
 # Creates the development templates in the development projects
 oc create -f ./environments/dev/java/java-app-pipelines-template.yaml -n hello-dev
