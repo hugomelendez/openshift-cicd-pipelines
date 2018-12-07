@@ -12,7 +12,7 @@
 * https://docs.openshift.com/container-platform/3.10/dev_guide/openshift_pipeline.html#pipeline-configuring-slave-pods
 * https://github.com/openshift/jenkins-sync-plugin
 
-## Secrets 
+## Secrets 
 
 * https://docs.openshift.com/container-platform/3.9/dev_guide/builds/build_inputs.html
 
