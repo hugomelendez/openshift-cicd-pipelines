@@ -28,7 +28,7 @@ objects:
         - name: APP_NAME
           value: ${PARAM_APP_NAME}
         - name: IMAGE_NAME
-          value: ${PARAM_IMAGE_NAME}
+          value: ${PARAM_APP_NAME}
         - name: SRC_PROJECT
           value: ${PARAM_SRC_PROJECT}    
         - name: GIT_REPO

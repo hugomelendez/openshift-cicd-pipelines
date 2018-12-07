@@ -20,7 +20,7 @@ oc annotate secret repository-credentials 'build.openshift.io/source-secret-matc
 # Creates the test projects (n areas, n projects)
 oc new-project hello-test
 
-# The REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
+# The REPOSITORY_CREDENTIALS_USERNAME and REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
 oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n hello-test
 oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n hello-test
 oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-test
@@ -28,7 +28,7 @@ oc annotate secret repository-credentials 'build.openshift.io/source-secret-matc
 # Creates the prod (management) projects (n areas, n projects)
 oc new-project hello-prod-management
 
-# The REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
+# The REPOSITORY_CREDENTIALS_USERNAME and REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
 oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n hello-prod-management
 oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n hello-prod-management
 oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-prod-management
@@ -43,15 +43,12 @@ oc create -f ./environments/test/config/change-config-test-template.yaml -n hell
 
 # Creates the prod template in the prod projects
 oc create -f ./environments/prod/prod-application-template.yaml -n hello-prod-management
-oc create -f ./environments/prod/config/change-config-prod-template.yaml -n hello-prod
+oc create -f ./environments/prod/config/change-config-prod-template.yaml -n hello-prod-management
 
 # Jenkins
 
 # Creates the Jenkins project
 oc new-project jenkins
-
-# Deploys Jenkins
-oc new-app jenkins-persistent -n jenkins
 
 # Sets Jenkins service account permissions
 oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n hello-dev
@@ -59,6 +56,15 @@ oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n he
 oc adm policy add-role-to-user admin system:serviceaccount:jenkins:jenkins -n hello-prod-management
 oc adm policy add-cluster-role-to-user system:registry system:serviceaccount:jenkins:jenkins
 oc adm policy add-cluster-role-to-user system:image-builder system:serviceaccount:jenkins:jenkins
+
+# Creates the custom Jenkins image
+oc new-build jenkins:2 --binary --name custom-jenkins -n jenkins
+
+# Starts the custom Jenkins build
+oc start-build custom-jenkins --from-dir=./jenkins --wait -n jenkins
+
+# Deploys the custom Jenkins application
+oc new-app --template=jenkins-persistent -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest -p NAMESPACE=jenkins -n jenkins
 
 # Creates a new cluster role for reading groups in the cluster
 echo "apiVersion: v1
@@ -80,11 +86,6 @@ rules:
 
 # Allows jenkins service account to read groups from cluster
 oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:jenkins:jenkins
-
-# Avoids a Jenkins instance in every project a pipeline is created
-minishift openshift config set --patch '{"jenkinsPipelineConfig":{"autoProvisionEnabled":false}}'
-
-sleep 5
 
 # Creates new groups
 oc adm groups new developers
@@ -189,10 +190,13 @@ oc label secret src-registry-credentials credential.sync.jenkins.openshift.io=tr
 oc create secret generic dst-registry-credentials --from-literal=username=unused --from-literal=password=${DST_REGISTRY_TOKEN} --type=kubernetes.io/basic-auth -n jenkins
 oc label secret dst-registry-credentials credential.sync.jenkins.openshift.io=true -n jenkins
 
-# The REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
+# The REPOSITORY_CREDENTIALS_USERNAME and REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
 oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n jenkins
 oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n jenkins
 oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n jenkins
 
 # Resumes deployments for Jenkins
 oc rollout resume dc/jenkins -n jenkins
+
+# Avoids a Jenkins instance in every project a pipeline is created
+minishift openshift config set --patch '{"jenkinsPipelineConfig":{"autoProvisionEnabled":false}}'
