@@ -2,12 +2,12 @@
 
 CI/CD pipelines in OpenShift.
 
-# Requirements
+## Requirements
 
 * Minishift (CDK 3.5 or higher)
 * Command line interface tool (**oc**) that matches with OpenShift clusters version
 
-## Usage
+## Usage
 
 In the **setup.sh** script are the required steps to deploy the demo. 
 
