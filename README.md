@@ -2,7 +2,7 @@
 
 CI/CD pipelines in OpenShift.
 
-## Demo
+## Demo
 
 ### Requirements
 
