@@ -57,7 +57,7 @@ The applications using this pipelines must follow the next convention:
           └── deployment.yaml
 ```
 
-#### Notes
+##### Notes
 
 * Add more environment directories if needed.
 * The development configuration is located in the template designed by the developers.
