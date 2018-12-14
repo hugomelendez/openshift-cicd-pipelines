@@ -2,31 +2,20 @@
 
 CI/CD pipelines in OpenShift.
 
-## Demo
+## Pipelines
 
-### Requirements
-
-* MiniShift (CDK 3.5+)
-* OpenShift CLI
-
-### Usage
-
-In the **setup.sh** script are the required steps to deploy the demo. 
-
-The script requires some environment variables to be present in the context where the script runs:
-
-| Environment Variable             | Description                                                              |
-| -------------------------------- | ------------------------------------------------------------------------ |
-| REPOSITORY_CREDENTIALS_USERNAME  | Username to authenticate to different Git repositories used in this demo |
-| REPOSITORY_CREDENTIALS_PASSWORD  | Password to authenticate to different Git repositories used in this demo |
-
-Run the script:
-
-    sh setup.sh
-
-After the completion of the script a non-prod and a prod cluster will be ready to use with all templates created and configuration applied to start using the pipelines.
-
-### Convention Over Configuration
+* Development
+  * CI pipeline from develop
+  * Release pipeline to generate a version that can be promoted to the next environment
+  * Feature based pipeline (for specific branches like features or bugs)
+* Testing
+  * Image deployment pipeline
+  * Configuration change pipeline
+* Production
+  * Image deployment pipeline
+  * Configuration change pipeline
+    
+## Convention Over Configuration
 
 The applications using this pipelines must follow the next convention:
 
@@ -57,18 +46,13 @@ The applications using this pipelines must follow the next convention:
           └── deployment.yaml
 ```
 
-##### Notes
+### Notes
 
 * Add more environment directories if needed.
 * The development configuration is located in the template designed by the developers.
 
-#### Pipeline Library
+## Pipeline Library
 
 The pipelines use a shared library for common functionality, the code is in the following repository:
 
 * [openshift-pipeline-library](https://github.com/redhatcsargentina/openshift-pipeline-library.git)
-
-#### Example Repositories
-
-* [openshift-hello-world](https://github.com/redhatcsargentina/openshift-hello-world.git)
-* [openshift-hello-world-config](https://github.com/redhatcsargentina/openshift-hello-world-config.git)

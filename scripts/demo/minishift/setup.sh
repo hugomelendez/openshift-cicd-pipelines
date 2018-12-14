@@ -34,16 +34,16 @@ oc label secret repository-credentials credential.sync.jenkins.openshift.io=true
 oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-prod-management
 
 # Creates the development templates in the development projects
-oc create -f ./environments/dev/java/java-app-pipelines-template.yaml -n hello-dev
-oc create -f ./environments/dev/java/java-app-pipeline-branch-template.yaml -n hello-dev
+oc create -f ../../../environments/dev/java/java-app-pipelines-template.yaml -n hello-dev
+oc create -f ../../../environments/dev/java/java-app-pipeline-branch-template.yaml -n hello-dev
 
 # Creates the test template in the test projects
-oc create -f ./environments/test/test-application-template.yaml -n hello-test
-oc create -f ./environments/test/config/change-config-test-template.yaml -n hello-test
+oc create -f ../../../environments/test/test-application-template.yaml -n hello-test
+oc create -f ../../../environments/test/config/change-config-test-template.yaml -n hello-test
 
 # Creates the prod template in the prod projects
-oc create -f ./environments/prod/prod-application-template.yaml -n hello-prod-management
-oc create -f ./environments/prod/config/change-config-prod-template.yaml -n hello-prod-management
+oc create -f ../../../environments/prod/prod-application-template.yaml -n hello-prod-management
+oc create -f ../../../environments/prod/config/change-config-prod-template.yaml -n hello-prod-management
 
 # Jenkins
 
