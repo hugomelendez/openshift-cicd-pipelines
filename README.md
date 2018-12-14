@@ -56,3 +56,7 @@ The applications using this pipelines must follow the next convention:
 The pipelines use a shared library for common functionality, the code is in the following repository:
 
 * [openshift-pipeline-library](https://github.com/redhatcsargentina/openshift-pipeline-library.git)
+
+## Demo
+
+Follow [this](scripts/demo/minishift/README.md) instructions to install the demo and test it.
