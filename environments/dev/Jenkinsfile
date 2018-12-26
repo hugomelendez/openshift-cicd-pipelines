@@ -21,6 +21,7 @@ pipeline {
                 script {
                     env.TAG = "latest"
                     env.PROJECT = getProject()
+                    env.REPOSITORY_CREDENTIALS = env.REPOSITORY_CREDENTIALS
                 }
             }
         }
