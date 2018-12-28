@@ -20,7 +20,6 @@ oc annotate secret repository-credentials 'build.openshift.io/source-secret-matc
 # Creates the test projects (n areas, n projects)
 oc new-project hello-test
 
-# The REPOSITORY_CREDENTIALS_USERNAME and REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
 oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n hello-test
 oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n hello-test
 oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-test
@@ -28,7 +27,6 @@ oc annotate secret repository-credentials 'build.openshift.io/source-secret-matc
 # Creates the prod (management) projects (n areas, n projects)
 oc new-project hello-prod-management
 
-# The REPOSITORY_CREDENTIALS_USERNAME and REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
 oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n hello-prod-management
 oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n hello-prod-management
 oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n hello-prod-management
@@ -62,6 +60,9 @@ oc new-build jenkins:2 --binary --name custom-jenkins -n jenkins
 
 # Starts the custom Jenkins build
 oc start-build custom-jenkins --from-dir=./jenkins --wait -n jenkins
+
+# In OpenShift MiniShift 3.11 the jenkins-persistent template is not installed
+oc create -f https://raw.githubusercontent.com/openshift/origin/release-3.11/examples/jenkins/jenkins-persistent-template.json -n openshift
 
 # Deploys the custom Jenkins application
 oc new-app --template=jenkins-persistent -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest -p NAMESPACE=jenkins -n jenkins
@@ -190,7 +191,6 @@ oc label secret src-registry-credentials credential.sync.jenkins.openshift.io=tr
 oc create secret generic dst-registry-credentials --from-literal=username=unused --from-literal=password=${DST_REGISTRY_TOKEN} --type=kubernetes.io/basic-auth -n jenkins
 oc label secret dst-registry-credentials credential.sync.jenkins.openshift.io=true -n jenkins
 
-# The REPOSITORY_CREDENTIALS_USERNAME and REPOSITORY_CREDENTIALS_PASSWORD environment variable needs to be defined with a valid password for cloning the repositories
 oc create secret generic repository-credentials --from-literal=username=${REPOSITORY_CREDENTIALS_USERNAME} --from-literal=password=${REPOSITORY_CREDENTIALS_PASSWORD} --type=kubernetes.io/basic-auth -n jenkins
 oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n jenkins
 oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=https://github.com/*' -n jenkins
