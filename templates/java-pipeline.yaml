@@ -1,35 +1,32 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: change-test-config-template
+  name: java-pipeline
   annotations:
-    openshift.io/display-name: Change Config (TEST)
+    openshift.io/display-name: Java Pipeline
     iconClass: fa fa-code
-    description: Template to create a pipeline to apply changes to Config Maps.
 objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    annotations:
-      pipeline.alpha.openshift.io/uses: '[{"name": "${PARAM_APP_NAME}", "namespace": "", "kind": "DeploymentConfig"}]'
     labels:
-      app: ${PARAM_APP_NAME}
-    name: ${PARAM_APP_NAME}-config-change-pipeline
+      app: ${PARAM_APPLICATION}
+    name: ${PARAM_APPLICATION}-pipeline
   spec:
     source:
-      type: Git
       git:
-        uri: https://github.com/redhatcsargentina/openshift-pipelines.git
-        ref: master
-      contextDir: environments/test/config
+        uri: "https://github.com/leandroberetta/openshift-pipelines.git"
     strategy:
       jenkinsPipelineStrategy:
         env:
-        - name: APP_NAME
-          value: ${PARAM_APP_NAME}
+        - name: APPLICATION
+          value: ${PARAM_APP}
         - name: GIT_REPO
           value: ${PARAM_GIT_REPO}
-        jenkinsfilePath: Jenkinsfile
+        - name: GIT_BRANCH
+          value: ${PARAM_GIT_BRANCH}
+        - name: TECH
+          value: maven
       type: JenkinsPipeline
     triggers:
       - generic:
@@ -39,12 +36,17 @@ objects:
 parameters:
 - description: The application name
   displayName: Application Name
-  name: PARAM_APP_NAME
+  name: PARAM_APPLICATION
   required: true
 - description: The Git repository
   displayName: Git Repository
   name: PARAM_GIT_REPO
   required: true
+- description: The Git branch
+  displayName: Git Branch
+  name: PARAM_GIT_BRANCH
+  required: true
+  value: master
 - description: A secret string used to configure the webhook
   displayName: Webhook Secret
   name: PARAM_WEBHOOK_SECRET

@@ -1,1 +1,0 @@
-openshift-sync:1.0.30
