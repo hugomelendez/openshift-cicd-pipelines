@@ -11,7 +11,7 @@ pipeline {
             steps {
                 library(identifier: "openshift-pipeline-library@master", 
                         retriever: modernSCM([$class: "GitSCMSource", 
-                                              remote: "https://github.com/leandroberetta/openshift-pipeline-library.git"]))     
+                                              remote: "https://github.com/redhatcsargentina/openshift-pipeline-library.git"]))     
 
                 script {
                     env.IMAGE_NAME = env.APP_NAME
