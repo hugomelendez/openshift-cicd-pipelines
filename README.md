@@ -29,7 +29,7 @@ Then a set of permissions need to be granted.
 
 ### Create the application (and the pipeline)
 
-    oc new-app -f src/main/openshift/template.yaml -n dev -p APP_NAME=openshift-hello-world -p GIT_REPO=https://github.com/leandroberetta/openshift-cicd-demo.git -p GIT_BRANCH=master
+    oc new-app -f src/main/openshift/template.yaml -n dev -p APP_NAME=openshift-hello-world -p GIT_REPO=https://github.com/redhatcsargentina/openshift-pipelines.git -p GIT_BRANCH=master
 
 ### Start the pipeline
 
