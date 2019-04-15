@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label env.TECH
+        label "maven"
     }
     options {
         skipDefaultCheckout()
@@ -11,9 +11,22 @@ pipeline {
             steps {
                 library(identifier: "openshift-pipeline-library@master", 
                         retriever: modernSCM([$class: "GitSCMSource", 
-                                              remote: "https://github.com/redhatcsargentina/openshift-pipeline-library.git"]))     
+                                              remote: "https://github.com/leandroberetta/openshift-pipeline-library.git"]))     
 
-                initVars()
+                script {
+                    env.IMAGE_NAME = env.APP_NAME
+    
+                    env.DEV_PROJECT = "dev"
+                    env.TEST_PROJECT = "test"
+                    env.PROD_PROJECT = "prod"
+                                    
+                    env.APPLICATION_TEMPLATE = "src/main/openshift/template.yaml"
+                    env.APPLICATION_TEMPLATE_PARAMETERS_DEV = "src/main/openshift/environments/dev/templateParameters.txt"
+                    env.APPLICATION_TEMPLATE_PARAMETERS_TEST = "src/main/openshift/environments/test/templateParameters.txt"
+                    env.APPLICATION_TEMPLATE_PARAMETERS_PROD = "src/main/openshift/environments/prod/templateParameters.txt"
+                    env.APPLICATION_INT_TEST_AGENT = "src/main/openshift/environments/test/integration-test/integration-test-agent.yaml"
+                    env.APPLICATION_INT_TEST_SCRIPT = "src/main/openshift/environments/test/integration-test/integration-test.py"
+                }
             }
         }
         stage("Checkout") {
@@ -22,53 +35,49 @@ pipeline {
                          branch: env.GIT_BRANCH, 
                          credentialsId: env.GIT_CREDENTIALS)
 
-                stash env.APPLICATION_OPENSHIFT_FOLDER
+                stash "repo"
             }
         }
         stage("Compile") {
-            when {
-                expression {
-                    return fileExists(env.APPLICATION_COMPILE_COMMAND_SCRIPT)
-                }
-            }
             steps {
-                sh env.APPLICATION_COMPILE_COMMAND_SCRIPT
+                sh "mvn clean package -DskipTests"
             }
         }
         stage("Test") {
             steps {
-                sh env.APPLICATION_TEST_COMMAND_SCRIPT
+                sh "mvn test"
             }
         }
         stage("Build Image") {
             steps {
                 applyTemplate(project: env.DEV_PROJECT, 
-                              application: env.APPLICATION, 
-                              template: env.APPLICATION_TEMPLATE_FILE, 
-                              parameters: env.APPLICATION_TEMPLATE_FILE_PARAMETERS_DEV,
+                              application: env.APP_NAME, 
+                              template: env.APPLICATION_TEMPLATE, 
+                              parameters: env.APPLICATION_TEMPLATE_PARAMETERS_DEV,
                               createBuildObjects: true)
 
                 buildImage(project: env.DEV_PROJECT, 
-                           application: env.APPLICATION, 
-                           artifactsDir: "./artifacts-dir")
+                           application: env.APP_NAME, 
+                           artifactsDir: "./target")
             }
         }
         stage("Deploy DEV") {
             steps {
                 script {
-                    env.TAG = utils.getTag(env.TECH)
+                    env.TAG_NAME = readMavenPom().getVersion()
                 }   
                 
-                tagImage(srcProject: "${PROJECT}-dev", 
-                         srcImage: env.IMAGE, 
+                tagImage(srcProject: env.DEV_PROJECT, 
+                         srcImage: env.IMAGE_NAME, 
                          srcTag: "latest", 
-                         dstProject: "${PROJECT}-dev", 
-                         dstImage: env.IMAGE,
-                         dstTag: env.TAG)
+                         dstProject: env.DEV_PROJECT, 
+                         dstImage: env.IMAGE_NAME,
+                         dstTag: env.TAG_NAME)
                 
                 deployImage(project: env.DEV_PROJECT, 
-                            application: env.APPLICATION, 
-                            image: env.IMAGE, tag: env.TAG)
+                            application: env.APP_NAME, 
+                            image: env.IMAGE_NAME, 
+                            tag: env.TAG_NAME)
             }
         }
         stage("Deploy TEST") {
@@ -76,20 +85,21 @@ pipeline {
                 input("Promote to TEST?")
 
                 applyTemplate(project: env.TEST_PROJECT, 
-                              application: env.APPLICATION, 
-                              template: env.APPLICATION_TEMPLATE_FILE, 
-                              parameters: env.APPLICATION_TEMPLATE_FILE_PARAMETERS_TEST)
-                
+                              application: env.APP_NAME, 
+                              template: env.APPLICATION_TEMPLATE, 
+                              parameters: env.APPLICATION_TEMPLATE_PARAMETERS_TEST)
+
                 tagImage(srcProject: env.DEV_PROJECT, 
-                         srcImage: env.IMAGE, 
-                         srcTag: env.TAG, 
+                         srcImage: env.IMAGE_NAME, 
+                         srcTag: env.TAG_NAME, 
                          dstProject: env.TEST_PROJECT, 
-                         dstImage: env.IMAGE,
-                         dstTag: env.TAG)
+                         dstImage: env.IMAGE_NAME,
+                         dstTag: env.TAG_NAME)
                 
                 deployImage(project: env.TEST_PROJECT, 
-                            application: env.APPLICATION, 
-                            image: env.IMAGE, tag: env.TAG)
+                            application: env.APP_NAME, 
+                            image: env.IMAGE_NAME, 
+                            tag: env.TAG_NAME)
             }
         }
         stage("Integration Test") {
@@ -97,55 +107,52 @@ pipeline {
                 kubernetes {
                     cloud "openshift"
                     defaultContainer "jnlp"
-                    label "${env.APPLICATION}-integration-test"
-                    yaml readFile(env.APPLICATION_INTEGRATION_TEST_AGENT)
+                    label "${env.APP_NAME}-int-test"
+                    yaml readFile(env.APPLICATION_INT_TEST_AGENT)
                 }
             }
             steps {
-                script {
-                    unstash env.APPLICATION_OPENSHIFT_FOLDER
-                    
-                    def integrationTest = load env.APPLICATION_INTEGRATION_TEST_ENTRYPOINT
-                    
-                    integrationTest()
+                unstash "repo"
+
+                container("python") {
+                    sh "pip install requests"
+                    sh "python ${env.APPLICATION_INT_TEST_SCRIPT}"
                 }
             }
         }
         stage("Deploy PROD (Blue)") {
             steps {
                 script {
-                    if (!blueGreen.existsBlueGreenRoute(project: env.PROD_PROJECT, application: env.APPLICATION)) {
+                    if (!blueGreen.existsBlueGreenRoute(project: env.PROD_PROJECT, application: env.APP_NAME)) {
                         applyTemplate(project: env.PROD_PROJECT, 
-                                      application: blueGreen.getApplication1Name(env.APPLICATION), 
-                                      template: env.APPLICATION_TEMPLATE_FILE, 
-                                      parameters: env.APPLICATION_TEMPLATE_FILE_PARAMETERS_PROD)
+                                      application: blueGreen.getApplication1Name(env.APP_NAME), 
+                                      template: env.APPLICATION_TEMPLATE, 
+                                      parameters: env.APPLICATION_TEMPLATE_PARAMETERS_PROD)
                                       
                         applyTemplate(project: env.PROD_PROJECT, 
-                                      application: blueGreen.getApplication2Name(env.APPLICATION), 
-                                      template: env.APPLICATION_TEMPLATE_FILE, 
-                                      parameters: env.APPLICATION_TEMPLATE_FILE_PARAMETERS_PROD)
+                                      application: blueGreen.getApplication2Name(env.APP_NAME), 
+                                      template: env.APPLICATION_TEMPLATE, 
+                                      parameters: env.APPLICATION_TEMPLATE_PARAMETERS_PROD) 
 
-                        blueGreen.createBlueGreenRoute(project: env.PROD_PROJECT, 
-                                                       application: env.APPLICATION)
+                        blueGreen.createBlueGreenRoute(project: env.PROD_PROJECT, application: env.APP_NAME)
+                    } else {
+                        applyTemplate(project: env.PROD_PROJECT, 
+                                      application: blueGreen.getBlueApplication(project: env.PROD_PROJECT, application: env.APP_NAME), 
+                                      template: env.APPLICATION_TEMPLATE, 
+                                      parameters: env.APPLICATION_TEMPLATE_PARAMETERS_PROD)
                     }
                     
-                    def blueApplication = blueGreen.getBlueApplication(project: env.PROD_PROJECT, application: env.APPLICATION)  
-
-                    applyTemplate(project: env.PROD_PROJECT, 
-                                  application: blueApplication, 
-                                  template: env.APPLICATION_TEMPLATE_FILE, 
-                                  parameters: env.APPLICATION_TEMPLATE_FILE_PARAMETERS_PROD)
-
                     tagImage(srcProject: env.TEST_PROJECT, 
-                             srcImage: env.IMAGE, 
-                             srcTag: env.TAG, 
+                             srcImage: env.IMAGE_NAME, 
+                             srcTag: env.TAG_NAME, 
                              dstProject: env.PROD_PROJECT, 
-                             dstImage: env.IMAGE,
-                             dstTag: env.TAG)
+                             dstImage: env.IMAGE_NAME,
+                             dstTag: env.TAG_NAME)
 
                     deployImage(project: env.PROD_PROJECT, 
-                                application: blueApplication, 
-                                image: env.IMAGE, tag: env.TAG)
+                                application: blueGreen.getBlueApplication(project: env.PROD_PROJECT, application: env.APP_NAME), 
+                                image: env.IMAGE_NAME, 
+                                tag: env.TAG_NAME)
                 } 
             }
         }
@@ -154,8 +161,7 @@ pipeline {
                 input("Switch to new version?")
 
                 script{
-                    blueGreen.switchToGreenApplication(project: env.PROD_PROJECT, 
-                                                       application: env.APPLICATION)   
+                    blueGreen.switchToGreenApplication(project: env.PROD_PROJECT, application: env.APP_NAME)   
                 }              
             }
         }
