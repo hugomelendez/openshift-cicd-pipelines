@@ -8,9 +8,7 @@ Basic demonstration of OpenShift CI/CD pipelines for deploying applications acro
 
 ## Pipeline library
 
-The pipelines use a shared library for common functionality, the code is in the following repository:
-
-* [openshift-pipeline-library](https://github.com/redhatcsargentina/openshift-pipeline-library.git)
+The pipeline uses a shared library for common functionality, the library is in [https://github.com/redhatcsargentina/openshift-pipeline-library.git] repository.
 
 ## Demo
 
@@ -43,7 +41,7 @@ All the repositories used are private so pull secrets are needed.
 
 The pipeline library uses a secret named **pipeline-library-repository-credentials** and the pipeline (used both in the BuildConfig and the Checkout step) uses a secret named **app-repository-credentials**.
 
-These secrets needs to be label with **credential.sync.jenkins.openshift.io=true** to be synchronized in Jenkins as a credential (thanks to the [OpenShift Jenkins Sync Plugin](https://github.com/openshift/jenkins-sync-plugin)). 
+These secrets needs to be label with **credential.sync.jenkins.openshift.io=true** to be synchronized in Jenkins (thanks to the [OpenShift Jenkins Sync Plugin](https://github.com/openshift/jenkins-sync-plugin)). 
 
 The commands to create and label the secrets are:
 
