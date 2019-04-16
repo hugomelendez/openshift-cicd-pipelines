@@ -11,7 +11,7 @@ pipeline {
             steps {
                 library(identifier: "openshift-pipeline-library@master", 
                         retriever: modernSCM([$class: "GitSCMSource", 
-                                              credentialsId: "dev-repository-credentials", 
+                                              credentialsId: "dev-pipeline-library-repository-credentials", 
                                               remote: "https://github.com/redhatcsargentina/openshift-pipeline-library.git"]))     
 
                 script {
