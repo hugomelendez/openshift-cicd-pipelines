@@ -10,9 +10,7 @@ pipeline {
         stage("Initialize") {
             steps {
                 library(identifier: "openshift-pipeline-library@master", 
-                        retriever: modernSCM([$class: "GitSCMSource", 
-                                              credentialsId: "dev-repository-credentials", 
-                                              remote: "https://github.com/redhatcsargentina/openshift-cicd-pipelines.git"]))     
+                        retriever: scm)     
 
                 script {
                     env.IMAGE_NAME = env.APP_NAME
