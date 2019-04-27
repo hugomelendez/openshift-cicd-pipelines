@@ -9,8 +9,7 @@ pipeline {
     stages {
         stage("Initialize") {
             steps {
-                library(identifier: "openshift-pipeline-library@master", 
-                        retriever: legacySCM(scm))     
+                library(identifier: "openshift-pipeline-library@master", retriever: legacySCM(scm))     
 
                 script {
                     env.IMAGE_NAME = env.APP_NAME
@@ -30,13 +29,7 @@ pipeline {
         }
         stage("Checkout") {
             steps {      
-                checkout(scm)
-
-                /*          
-                gitClone(repository: env.GIT_REPO, 
-                         branch: env.GIT_BRANCH, 
-                         credentialsId: "dev-repository-credentials")
-                */
+                env.GIT_COMMIT= checkout(scm).GIT_COMMIT
 
                 stash "repo"
             }
