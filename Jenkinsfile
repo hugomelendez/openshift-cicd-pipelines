@@ -10,7 +10,7 @@ pipeline {
         stage("Initialize") {
             steps {
                 library(identifier: "openshift-pipeline-library@master", 
-                        retriever: new org.jenkinsci.plugins.workflow.libs.SCMRetriever(scm))     
+                        retriever: modernSCM(scm))     
 
                 script {
                     env.IMAGE_NAME = env.APP_NAME
