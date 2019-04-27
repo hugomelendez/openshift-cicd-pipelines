@@ -10,7 +10,7 @@ pipeline {
         stage("Initialize") {
             steps {
                 library(identifier: "openshift-pipeline-library@master", 
-                        retriever: scm)     
+                        retriever: new SCMRetriever(scm))     
 
                 script {
                     env.IMAGE_NAME = env.APP_NAME
