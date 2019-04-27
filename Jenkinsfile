@@ -31,10 +31,14 @@ pipeline {
             }
         }
         stage("Checkout") {
-            steps {                
+            steps {      
+                checkout(scm)
+
+                /*          
                 gitClone(repository: env.GIT_REPO, 
                          branch: env.GIT_BRANCH, 
                          credentialsId: "dev-repository-credentials")
+                */
 
                 stash "repo"
             }
