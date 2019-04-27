@@ -29,7 +29,7 @@ pipeline {
         }
         stage("Checkout") {
             steps {      
-                env.GIT_COMMIT= checkout(scm).GIT_COMMIT
+                env.GIT_COMMIT = checkout(scm).GIT_COMMIT
 
                 stash "repo"
             }
