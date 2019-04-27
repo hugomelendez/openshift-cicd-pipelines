@@ -11,8 +11,8 @@ pipeline {
             steps {
                 library(identifier: "openshift-pipeline-library@master", 
                         retriever: modernSCM([$class: "GitSCMSource", 
-                                              credentialsId: "dev-pipeline-library-repository-credentials", 
-                                              remote: "https://github.com/redhatcsargentina/openshift-pipeline-library.git"]))     
+                                              credentialsId: "dev-repository-credentials", 
+                                              remote: "https://github.com/redhatcsargentina/openshift-cicd-pipelines.git"]))     
 
                 script {
                     env.IMAGE_NAME = env.APP_NAME
@@ -34,7 +34,7 @@ pipeline {
             steps {                
                 gitClone(repository: env.GIT_REPO, 
                          branch: env.GIT_BRANCH, 
-                         credentialsId: "dev-app-repository-credentials")
+                         credentialsId: "dev-repository-credentials")
 
                 stash "repo"
             }
