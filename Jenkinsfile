@@ -12,7 +12,6 @@ pipeline {
                 library(identifier: "openshift-pipeline-library@master", 
                         retriever: modernSCM([$class: "GitSCMSource",
                                               credentialsId: "dev-repository-credentials",
-                                              traits: [[$class: "jenkins.plugins.git.traits.TagDiscoveryTrait"]],
                                               remote: "ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git"]))     
 
                 script {
