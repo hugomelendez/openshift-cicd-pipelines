@@ -112,10 +112,10 @@ pipeline {
                         spec:
                         containers:
                         - name: python
-                            image: python:3
-                            command:
-                            - cat
-                            tty: true
+                          image: python:3
+                          command:
+                          - cat
+                          tty: true
                     """                
                 }
             }
