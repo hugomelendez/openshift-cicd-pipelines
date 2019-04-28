@@ -9,7 +9,11 @@ pipeline {
     stages {
         stage("Initialize") {
             steps {
-                library(identifier: "openshift-pipeline-library@master", retriever: legacySCM(scm))     
+                library(identifier: "openshift-pipeline-library@master", 
+                        retriever: modernSCM([$class: "GitSCMSource",
+                                              credentialsId: "dev-repository-credentials",
+                                              traits: [[$class: "jenkins.plugins.git.traits.TagDiscoveryTrait"]],
+                                              remote: "ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git"]))     
 
                 script {
                     env.IMAGE_NAME = env.APP_NAME
@@ -22,12 +26,9 @@ pipeline {
                     env.APPLICATION_TEMPLATE_PARAMETERS_DEV = "./openshift/environments/dev/templateParameters.txt"
                     env.APPLICATION_TEMPLATE_PARAMETERS_TEST = "./openshift/environments/test/templateParameters.txt"
                     env.APPLICATION_TEMPLATE_PARAMETERS_PROD = "./openshift/environments/prod/templateParameters.txt"
-                    env.APPLICATION_INT_TEST_AGENT = "./openshift/environments/test/integration-test/integration-test-agent.yaml"
-                    env.APPLICATION_INT_TEST_SCRIPT = "./openshift/environments/test/integration-test/integration-test.py"
                 }
             }
         }
-        /*
         stage("Checkout") {
             steps {      
                 script {
@@ -99,7 +100,6 @@ pipeline {
                             tag: env.TAG_NAME)
             }
         }
-        */
         stage("Integration Test") {
             agent {
                 kubernetes {
@@ -124,11 +124,10 @@ pipeline {
 
                 container("python") {
                     sh "pip install requests"
-                    sh "python ./openshift/environments/test/integration-test/integration-test.py"
+                    sh "python ./src/test/python/it.py"
                 }
             }
         }
-        /*
         stage("Deploy PROD (Blue)") {
             steps {
                 script {
@@ -174,6 +173,5 @@ pipeline {
                 }              
             }
         }
-        */
     }
 }
