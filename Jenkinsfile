@@ -18,12 +18,12 @@ pipeline {
                     env.TEST_PROJECT = "test"
                     env.PROD_PROJECT = "prod"
                                     
-                    env.APPLICATION_TEMPLATE = "src/main/openshift/template.yaml"
-                    env.APPLICATION_TEMPLATE_PARAMETERS_DEV = "src/main/openshift/environments/dev/templateParameters.txt"
-                    env.APPLICATION_TEMPLATE_PARAMETERS_TEST = "src/main/openshift/environments/test/templateParameters.txt"
-                    env.APPLICATION_TEMPLATE_PARAMETERS_PROD = "src/main/openshift/environments/prod/templateParameters.txt"
-                    env.APPLICATION_INT_TEST_AGENT = "src/main/openshift/environments/test/integration-test/integration-test-agent.yaml"
-                    env.APPLICATION_INT_TEST_SCRIPT = "src/main/openshift/environments/test/integration-test/integration-test.py"
+                    env.APPLICATION_TEMPLATE = "./openshift/template.yaml"
+                    env.APPLICATION_TEMPLATE_PARAMETERS_DEV = "./openshift/environments/dev/templateParameters.txt"
+                    env.APPLICATION_TEMPLATE_PARAMETERS_TEST = "./openshift/environments/test/templateParameters.txt"
+                    env.APPLICATION_TEMPLATE_PARAMETERS_PROD = "./openshift/environments/prod/templateParameters.txt"
+                    env.APPLICATION_INT_TEST_AGENT = "./openshift/environments/test/integration-test/integration-test-agent.yaml"
+                    env.APPLICATION_INT_TEST_SCRIPT = "./openshift/environments/test/integration-test/integration-test.py"
                 }
             }
         }
@@ -106,7 +106,17 @@ pipeline {
                     cloud "openshift"
                     defaultContainer "jnlp"
                     label "${env.APP_NAME}-int-test"
-                    yaml readFile(env.APPLICATION_INT_TEST_AGENT)
+                    yaml """
+                        apiVersion: v1
+                        kind: Pod
+                        spec:
+                        containers:
+                        - name: python
+                            image: python:3
+                            command:
+                            - cat
+                            tty: true
+                    """                
                 }
             }
             steps {
