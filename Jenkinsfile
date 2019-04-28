@@ -27,12 +27,11 @@ pipeline {
                 }
             }
         }
+        /*
         stage("Checkout") {
             steps {      
                 script {
                     env.GIT_COMMIT = checkout(scm).GIT_COMMIT
-
-                    stash "repo"
                 }
             }
         }
@@ -100,6 +99,7 @@ pipeline {
                             tag: env.TAG_NAME)
             }
         }
+        */
         stage("Integration Test") {
             agent {
                 kubernetes {
@@ -110,24 +110,25 @@ pipeline {
                         apiVersion: v1
                         kind: Pod
                         spec:
-                        containers:
-                        - name: python
-                          image: python:3
-                          command:
-                          - cat
-                          tty: true
+                          containers:
+                          - name: python
+                            image: python:3
+                            command:
+                            - cat
+                            tty: true
                     """                
                 }
             }
             steps {
-                unstash "repo"
+                checkout(scm)
 
                 container("python") {
                     sh "pip install requests"
-                    sh "python ${env.APPLICATION_INT_TEST_SCRIPT}"
+                    sh "python ./openshift/environments/test/integration-test/integration-test.py"
                 }
             }
         }
+        /*
         stage("Deploy PROD (Blue)") {
             steps {
                 script {
@@ -173,5 +174,6 @@ pipeline {
                 }              
             }
         }
+        */
     }
 }
