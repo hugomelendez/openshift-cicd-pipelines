@@ -19,7 +19,7 @@ public class HelloService {
 		Properties properties = this.loadProperties("artifact.properties");
 
 		return String.format("%s (Version: %s - Build Number: %s - Git Commit: %s - Environment: %s)", 
-							 System.getenv("HELLO_STRING"), 
+							 System.getenv("HELLO_MESSAGE"), 
 							 properties.get("artifact.version"),
 							 properties.get("artifact.buildNumber"),
 							 properties.get("artifact.gitCommit"),

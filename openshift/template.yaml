@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: hello-world
+  name: hello-template
   annotations:
-    openshift.io/display-name: Hello World
+    openshift.io/display-name: Hello Service
     iconClass: fa fa-code
 objects:
 - apiVersion: v1
@@ -58,8 +58,8 @@ objects:
         - image: ${APP_NAME}:latest
           name: ${APP_NAME}
           env:
-          - name: HELLO_STRING
-            value: ${HELLO_STRING}
+          - name: HELLO_MESSAGE
+            value: ${HELLO_MESSAGE}
           - name: HELLO_ENVIRONMENT
             valueFrom:
               configMapKeyRef:
@@ -115,7 +115,7 @@ parameters:
   displayName: Application Name
   name: APP_NAME
   required: true
-  value: hello-world
+  value: hello-service
 - description: Git Repository
   displayName: Git Repository
   name: GIT_REPO
@@ -126,9 +126,9 @@ parameters:
   name: GIT_BRANCH
   required: true
   value: master
-- name: HELLO_STRING
-  displayName: Hello World Message
-  description: Hello World Message
+- name: HELLO_MESSAGE
+  displayName: Hello Message
+  description: Hello Message
   required: true
   value: "Hello World from OpenShift!"
 - name: ENVIRONMENT
