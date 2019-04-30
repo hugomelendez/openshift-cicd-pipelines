@@ -37,6 +37,7 @@ pipeline {
         }
         stage("Compile") {
             steps {
+                // Quarkus requires Maven 3.5.3+ but the agent's Maven version is 3.5.0, using the agent just for the oc command
                 sh "./mvnw clean package -DskipTests"
             }
         }
@@ -53,7 +54,7 @@ pipeline {
                               parameters: env.APPLICATION_TEMPLATE_PARAMETERS_DEV,
                               createBuildObjects: true)
 
-                // Quarkus workaround
+                // Quarkus specific
                 sh "mkdir deploy"
                 sh "cp -R ./target/lib ./deploy"
                 sh "cp ./target/${env.APP_NAME}-runner.jar ./deploy"
