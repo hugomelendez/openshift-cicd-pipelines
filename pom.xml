@@ -4,33 +4,48 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.veicot.cloud</groupId>
-  <artifactId>openshift-hello-world</artifactId>
-  <name>OpenShift Hello World</name>
+  <artifactId>hello-service</artifactId>
+  <name>Hello Service</name>
   <version>1.0.0</version>
-  <packaging>war</packaging>
 
   <properties>
-    <version.thorntail>2.2.1.Final</version.thorntail>
+    <quarkus.version>0.13.1</quarkus.version>
+    <surefire-plugin.version>2.22.1</surefire-plugin.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <failOnMissingWebXml>false</failOnMissingWebXml>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>io.thorntail</groupId>
-        <artifactId>bom-all</artifactId>
-        <version>${version.thorntail}</version>
-        <scope>import</scope>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-bom</artifactId>
+        <version>${quarkus.version}</version>
         <type>pom</type>
+        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
 
+  <dependencies>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
   <build>
-    <finalName>openshift-hello-world</finalName>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -39,24 +54,26 @@
     </resources>
     <plugins>
       <plugin>
-        <groupId>io.thorntail</groupId>
-        <artifactId>thorntail-maven-plugin</artifactId>
-        <version>${version.thorntail}</version>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire-plugin.version}</version>
+        <configuration>
+          <systemProperties>
+            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+          </systemProperties>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-maven-plugin</artifactId>
+        <version>${quarkus.version}</version>
         <executions>
           <execution>
             <goals>
-              <goal>package</goal>
+              <goal>build</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
-
-  <dependencies>
-    <dependency>
-      <groupId>io.thorntail</groupId>
-      <artifactId>jaxrs</artifactId>
-    </dependency>
-  </dependencies>
 </project>
