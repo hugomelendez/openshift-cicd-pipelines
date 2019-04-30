@@ -57,7 +57,7 @@ pipeline {
                 sh "mkdir deploy"
                 sh "cp -R ./target/lib ./deploy"
                 sh "cp ./target/${env.APP_NAME}-runner.jar ./deploy"
-                sh "cp -R ./s2i ./deploy"
+                sh "cp -R ./.s2i ./deploy"
 
                 buildImage(project: env.DEV_PROJECT, 
                            application: env.APP_NAME, 
