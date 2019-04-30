@@ -53,9 +53,15 @@ pipeline {
                               parameters: env.APPLICATION_TEMPLATE_PARAMETERS_DEV,
                               createBuildObjects: true)
 
+                // Quarkus workaround
+                sh "mkdir deploy"
+                sh "cp -R ./target/lib ./deploy"
+                sh "cp ./target/${env.APP_NAME}-runner.jar ./deploy"
+                sh "cp -R ./s2i ./deploy"
+
                 buildImage(project: env.DEV_PROJECT, 
                            application: env.APP_NAME, 
-                           artifactFile: "./target/${env.APP_NAME}-runner.jar")
+                           artifactsDir: "./deploy")
             }
         }
         stage("Deploy DEV") {
