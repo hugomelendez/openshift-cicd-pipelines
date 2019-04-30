@@ -55,7 +55,7 @@ pipeline {
 
                 buildImage(project: env.DEV_PROJECT, 
                            application: env.APP_NAME, 
-                           artifactFile: "./target/${APP_NAME}-runner.jar")
+                           artifactFile: "./target/${env.APP_NAME}-runner.jar")
             }
         }
         stage("Deploy DEV") {
