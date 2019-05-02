@@ -33,9 +33,9 @@ Then a set of permissions need to be granted:
     oc adm policy add-role-to-user edit system:serviceaccount:dev:jenkins -n test
     oc adm policy add-role-to-user edit system:serviceaccount:dev:jenkins -n prod
 
-### Create the pull Secret
+### Create the pull Secret (optional)
 
-The repository used in this demonstration is private so a pull Secret is needed.
+If the repository used is private a pull Secret is needed.
 
 The Secret needs to be label with **credential.sync.jenkins.openshift.io=true** to be synchronized in Jenkins thanks to the [OpenShift Jenkins Sync Plugin](https://github.com/openshift/jenkins-sync-plugin). 
 
