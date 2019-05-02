@@ -57,6 +57,32 @@ objects:
         containers:
         - image: ${APP_NAME}:latest
           name: ${APP_NAME}
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 100Mi
+            requests:
+              cpu: 200m
+              memory: 100Mi
           env:
           - name: HELLO_MESSAGE
             value: ${HELLO_MESSAGE}
