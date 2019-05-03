@@ -19,7 +19,7 @@ def call(parameters) {
 
                     script {
                         env.APP_NAME = parameters.appName
-                        env.IMAGE_NAME = env.APP_NAME
+                        env.IMAGE_NAME = parameters.appName
         
                         env.DEV_PROJECT = "dev"
                         env.TEST_PROJECT = "test"
