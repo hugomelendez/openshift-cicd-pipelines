@@ -41,14 +41,11 @@ def call(parameters) {
             }
             stage("Compile") {
                 steps {
-                    // Quarkus requires Maven 3.5.3+ but the agent's Maven version is 3.5.0, using the agent just for the oc command
-                    //sh "./mvnw clean package -DskipTests"
                     sh parameters.compileCommands
                 }
             }
             stage("Test") {
                 steps {
-                    //sh "./mvnw test"
                     sh parameters.testCommands
                 }
             }
@@ -59,12 +56,6 @@ def call(parameters) {
                                 template: env.APPLICATION_TEMPLATE, 
                                 parameters: env.APPLICATION_TEMPLATE_PARAMETERS_DEV,
                                 createBuildObjects: true)
-
-                    // Quarkus specific
-                    //sh "mkdir deploy"
-                    //sh "cp -R ./target/lib ./deploy"
-                    //sh "cp ./target/${env.APP_NAME}-runner.jar ./deploy"
-                    //sh "cp -R ./.s2i ./deploy"
 
                     buildImage(project: env.DEV_PROJECT, 
                             application: env.APP_NAME, 
@@ -113,36 +104,18 @@ def call(parameters) {
                 }
             }
             stage("Integration Test") {
-                /*
                 agent {
                     kubernetes {
                         cloud "openshift"
                         defaultContainer "jnlp"
                         label "${env.APP_NAME}-int-test"
-                        yaml """
-                            apiVersion: v1
-                            kind: Pod
-                            spec:
-                            containers:
-                            - name: python
-                                image: python:3
-                                command:
-                                - cat
-                                tty: true
-                        """                
+                        yaml readFile(parameters.integrationTestAgent)           
                     }
                 }
-                */
                 steps {
-                    echo "test"
-                    /*
                     checkout(scm)
 
-                    container("python") {
-                        sh "pip install requests"
-                        sh "python ./src/test/python/it.py"
-                    }
-                    */
+                    load parameters.integrationTestCommands
                 }
             }
             stage("Deploy PROD (Blue)") {
