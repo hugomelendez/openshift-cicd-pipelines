@@ -41,7 +41,6 @@ def call(parameters) {
                     }
                 }
             }
-            /*
             stage("Compile") {
                 steps {
                     sh parameters.compileCommands
@@ -106,7 +105,6 @@ def call(parameters) {
                                 tag: env.TAG_NAME)
                 }
             }
-            */
             stage("Integration Test") {
                 when {
                     expression {
@@ -118,7 +116,7 @@ def call(parameters) {
                         cloud "openshift"
                         defaultContainer "jnlp"
                         label "${env.APP_NAME}-int-test"
-                        yaml ""    
+                        yaml ((parameters.integrationTestAgent) ? readFile(parameters.integrationTestAgent) : "")     
                     }
                 }
                 steps {
