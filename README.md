@@ -8,11 +8,11 @@ The pipelines use the new declarative approach and the [OpenShift Jenkins Pipeli
 
 ### CI
 
-![CI](demo/images/pipeline-ci.png)
+![CI](./demo/images/pipeline-ci.png)
 
 ### CD
 
-![CD](demo/images/pipeline-cd.png)
+![CD](./demo/images/pipeline-cd.png)
 
 ## Pipeline Library
 
@@ -61,9 +61,21 @@ A pipeline is a special type of BuildConfig so to create it the new-build comman
 
     oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-ci-pipeline --context-dir=./pipelines/ci --strategy=pipeline -e APP_NAME=hello-service-ci -n dev
     
-
-#### CD
+#### CD
 
     oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-cd-pipeline --context-dir=./pipelines/cd --strategy=pipeline -e APP_NAME=hello-service -n dev
 
 After the execution of this commands the pipelines are started.
+
+### With Templates
+
+Another method is with Templates:
+
+    oc create -f ./pipelines/ci/ci-pipeline.yaml -n dev
+    oc create -f ./pipelines/cd/cd-pipeline.yaml -n dev
+
+Then the following commands create the pipelines:
+
+    oc new-app --template ci-pipeline --name=hello-service-ci-pipeline -p APP_NAME=hello-service-ci -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master
+
+    oc new-app --template cd-pipeline --name=hello-service-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master
