@@ -55,6 +55,8 @@ The commands to create and label the Secret are:
 
 ### Create the pipelines
 
+#### Creating the BuildConfigs directly
+
 A pipeline is a special type of BuildConfig so to create it the new-build command is used:
 
 #### CI 
@@ -67,15 +69,18 @@ A pipeline is a special type of BuildConfig so to create it the new-build comman
 
 After the execution of this commands the pipelines are started.
 
-### With Templates
+#### With Templates
 
 Another method is with Templates:
 
+#### CI 
+
     oc create -f ./pipelines/ci/ci-pipeline.yaml -n dev
+    
+    oc new-app --template ci-pipeline -p APP_NAME=hello-service-ci -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master -n dev
+
+#### CD
+
     oc create -f ./pipelines/cd/cd-pipeline.yaml -n dev
 
-Then the following commands create the pipelines:
-
-    oc new-app --template ci-pipeline --name=hello-service-ci-pipeline -p APP_NAME=hello-service-ci -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master
-
-    oc new-app --template cd-pipeline --name=hello-service-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master
+    oc new-app --template cd-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master -n dev
