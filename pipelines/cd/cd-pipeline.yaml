@@ -17,7 +17,7 @@ objects:
       type: Git
       git:
         uri: ${GIT_REPO}
-        ref: ${GIT_BRANCH}
+        ref: master
       contextDir: pipelines/cd
     strategy:
       jenkinsPipelineStrategy:
@@ -39,10 +39,6 @@ parameters:
 - description: Git Repository
   displayName: Git Repository
   name: GIT_REPO
-  required: true
-- description: Git Branch
-  displayName: Git Branch
-  name: GIT_BRANCH
   required: true
 - description: Webhook Secret
   displayName: Webhook Secret
