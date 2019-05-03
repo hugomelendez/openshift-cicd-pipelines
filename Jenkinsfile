@@ -5,6 +5,6 @@ library(identifier: "openshift-pipeline-library@master",
 
 runPipeline(appName: env.APP_NAME,
             agent: "maven",
-            artifactsDir: "./deploy"
+            artifactsDir: "./deploy",
             compileCommands: "mvn package -DskipTests; mkdir deploy; cp -R ./target/lib ./deploy; p ./target/${env.APP_NAME}-runner.jar ./deploy; cp -R ./.s2i ./deploy",
             testCommands: "mvn test")
