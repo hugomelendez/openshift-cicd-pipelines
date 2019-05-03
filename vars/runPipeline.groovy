@@ -29,6 +29,14 @@ def call(parameters) {
                         env.APPLICATION_TEMPLATE_PARAMETERS_DEV = "./openshift/environments/dev/templateParameters.txt"
                         env.APPLICATION_TEMPLATE_PARAMETERS_TEST = "./openshift/environments/test/templateParameters.txt"
                         env.APPLICATION_TEMPLATE_PARAMETERS_PROD = "./openshift/environments/prod/templateParameters.txt"
+
+                        echo parameters.integrationTestAgent 
+                        echo parameters.integrationTestCommands
+
+                        if (parameters.integrationTestAgent && parameters.integrationTestCommands)
+                            echo "true"
+                        else
+                            echo "false"
                     }
                 }
             }
