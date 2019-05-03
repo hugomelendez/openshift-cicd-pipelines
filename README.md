@@ -67,7 +67,7 @@ A pipeline is a special type of BuildConfig so to create it the new-build comman
 
 After the execution of this commands the pipelines are started.
 
-### With Templates
+### With Templates
 
 Another method is with Templates:
 
