@@ -108,7 +108,7 @@ def call(parameters) {
             stage("Integration Test") {
                 when {
                     expression {
-                        return parameters.integrationTestAgent != null && parameters.integrationTestCommands != null
+                        return parameters.integrationTestAgent
                     }
                 }
                 agent {
