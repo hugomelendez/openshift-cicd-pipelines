@@ -1,4 +1,4 @@
 container("python") {
     sh "pip install requests"
-    sh "python ./int-test.py"
+    sh "python ./openshift/environments/test/integration-test/int-test.py"
 }
