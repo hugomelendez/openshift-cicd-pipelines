@@ -25,18 +25,12 @@ def call(parameters) {
                         env.TEST_PROJECT = "test"
                         env.PROD_PROJECT = "prod"
                                         
-                        env.APPLICATION_TEMPLATE = "./openshift/template.yaml"
-                        env.APPLICATION_TEMPLATE_PARAMETERS_DEV = "./openshift/environments/dev/templateParameters.txt"
-                        env.APPLICATION_TEMPLATE_PARAMETERS_TEST = "./openshift/environments/test/templateParameters.txt"
-                        env.APPLICATION_TEMPLATE_PARAMETERS_PROD = "./openshift/environments/prod/templateParameters.txt"
+                        env.APP_TEMPLATE = (parameters.template) ? parameters.template : "./openshift/template.yaml"
+                        env.APP_TEMPLATE_PARAMETERS_DEV = (parameters.templateParametersDev) ? parameters.templateParametersDev : "./openshift/environments/dev/templateParameters.txt"
+                        env.APP_TEMPLATE_PARAMETERS_TEST = (parameters.templateParametersTest) ? parameters.templateParametersTest :  "./openshift/environments/test/templateParameters.txt"
+                        env.APP_TEMPLATE_PARAMETERS_PROD = (parameters.templateParametersProd) ? parameters.templateParametersProd :  "./openshift/environments/prod/templateParameters.txt"
 
-                        echo parameters.integrationTestAgent 
-                        echo parameters.integrationTestCommands
-
-                        if (parameters.integrationTestAgent && parameters.integrationTestCommands)
-                            echo "true"
-                        else
-                            echo "false"
+                        echo env.APP_TEMPLATE_PARAMETERS_DEV
                     }
                 }
             }
@@ -61,8 +55,8 @@ def call(parameters) {
                 steps {
                     applyTemplate(project: env.DEV_PROJECT, 
                                 application: env.APP_NAME, 
-                                template: env.APPLICATION_TEMPLATE, 
-                                parameters: env.APPLICATION_TEMPLATE_PARAMETERS_DEV,
+                                template: env.APP_TEMPLATE, 
+                                parameters: env.APP_TEMPLATE_PARAMETERS_DEV,
                                 createBuildObjects: true)
 
                     buildImage(project: env.DEV_PROJECT, 
@@ -95,8 +89,8 @@ def call(parameters) {
 
                     applyTemplate(project: env.TEST_PROJECT, 
                                 application: env.APP_NAME, 
-                                template: env.APPLICATION_TEMPLATE, 
-                                parameters: env.APPLICATION_TEMPLATE_PARAMETERS_TEST)
+                                template: env.APP_TEMPLATE, 
+                                parameters: env.APP_TEMPLATE_PARAMETERS_TEST)
 
                     tagImage(srcProject: env.DEV_PROJECT, 
                             srcImage: env.IMAGE_NAME, 
@@ -114,7 +108,7 @@ def call(parameters) {
             stage("Integration Test") {
                 when {
                     expression {
-                        return parameters.integrationTestAgent && parameters.integrationTestCommands
+                        return parameters.integrationTestAgent != null && parameters.integrationTestCommands != null
                     }
                 }
                 agent {
@@ -137,20 +131,20 @@ def call(parameters) {
                         if (!blueGreen.existsBlueGreenRoute(project: env.PROD_PROJECT, application: env.APP_NAME)) {
                             applyTemplate(project: env.PROD_PROJECT, 
                                         application: blueGreen.getApplication1Name(env.APP_NAME), 
-                                        template: env.APPLICATION_TEMPLATE, 
-                                        parameters: env.APPLICATION_TEMPLATE_PARAMETERS_PROD)
+                                        template: env.APP_TEMPLATE, 
+                                        parameters: env.APP_TEMPLATE_PARAMETERS_PROD)
                                         
                             applyTemplate(project: env.PROD_PROJECT, 
                                         application: blueGreen.getApplication2Name(env.APP_NAME), 
-                                        template: env.APPLICATION_TEMPLATE, 
-                                        parameters: env.APPLICATION_TEMPLATE_PARAMETERS_PROD) 
+                                        template: env.APP_TEMPLATE, 
+                                        parameters: env.APP_TEMPLATE_PARAMETERS_PROD) 
 
                             blueGreen.createBlueGreenRoute(project: env.PROD_PROJECT, application: env.APP_NAME)
                         } else {
                             applyTemplate(project: env.PROD_PROJECT, 
                                         application: blueGreen.getBlueApplication(project: env.PROD_PROJECT, application: env.APP_NAME), 
-                                        template: env.APPLICATION_TEMPLATE, 
-                                        parameters: env.APPLICATION_TEMPLATE_PARAMETERS_PROD)
+                                        template: env.APP_TEMPLATE, 
+                                        parameters: env.APP_TEMPLATE_PARAMETERS_PROD)
                         }
                         
                         tagImage(srcProject: env.TEST_PROJECT, 
