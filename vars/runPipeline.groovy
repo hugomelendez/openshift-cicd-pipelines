@@ -118,7 +118,7 @@ def call(parameters) {
                         cloud "openshift"
                         defaultContainer "jnlp"
                         label "${env.APP_NAME}-int-test"
-                        yaml readFile(parameters.integrationTestAgent)           
+                        yaml ((parameters.integrationTestAgent) ? readFile(parameters.integrationTestAgent) : "")     
                     }
                 }
                 steps {
