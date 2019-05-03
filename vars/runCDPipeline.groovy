@@ -24,8 +24,6 @@ def call(parameters) {
                         env.APP_TEMPLATE_PARAMETERS_DEV = (parameters.templateParametersDev) ? parameters.templateParametersDev : "./openshift/environments/dev/templateParameters.txt"
                         env.APP_TEMPLATE_PARAMETERS_TEST = (parameters.templateParametersTest) ? parameters.templateParametersTest :  "./openshift/environments/test/templateParameters.txt"
                         env.APP_TEMPLATE_PARAMETERS_PROD = (parameters.templateParametersProd) ? parameters.templateParametersProd :  "./openshift/environments/prod/templateParameters.txt"
-
-                        echo env.APP_TEMPLATE_PARAMETERS_DEV
                     }
                 }
             }

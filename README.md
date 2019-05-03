@@ -4,9 +4,15 @@ Basic demonstration of an OpenShift CI/CD pipeline for deploying applications ac
 
 The pipeline uses the new declarative approach and the [OpenShift Jenkins Pipeline Plugin](https://github.com/openshift/jenkins-client-plugin).
 
-## Pipeline
+## Pipelines
 
-![Pipeline](demo/images/pipeline.png)
+### CI
+
+![CI](demo/images/pipeline-ci.png)
+
+### CD
+
+![CD](demo/images/pipeline-cd.png)
 
 ## Pipeline Library
 
@@ -52,5 +58,7 @@ The commands to create and label the Secret are:
 A pipeline is a special type of BuildConfig so to create it the new-build command is used:
 
     oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-pipeline --strategy=pipeline -e APP_NAME=hello-service -n dev
+
+    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-ci-pipeline --context-dir=./pipelines/ci --strategy=pipeline -e APP_NAME=hello-service -n dev
 
 After the execution of this command the pipeline is started.
