@@ -41,6 +41,7 @@ def call(parameters) {
                     }
                 }
             }
+            /*
             stage("Compile") {
                 steps {
                     sh parameters.compileCommands
@@ -105,6 +106,7 @@ def call(parameters) {
                                 tag: env.TAG_NAME)
                 }
             }
+            */
             stage("Integration Test") {
                 agent {
                     kubernetes {
