@@ -11,12 +11,7 @@ def call(parameters) {
         }
         stages {
             stage("Initialize") {
-                steps {
-                    library(identifier: "openshift-pipeline-library@master", 
-                            retriever: modernSCM([$class: "GitSCMSource",
-                                                credentialsId: "dev-repository-credentials",
-                                                remote: "ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git"]))     
-
+                steps {                    
                     script {
                         env.APP_NAME = parameters.appName
                         env.IMAGE_NAME = parameters.appName
