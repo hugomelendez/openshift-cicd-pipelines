@@ -20,7 +20,7 @@ The pipelines use a shared library for common functionality, the library is embe
 
 ## Demo
 
-### Create the environments
+### Create the Environments
 
 These are the environments used to promote the application:
 
@@ -28,7 +28,7 @@ These are the environments used to promote the application:
     oc new-project test
     oc new-project prod
     
-### Create a Jenkins instance
+### Create a Jenkins Instance
 
 A Jenkins instances is created in the development project:
 
@@ -39,7 +39,7 @@ Then a set of permissions need to be granted:
     oc adm policy add-role-to-user edit system:serviceaccount:dev:jenkins -n test
     oc adm policy add-role-to-user edit system:serviceaccount:dev:jenkins -n prod
 
-### Create the pull Secret (optional)
+### Create the Pull Secret (Optional)
 
 If the repository used is private a pull Secret is needed.
 
@@ -53,9 +53,9 @@ The commands to create and label the Secret are:
     oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n dev
     oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=ssh://github.com/*' -n dev
 
-### Create the pipelines
+### Create the Pipelines
 
-#### Creating the BuildConfigs directly
+#### Creating the BuildConfigs Directly
 
 A pipeline is a special type of BuildConfig so to create it the new-build command is used:
 
