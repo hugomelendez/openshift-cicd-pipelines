@@ -108,14 +108,14 @@ def call(parameters) {
             }
             */
             stage("Integration Test") {
-                agent {
-                    kubernetes {
-                        cloud "openshift"
-                        defaultContainer "jnlp"
-                        label "${env.APP_NAME}-int-test"
-                        yaml readFile(parameters.integrationTestAgent)           
-                    }
-                }
+                // agent {
+                //     kubernetes {
+                //         cloud "openshift"
+                //         defaultContainer "jnlp"
+                //         label "${env.APP_NAME}-int-test"
+                //         yaml readFile(parameters.integrationTestAgent)           
+                //     }
+                // }
                 when {
                     expression {
                         return parameters.integrationTestAgent
