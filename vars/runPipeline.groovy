@@ -104,6 +104,11 @@ def call(parameters) {
                 }
             }
             stage("Integration Test") {
+                when {
+                    expression {
+                        return parameters.integrationTestAgent && parameters.integrationTestCommands
+                    }
+                }
                 agent {
                     kubernetes {
                         cloud "openshift"
