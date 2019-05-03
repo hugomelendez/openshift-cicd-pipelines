@@ -1,8 +1,8 @@
 # OpenShift CI/CD Pipelines
 
-Basic demonstration of an OpenShift CI/CD pipeline for deploying applications across environments using advanced deployment strategies like Blue/Green.
+Basic demonstration of OpenShift CI/CD pipelines for deploying applications across environments using advanced deployment strategies like Blue/Green.
 
-The pipeline uses the new declarative approach and the [OpenShift Jenkins Pipeline Plugin](https://github.com/openshift/jenkins-client-plugin).
+The pipelines use the new declarative approach and the [OpenShift Jenkins Pipeline Plugin](https://github.com/openshift/jenkins-client-plugin).
 
 ## Pipelines
 
@@ -16,7 +16,7 @@ The pipeline uses the new declarative approach and the [OpenShift Jenkins Pipeli
 
 ## Pipeline Library
 
-The pipeline uses a shared library for common functionality, the library is embedded in this repository but can be externalized in other Git repository as well.
+The pipelines use a shared library for common functionality, the library is embedded in this repository but can be externalized in other Git repository as well.
 
 ## Demo
 
@@ -53,12 +53,17 @@ The commands to create and label the Secret are:
     oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n dev
     oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=ssh://github.com/*' -n dev
 
-### Create the pipeline
+### Create the pipelines
 
 A pipeline is a special type of BuildConfig so to create it the new-build command is used:
 
-    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-pipeline --strategy=pipeline -e APP_NAME=hello-service -n dev
+#### CI 
 
-    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-ci-pipeline --context-dir=./pipelines/ci --strategy=pipeline -e APP_NAME=hello-service -n dev
+    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-ci-pipeline --context-dir=./pipelines/ci --strategy=pipeline -e APP_NAME=hello-service-ci -n dev
+    
 
-After the execution of this command the pipeline is started.
+#### CD
+
+    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-cd-pipeline --context-dir=./pipelines/cd --strategy=pipeline -e APP_NAME=hello-service -n dev
+
+After the execution of this commands the pipelines are started.
