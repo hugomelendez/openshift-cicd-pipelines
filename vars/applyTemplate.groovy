@@ -9,7 +9,7 @@ def call(parameters) {
             try {
                 openshift.patch("dc/${parameters.application}", readFile(parameters.deploymentPatch)) 
             } catch(Exception e) {
-                e.printStackTrace()
+                e.getMessage()
             }
         }
     }
