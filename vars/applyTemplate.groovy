@@ -18,7 +18,7 @@ def process(objects, deploymentPatch) {
             if (dc.exists()) {
                 o.spec.template.spec.containers[0].image = dc.object().spec.template.spec.containers[0].image
 
-                openshift.patch(dc, readFile(deploymentPatch))   
+                openshift.patch(dc, "${readFile(deploymentPatch)}")   
             }
 
             o.spec.triggers = []
