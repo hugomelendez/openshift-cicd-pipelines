@@ -32,17 +32,17 @@ These projects (environments) are used to deploy the application:
     oc new-project test
     oc new-project prod
 
-This project is used to deploy de Jenkins instance:
+This project is used to deploy the Jenkins instance:
 
     oc new-project jenkins
 
 ### Create the Secrets (Optional)
     
-If the repository used is private a pull Secret is needed in the dev (to pull the application source code) and jenkins (to pull the pipeline library) projects.
+If the repository used is private a pull Secret is needed in **dev** (to pull the application source code) and ****jenkins** (to pull the pipeline library).
 
-The Secrets need to be label with **credential.sync.jenkins.openshift.io=true** to be synchronized in Jenkins thanks to the [OpenShift Jenkins Sync Plugin](https://github.com/openshift/jenkins-sync-plugin). 
+The Secrets need to be label with **credential.sync.jenkins.openshift.io=true** to be synchronized in Jenkins as Credentials thanks to the [OpenShift Jenkins Sync Plugin](https://github.com/openshift/jenkins-sync-plugin). 
 
-An annotation is used to automatically assign the Secrets to any BuildConfig that matches the Git URI used.
+In **dev** an annotation is used to automatically assign the Secret to any BuildConfig that matches the Git URI used.
 
 The commands to create and label the Secrets are:
 
@@ -71,7 +71,7 @@ Finally a set of permissions need to be granted:
 
 #### Creating the BuildConfigs Directly
 
-A pipeline is a special type of BuildConfig so to create it the new-build command is used:
+A pipeline is a BuildConfig of type **JenkinsPipeline** so for creation the **new-build** command is used:
 
 #### CI 
 
@@ -81,7 +81,7 @@ A pipeline is a special type of BuildConfig so to create it the new-build comman
 
     oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-pipeline --context-dir=./pipelines/cd --strategy=pipeline -e APP_NAME=hello-service -n dev
 
-After the execution of this commands the pipelines are started.
+After the execution of this commands the pipelines are automatically started.
 
 #### With Templates
 
@@ -95,4 +95,4 @@ Another method is with Templates:
 #### CD
 
     oc create -f ./pipelines/cd/cd-pipeline.yaml -n dev
-    oc new-app --template cd-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master -n dev
+    oc new-app --template cd-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -n dev
