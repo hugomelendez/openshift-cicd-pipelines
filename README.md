@@ -2,9 +2,13 @@
 
 Basic demonstration of OpenShift CI/CD pipelines for deploying applications across environments using advanced deployment strategies like Blue/Green.
 
-The pipelines use the new declarative approach and the [OpenShift Jenkins Pipeline Plugin](https://github.com/openshift/jenkins-client-plugin).
+## Note
+
+This repository serves as an incubator for new features, to apply this pipelines in real scenarios the application and the pipeline library must be splitted.
 
 ## Pipelines
+
+The pipelines use the declarative approach and the [OpenShift Jenkins Pipeline Plugin](https://github.com/openshift/jenkins-client-plugin).
 
 ### CI
 
@@ -65,7 +69,7 @@ A pipeline is a special type of BuildConfig so to create it the new-build comman
     
 #### CD
 
-    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-cd-pipeline --context-dir=./pipelines/cd --strategy=pipeline -e APP_NAME=hello-service -n dev
+    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-pipeline --context-dir=./pipelines/cd --strategy=pipeline -e APP_NAME=hello-service -n dev
 
 After the execution of this commands the pipelines are started.
 
