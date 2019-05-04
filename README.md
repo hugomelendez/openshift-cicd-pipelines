@@ -24,45 +24,48 @@ The pipelines use a shared library for common functionality, the library is embe
 
 ## Demo
 
-### Create the Environments
+### Create the Projects
 
-These are the environments used to promote the application:
+These projects (environments) are used to deploy the application:
 
     oc new-project dev
     oc new-project test
     oc new-project prod
-    
-### Create a Jenkins Instance
 
-A Jenkins instance is created in a separate project:
+This project is used to deploy de Jenkins instance:
 
     oc new-project jenkins
 
-    oc new-build jenkins:2 --binary --name custom-jenkins -n jenkins
+### Create the Secrets (Optional)
+    
+If the repository used is private a pull Secret is needed in the dev (to pull the application source code) and jenkins (to pull the pipeline library) projects.
 
-    oc start-build custom-jenkins --from-dir=./jenkins --wait -n jenkins
+The Secrets need to be label with **credential.sync.jenkins.openshift.io=true** to be synchronized in Jenkins thanks to the [OpenShift Jenkins Sync Plugin](https://github.com/openshift/jenkins-sync-plugin). 
 
-    oc new-app --template=jenkins-ephemeral --name=jenkins -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest -p NAMESPACE=jenkins -n jenkins
+An annotation is used to automatically assign the Secrets to any BuildConfig that matches the Git URI used.
 
-Then a set of permissions need to be granted:
-
-    oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n dev
-    oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n test
-    oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n prod
-
-### Create the Pull Secret (Optional)
-
-If the repository used is private a pull Secret is needed.
-
-The Secret needs to be label with **credential.sync.jenkins.openshift.io=true** to be synchronized in Jenkins thanks to the [OpenShift Jenkins Sync Plugin](https://github.com/openshift/jenkins-sync-plugin). 
-
-An annotation is used to automatically assign the Secret to any BuildConfig that matches the Git URI used.
-
-The commands to create and label the Secret are:
+The commands to create and label the Secrets are:
 
     oc create secret generic repository-credentials --from-file=ssh-privatekey=$HOME/.ssh/id_rsa --type=kubernetes.io/ssh-auth -n dev
     oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n dev
     oc annotate secret repository-credentials 'build.openshift.io/source-secret-match-uri-1=ssh://github.com/*' -n dev
+
+    oc create secret generic repository-credentials --from-file=ssh-privatekey=$HOME/.ssh/id_rsa --type=kubernetes.io/ssh-auth -n jenkins
+    oc label secret repository-credentials credential.sync.jenkins.openshift.io=true -n jenkins
+
+### Create a Preconfigured Jenkins Instance with S2I
+
+A custom preconfigured Jenkins instance is created:
+
+    oc new-build jenkins:2 --binary --name custom-jenkins -n jenkins
+    oc start-build custom-jenkins --from-dir=./jenkins --wait -n jenkins
+    oc new-app --template=jenkins-ephemeral --name=jenkins -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest -p NAMESPACE=jenkins -n jenkins
+
+Finally a set of permissions need to be granted:
+
+    oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n dev
+    oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n test
+    oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n prod
 
 ### Create the Pipelines
 
@@ -87,11 +90,9 @@ Another method is with Templates:
 #### CI 
 
     oc create -f ./pipelines/ci/ci-pipeline.yaml -n dev
-    
     oc new-app --template ci-pipeline -p APP_NAME=hello-service-ci -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master -n dev
 
 #### CD
 
     oc create -f ./pipelines/cd/cd-pipeline.yaml -n dev
-
     oc new-app --template cd-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master -n dev

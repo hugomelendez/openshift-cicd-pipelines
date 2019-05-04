@@ -10,14 +10,11 @@ def call(parameters) {
             disableConcurrentBuilds()
         }
         stages {
-            stage("Initialize") {
-                steps {                    
-                    gatherParameters(parameters)
-                }
-            }
             stage("Checkout") {
                 steps {      
                     script {
+                        gatherParameters(parameters)
+
                         env.GIT_COMMIT = checkout(scm).GIT_COMMIT
                     }
                 }
@@ -35,15 +32,15 @@ def call(parameters) {
             stage("Build Image") {
                 steps {
                     applyTemplate(project: env.DEV_PROJECT, 
-                                application: env.APP_NAME, 
-                                template: env.APP_TEMPLATE, 
-                                parameters: env.APP_TEMPLATE_PARAMETERS_DEV,
-                                deploymentPatch: env.APP_DEPLOYMENT_PATCH_DEV,
-                                createBuildObjects: true)
+                                  application: env.APP_NAME, 
+                                  template: env.APP_TEMPLATE, 
+                                  parameters: env.APP_TEMPLATE_PARAMETERS_DEV,
+                                  deploymentPatch: env.APP_DEPLOYMENT_PATCH_DEV,
+                                  createBuildObjects: true)
 
                     buildImage(project: env.DEV_PROJECT, 
-                            application: env.APP_NAME, 
-                            artifactsDir: parameters.artifactsDir)
+                               application: env.APP_NAME, 
+                               artifactsDir: parameters.artifactsDir)
                 }
             }
             stage("Deploy DEV") {
@@ -53,11 +50,11 @@ def call(parameters) {
                     }   
                     
                     tagImage(srcProject: env.DEV_PROJECT, 
-                            srcImage: env.IMAGE_NAME, 
-                            srcTag: "latest", 
-                            dstProject: env.DEV_PROJECT, 
-                            dstImage: env.IMAGE_NAME,
-                            dstTag: env.TAG_NAME)
+                             srcImage: env.IMAGE_NAME, 
+                             srcTag: "latest", 
+                             dstProject: env.DEV_PROJECT, 
+                             dstImage: env.IMAGE_NAME,
+                             dstTag: env.TAG_NAME)
                     
                     deployImage(project: env.DEV_PROJECT, 
                                 application: env.APP_NAME, 

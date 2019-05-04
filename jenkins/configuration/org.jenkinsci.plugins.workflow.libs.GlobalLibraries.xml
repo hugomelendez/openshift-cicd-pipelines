@@ -7,14 +7,14 @@
         <scm class="jenkins.plugins.git.GitSCMSource" plugin="git@3.9.3">
           <id>9adacf82-8fcc-47ee-8a39-4cc023900394</id>
           <remote>git@github.com:redhatcsargentina/openshift-cicd-pipelines.git</remote>
-          <credentialsId>dev-repository-credentials</credentialsId>
+          <credentialsId>jenkins-repository-credentials</credentialsId>
           <traits>
             <jenkins.plugins.git.traits.BranchDiscoveryTrait/>
           </traits>
         </scm>
       </retriever>
       <defaultVersion>master</defaultVersion>
-      <implicit>false</implicit>
+      <implicit>true</implicit>
       <allowVersionOverride>true</allowVersionOverride>
       <includeInChangesets>true</includeInChangesets>
     </org.jenkinsci.plugins.workflow.libs.LibraryConfiguration>
