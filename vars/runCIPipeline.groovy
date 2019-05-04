@@ -47,6 +47,7 @@ def call(parameters) {
                                 application: env.APP_NAME, 
                                 template: env.APP_TEMPLATE, 
                                 parameters: env.APP_TEMPLATE_PARAMETERS_DEV,
+                                deploymentPatch: env.APP_DEPLOYMENT_PATCH_DEV,
                                 createBuildObjects: true)
 
                     buildImage(project: env.DEV_PROJECT, 
