@@ -16,7 +16,9 @@ def process(objects) {
             def dc = openshift.selector("dc", o.metadata.name)
 
             if (dc.exists()) {
-                o.spec.template.spec.containers[0].image = dc.object().spec.template.spec.containers[0].image   
+                o.spec.template.spec.containers[0].image = dc.object().spec.template.spec.containers[0].image
+
+                openshift.patch(dc.object(), readFile(parameters.deploymentPatch))   
             }
 
             o.spec.triggers = []
