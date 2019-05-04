@@ -6,7 +6,11 @@ def call(parameters) {
             def objects = openshift.process(steps.readFile(file: parameters.template), "-p APP_NAME=${parameters.application}", "--param-file=${parameters.parameters}", "--ignore-unknown-parameters")
 
             openshift.apply(process(filter(objects, parameters.createBuildObjects)))
-            openshift.patch("dc/${parameters.application}", readFile(parameters.deploymentPatch)) 
+            try {
+                openshift.patch("dc/${parameters.application}", readFile(parameters.deploymentPatch)) 
+            } catch(Exception e) {
+                e.printStackTrace()
+            }
         }
     }
 }
