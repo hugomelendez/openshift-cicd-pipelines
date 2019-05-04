@@ -5,12 +5,12 @@ def call(parameters) {
         openshift.withProject(parameters.project) {
             def objects = openshift.process(steps.readFile(file: parameters.template), "-p APP_NAME=${parameters.application}", "--param-file=${parameters.parameters}", "--ignore-unknown-parameters")
 
-            openshift.apply(process(filter(objects, parameters.createBuildObjects)))
+            openshift.apply(process(filter(objects, parameters.createBuildObjects), parameters.deploymentPatch))
         }
     }
 }
 
-def process(objects) {
+def process(objects, deploymentPatch) {
     for (o in objects) {
         if (o.kind.equals("DeploymentConfig")) {
             def dc = openshift.selector("dc", o.metadata.name)
@@ -18,7 +18,7 @@ def process(objects) {
             if (dc.exists()) {
                 o.spec.template.spec.containers[0].image = dc.object().spec.template.spec.containers[0].image
 
-                openshift.patch(dc.object(), readFile(parameters.deploymentPatch))   
+                openshift.patch(dc.object(), readFile(deploymentPatch))   
             }
 
             o.spec.triggers = []
