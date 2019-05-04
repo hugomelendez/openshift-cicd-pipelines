@@ -17,7 +17,7 @@ def process(objects, deploymentPatch) {
 
             if (dc.exists()) {
                 o.spec.template.spec.containers[0].image = dc.object().spec.template.spec.containers[0].image
-
+                openshift.logLevel(8)
                 openshift.patch(dc, "${readFile(deploymentPatch)}")   
             }
 
