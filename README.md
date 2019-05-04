@@ -34,14 +34,19 @@ These are the environments used to promote the application:
     
 ### Create a Jenkins Instance
 
-A Jenkins instances is created in the development project:
+A Jenkins instance is created in a separate project:
 
-    oc new-app --template=jenkins-ephemeral --name=jenkins -n dev
+    oc new-project jenkins
+
+    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -i jenkins:2 --name custom-jenkins --context-dir=jenkins --strategy=source -n jenkins
+
+    oc new-app --template=jenkins-ephemeral --name=jenkins -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest -p NAMESPACE=jenkins -n jenkins
 
 Then a set of permissions need to be granted:
 
-    oc adm policy add-role-to-user edit system:serviceaccount:dev:jenkins -n test
-    oc adm policy add-role-to-user edit system:serviceaccount:dev:jenkins -n prod
+    oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n dev
+    oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n test
+    oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n prod
 
 ### Create the Pull Secret (Optional)
 

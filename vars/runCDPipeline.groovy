@@ -12,7 +12,7 @@ def call(parameters) {
         stages {
             stage("Initialize") {
                 steps {                    
-                    gatherParams(parameters)
+                    gatherParameters(parameters)
                 }
             }
             stage("Checkout") {
