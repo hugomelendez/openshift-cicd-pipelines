@@ -38,7 +38,7 @@ This project is used to deploy the Jenkins instance:
 
 ### Create the Secrets (Optional)
     
-If the repository used is private a pull Secret is needed in **dev** (to pull the application source code) and ****jenkins** (to pull the pipeline library).
+If the repository used is private a pull Secret is needed in **dev** (to pull the pipelines and the application source code) and **jenkins** (to pull the pipeline library).
 
 The Secrets need to be label with **credential.sync.jenkins.openshift.io=true** to be synchronized in Jenkins as Credentials thanks to the [OpenShift Jenkins Sync Plugin](https://github.com/openshift/jenkins-sync-plugin). 
 
@@ -55,7 +55,7 @@ The commands to create and label the Secrets are:
 
 ### Create a Preconfigured Jenkins Instance with S2I
 
-A custom preconfigured Jenkins instance is created:
+A custom preconfigured Jenkins instance is created with the following commands:
 
     oc new-build jenkins:2 --binary --name custom-jenkins -n jenkins
     oc start-build custom-jenkins --from-dir=./jenkins --wait -n jenkins
@@ -83,9 +83,9 @@ A pipeline is a BuildConfig of type **JenkinsPipeline** so for creation the **ne
 
 After the execution of this commands the pipelines are automatically started.
 
-#### With Templates
+#### Using Templates
 
-Another method is with Templates:
+Another creation method is using Templates:
 
 #### CI 
 
