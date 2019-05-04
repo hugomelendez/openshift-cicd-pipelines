@@ -56,7 +56,7 @@ objects:
       spec:
         containers:
         - image: ${APP_NAME}:latest
-          name: ${APP_NAME}
+          name: hello-service
           livenessProbe:
             failureThreshold: 3
             httpGet:
