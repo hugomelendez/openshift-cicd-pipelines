@@ -12,19 +12,7 @@ def call(parameters) {
         stages {
             stage("Initialize") {
                 steps {                    
-                    script {
-                        env.APP_NAME = parameters.appName
-                        env.IMAGE_NAME = parameters.appName
-        
-                        env.DEV_PROJECT = "dev"
-                        env.TEST_PROJECT = "test"
-                        env.PROD_PROJECT = "prod"
-                                        
-                        env.APP_TEMPLATE = (parameters.template) ? parameters.template : "./openshift/template.yaml"
-                        env.APP_TEMPLATE_PARAMETERS_DEV = (parameters.templateParametersDev) ? parameters.templateParametersDev : "./openshift/environments/dev/templateParameters.txt"
-                        env.APP_TEMPLATE_PARAMETERS_TEST = (parameters.templateParametersTest) ? parameters.templateParametersTest :  "./openshift/environments/test/templateParameters.txt"
-                        env.APP_TEMPLATE_PARAMETERS_PROD = (parameters.templateParametersProd) ? parameters.templateParametersProd :  "./openshift/environments/prod/templateParameters.txt"
-                    }
+                    gatherParams(parameters)
                 }
             }
             stage("Checkout") {
@@ -47,10 +35,11 @@ def call(parameters) {
             stage("Build Image") {
                 steps {
                     applyTemplate(project: env.DEV_PROJECT, 
-                                application: env.APP_NAME, 
-                                template: env.APP_TEMPLATE, 
-                                parameters: env.APP_TEMPLATE_PARAMETERS_DEV,
-                                createBuildObjects: true)
+                                  application: env.APP_NAME, 
+                                  template: env.APP_TEMPLATE, 
+                                  parameters: env.APP_TEMPLATE_PARAMETERS_DEV,
+                                  deploymentPatch: env.APP_DEPLOYMENT_PATCH_DEV,
+                                  createBuildObjects: true)
 
                     buildImage(project: env.DEV_PROJECT, 
                             application: env.APP_NAME, 
@@ -81,9 +70,10 @@ def call(parameters) {
                     input("Promote to TEST?")
 
                     applyTemplate(project: env.TEST_PROJECT, 
-                                application: env.APP_NAME, 
-                                template: env.APP_TEMPLATE, 
-                                parameters: env.APP_TEMPLATE_PARAMETERS_TEST)
+                                  application: env.APP_NAME, 
+                                  template: env.APP_TEMPLATE, 
+                                  parameters: env.APP_TEMPLATE_PARAMETERS_TEST,
+                                  deploymentPatch: env.APP_DEPLOYMENT_PATCH_TEST)
 
                     tagImage(srcProject: env.DEV_PROJECT, 
                             srcImage: env.IMAGE_NAME, 
@@ -123,21 +113,24 @@ def call(parameters) {
                     script {
                         if (!blueGreen.existsBlueGreenRoute(project: env.PROD_PROJECT, application: env.APP_NAME)) {
                             applyTemplate(project: env.PROD_PROJECT, 
-                                        application: blueGreen.getApplication1Name(env.APP_NAME), 
-                                        template: env.APP_TEMPLATE, 
-                                        parameters: env.APP_TEMPLATE_PARAMETERS_PROD)
+                                          application: blueGreen.getApplication1Name(env.APP_NAME), 
+                                          template: env.APP_TEMPLATE, 
+                                          parameters: env.APP_TEMPLATE_PARAMETERS_PROD,
+                                          deploymentPatch: env.APP_DEPLOYMENT_PATCH_PROD)
                                         
                             applyTemplate(project: env.PROD_PROJECT, 
-                                        application: blueGreen.getApplication2Name(env.APP_NAME), 
-                                        template: env.APP_TEMPLATE, 
-                                        parameters: env.APP_TEMPLATE_PARAMETERS_PROD) 
+                                          application: blueGreen.getApplication2Name(env.APP_NAME), 
+                                          template: env.APP_TEMPLATE, 
+                                          parameters: env.APP_TEMPLATE_PARAMETERS_PROD,
+                                          deploymentPatch: env.APP_DEPLOYMENT_PATCH_PROD) 
 
                             blueGreen.createBlueGreenRoute(project: env.PROD_PROJECT, application: env.APP_NAME)
                         } else {
                             applyTemplate(project: env.PROD_PROJECT, 
-                                        application: blueGreen.getBlueApplication(project: env.PROD_PROJECT, application: env.APP_NAME), 
-                                        template: env.APP_TEMPLATE, 
-                                        parameters: env.APP_TEMPLATE_PARAMETERS_PROD)
+                                          application: blueGreen.getBlueApplication(project: env.PROD_PROJECT, application: env.APP_NAME), 
+                                          template: env.APP_TEMPLATE, 
+                                          parameters: env.APP_TEMPLATE_PARAMETERS_PROD,
+                                          deploymentPatch: env.APP_DEPLOYMENT_PATCH_PROD)
                         }
                         
                         tagImage(srcProject: env.TEST_PROJECT, 

@@ -7,12 +7,7 @@ def call(parameters) {
 
             openshift.apply(process(filter(objects, parameters.createBuildObjects)))
             
-            // Until OpenShift 3.11, this workaround is necessary: https://github.com/openshift/origin/pull/20456
-            //try {
-                openshift.patch("dc/${parameters.application}", "'${readFile(parameters.deploymentPatch)}'")                            
-            //} catch (Exception e) { 
-            //    ;
-            //}
+            openshift.patch("dc/${parameters.application}", "'${readFile(parameters.deploymentPatch)}'")                            
         }
     }
 }

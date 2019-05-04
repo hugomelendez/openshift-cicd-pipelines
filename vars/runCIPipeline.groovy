@@ -12,16 +12,7 @@ def call(parameters) {
         stages {
             stage("Initialize") {
                 steps {                    
-                    script {
-                        env.APP_NAME = parameters.appName
-                        env.IMAGE_NAME = parameters.appName
-        
-                        env.DEV_PROJECT = "dev"
-                                        
-                        env.APP_TEMPLATE = (parameters.template) ? parameters.template : "./openshift/template.yaml"
-                        env.APP_TEMPLATE_PARAMETERS_DEV = (parameters.templateParametersDev) ? parameters.templateParametersDev : "./openshift/environments/dev/templateParameters.txt"
-                        env.APP_DEPLOYMENT_PATCH_DEV = (parameters.deploymentPatchDev) ? parameters.deploymentPatchDev : "./openshift/environments/dev/deploymentPatch.yaml"
-                    }
+                    gatherParams(parameters)
                 }
             }
             stage("Checkout") {

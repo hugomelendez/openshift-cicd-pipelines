@@ -3,7 +3,7 @@ library(identifier: "openshift-pipeline-library@master",
                              credentialsId: "dev-repository-credentials",
                              remote: "ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git"]))
 
-runCDPipeline(appName: env.APP_NAME,
+runCDPipeline(application: env.APP_NAME,
               agent: "maven",
               compileCommands: "./mvnw package -DskipTests; mkdir deploy; cp -R ./target/lib ./deploy; cp ./target/*-runner.jar ./deploy; cp -R ./.s2i ./deploy",
               testCommands: "./mvnw test",
