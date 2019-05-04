@@ -9,7 +9,7 @@ def call(parameters) {
             
             // Until OpenShift 3.11, this workaround is necessary: https://github.com/openshift/origin/pull/20456
             try {
-                openshift.patch("dc/${parameters.application}", readFile(parameters.deploymentPatch))     
+                openshift.patch("dc/${parameters.application}", "'${readFile(parameters.deploymentPatch)}'")                            
             } catch (Exception e) { 
                 ;
             }
