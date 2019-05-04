@@ -6,9 +6,13 @@ def call(parameters) {
             def objects = openshift.process(steps.readFile(file: parameters.template), "-p APP_NAME=${parameters.application}", "--param-file=${parameters.parameters}", "--ignore-unknown-parameters")
 
             openshift.apply(process(filter(objects, parameters.createBuildObjects)))
-            openshift.logLevel(10)
-            openshift.patch("dc/${parameters.application}", readFile(parameters.deploymentPatch)) 
             
+            // Until OpenShift 3.11, this workaround is necessary: https://github.com/openshift/origin/pull/20456
+            try {
+                openshift.patch("dc/${parameters.application}", readFile(parameters.deploymentPatch))     
+            } catch (Exception e) { 
+                ;
+            }
         }
     }
 }
