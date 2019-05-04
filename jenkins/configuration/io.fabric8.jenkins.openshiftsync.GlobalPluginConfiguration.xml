@@ -3,7 +3,8 @@
   <enabled>true</enabled>
   <server></server>
   <namespaces>
-    <string>jenkins dev</string>
+    <string>jenkins</string>
+    <string>dev</string>
   </namespaces>
   <foldersEnabled>true</foldersEnabled>
   <jobNamePattern></jobNamePattern>

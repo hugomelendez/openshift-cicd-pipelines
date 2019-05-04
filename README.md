@@ -38,7 +38,9 @@ A Jenkins instance is created in a separate project:
 
     oc new-project jenkins
 
-    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -i jenkins:2 --name custom-jenkins --context-dir=jenkins --strategy=source -n jenkins
+    oc new-build jenkins:2 --binary --name custom-jenkins -n jenkins
+
+    oc start-build custom-jenkins --from-dir=./jenkins --wait -n jenkins
 
     oc new-app --template=jenkins-ephemeral --name=jenkins -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest -p NAMESPACE=jenkins -n jenkins
 
