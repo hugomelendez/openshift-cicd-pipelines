@@ -1,31 +1,13 @@
 spec:
   replicas: 1
-  containers:
-    - readinessProbe:
-        failureThreshold: 3
-        httpGet:
-          path: /
-          port: 8080
-          scheme: HTTP
-        initialDelaySeconds: 60
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 20
-      name: hello
-      livenessProbe:
-        failureThreshold: 3
-        httpGet:
-          path: /
-          port: 8080
-          scheme: HTTP
-        initialDelaySeconds: 120
-        periodSeconds: 10
-        successThreshold: 1
-        timeoutSeconds: 20
-      resources:
-        limits:
-          cpu: 200m
-          memory: 100Mi
-        requests:
-          cpu: 200m
-          memory: 100Mi
+  template:
+    spec:
+      containers:
+      - name: hello-service
+        resources:
+          limits:
+            cpu: 200m
+            memory: 100Mi
+          requests:
+            cpu: 200m
+            memory: 100Mi
