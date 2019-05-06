@@ -3,20 +3,9 @@
 def call(parameters) {
     openshift.withCluster(parameters.clusterUrl, parameters.credentialsId) {
         openshift.withProject(parameters.project) {
-            def objects = openshift.process(steps.readFile(file: parameters.template), "-p APP_NAME=${parameters.application}", "--param-file=${parameters.parameters}", "--ignore-unknown-parameters")
-
-            openshift.apply(process(filter(objects, parameters.createBuildObjects)))
-            
-            if (parameters.replaceConfig) {
-                sh "oc process -f ${parameters.replaceConfig} -p APP_NAME=${parameters.application} > replaceConfig.yaml -n dev"
-                
-                sh "oc replace -f replaceConfig.yaml --loglevel=8 -n dev"
-
-                //openshift.replace(openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}"))
-            }
-                          
-            if (parameters.deploymentPatch)
-                openshift.patch("dc/${parameters.application}", "'${readFile(file: parameters.deploymentPatch)}'")                            
+            openshift.apply(process(filter(openshift.process(steps.readFile(file: parameters.template), "-p APP_NAME=${parameters.application}", "--param-file=${parameters.parameters}", "--ignore-unknown-parameters"), parameters.createBuildObjects)))
+            openshift.replace(openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}"))
+            openshift.patch("dc/${parameters.application}", "'${readFile(file: parameters.deploymentPatch)}'")                            
         }
     }
 }
