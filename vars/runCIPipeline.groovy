@@ -13,7 +13,7 @@ def call(parameters) {
             stage("Checkout") {
                 steps {      
                     script {
-                        logMessage("Test %s - %d", "leandro", 42)
+                        logMessage(message: "Test %s - %d", parameters: ["leandro", 42])
 
                         gatherParameters(parameters)
 
