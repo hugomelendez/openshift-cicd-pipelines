@@ -9,6 +9,7 @@ def call(parameters) {
             
             if (parameters.replaceConfig) {
                 sh "oc process -f ${parameters.replaceConfig} -p APP_NAME=${parameters.application} > replaceConfig.yaml -n dev"
+                sleep 5
                 sh "oc replace -f replaceConfig.yaml -n dev"
 
                 //openshift.replace(openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}"))
