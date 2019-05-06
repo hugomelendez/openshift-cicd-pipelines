@@ -6,7 +6,7 @@ objects:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
-    name: ${APP_NAME}-config
+    name: ${APP_NAME}
   data:
     hello.environment: dev2
 parameters:
