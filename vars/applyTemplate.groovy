@@ -11,7 +11,7 @@ def call(parameters) {
                 sh "oc version"
                 sh "oc process -f ${parameters.replaceConfig} > replaceConfig.yaml -n dev"
                 sh "cat replaceConfig.yaml"
-                sh "oc replace -f replaceConfig.yaml -n dev"
+                sh "oc replace -f replaceConfig.yaml --loglevel=8 -n dev"
 
                 //openshift.replace(openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}"))
             }
