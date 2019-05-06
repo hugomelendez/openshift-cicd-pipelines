@@ -8,13 +8,10 @@ def call(parameters) {
             openshift.apply(process(filter(objects, parameters.createBuildObjects)))
             
             if (parameters.replaceConfig) {
-                def config = openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}")
-                
-                echo "Creating this template will instantiate ${config.size()} objects"
+                sh "oc version"
+                sh "oc process -f ${parameters.replaceConfig} > replaceConfig.yaml"
+                sh "oc replace -f replaceConfig.yaml"
 
-                for (o in config) {
-                    echo o
-                }
                 //openshift.replace(openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}"))
             }
                           
