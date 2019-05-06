@@ -35,6 +35,7 @@ def call(parameters) {
                                   application: env.APP_NAME, 
                                   template: env.APP_TEMPLATE, 
                                   parameters: env.APP_TEMPLATE_PARAMETERS_DEV,
+                                  replaceConfig: env.APP_REPLACE_CONFIG_DEV,
                                   deploymentPatch: env.APP_DEPLOYMENT_PATCH_DEV,
                                   createBuildObjects: true)
 
@@ -70,6 +71,7 @@ def call(parameters) {
                                   application: env.APP_NAME, 
                                   template: env.APP_TEMPLATE, 
                                   parameters: env.APP_TEMPLATE_PARAMETERS_TEST,
+                                  replaceConfig: env.APP_REPLACE_CONFIG_TEST,
                                   deploymentPatch: env.APP_DEPLOYMENT_PATCH_TEST)
 
                     tagImage(srcProject: env.DEV_PROJECT, 
@@ -113,12 +115,14 @@ def call(parameters) {
                                           application: blueGreen.getApplication1Name(env.APP_NAME), 
                                           template: env.APP_TEMPLATE, 
                                           parameters: env.APP_TEMPLATE_PARAMETERS_PROD,
+                                          replaceConfig: env.APP_REPLACE_CONFIG_PROD,
                                           deploymentPatch: env.APP_DEPLOYMENT_PATCH_PROD)
                                         
                             applyTemplate(project: env.PROD_PROJECT, 
                                           application: blueGreen.getApplication2Name(env.APP_NAME), 
                                           template: env.APP_TEMPLATE, 
                                           parameters: env.APP_TEMPLATE_PARAMETERS_PROD,
+                                          replaceConfig: env.APP_REPLACE_CONFIG_PROD,
                                           deploymentPatch: env.APP_DEPLOYMENT_PATCH_PROD) 
 
                             blueGreen.createBlueGreenRoute(project: env.PROD_PROJECT, application: env.APP_NAME)
@@ -127,6 +131,7 @@ def call(parameters) {
                                           application: blueGreen.getBlueApplication(project: env.PROD_PROJECT, application: env.APP_NAME), 
                                           template: env.APP_TEMPLATE, 
                                           parameters: env.APP_TEMPLATE_PARAMETERS_PROD,
+                                          replaceConfig: env.APP_REPLACE_CONFIG_PROD,
                                           deploymentPatch: env.APP_DEPLOYMENT_PATCH_PROD)
                         }
                         

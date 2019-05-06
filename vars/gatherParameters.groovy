@@ -15,5 +15,7 @@ def call(parameters) {
     env.APP_DEPLOYMENT_PATCH_DEV = (parameters.applicationDeploymentPatchDev) ? parameters.applicationDeploymentPatchDev : "./openshift/environments/dev/deploymentPatch.yaml"
     env.APP_DEPLOYMENT_PATCH_TEST = (parameters.applicationDeploymentPatchTest) ? parameters.applicationDeploymentPatchTest : "./openshift/environments/test/deploymentPatch.yaml"
     env.APP_DEPLOYMENT_PATCH_PROD = (parameters.applicationDeploymentPatchProd) ? parameters.applicationDeploymentPatchProd : "./openshift/environments/prod/deploymentPatch.yaml"
-
+    env.APP_REPLACE_CONFIG_DEV = (parameters.applicationReplaceConfigDev) ? parameters.applicationReplaceConfigDev : null
+    env.APP_REPLACE_CONFIG_TEST = (parameters.applicationReplaceConfigTest) ? parameters.applicationReplaceConfigTest : null
+    env.APP_REPLACE_CONFIG_PROD = (parameters.applicationReplaceConfigProd) ? parameters.applicationReplaceConfigProd : null
 }

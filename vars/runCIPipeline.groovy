@@ -35,6 +35,7 @@ def call(parameters) {
                                   application: env.APP_NAME, 
                                   template: env.APP_TEMPLATE, 
                                   parameters: env.APP_TEMPLATE_PARAMETERS_DEV,
+                                  replaceConfig: env.APP_REPLACE_CONFIG_DEV,
                                   deploymentPatch: env.APP_DEPLOYMENT_PATCH_DEV,
                                   createBuildObjects: true)
 
