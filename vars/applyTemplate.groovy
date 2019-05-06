@@ -9,6 +9,8 @@ def call(parameters) {
             
             if (parameters.replaceConfig) {
                 def config = openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}")
+                
+                echo "Creating this template will instantiate ${config.size()} objects"
 
                 for (o in config) {
                     o.describe()
