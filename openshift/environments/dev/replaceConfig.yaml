@@ -8,7 +8,7 @@ objects:
   metadata:
     name: ${APP_NAME}-config
   data:
-    hello.environment: dev
+    hello.environment: dev2
 parameters:
 - description: Application Name
   displayName: Application Name
