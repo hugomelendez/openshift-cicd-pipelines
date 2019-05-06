@@ -10,7 +10,9 @@ def call(parameters) {
             if (parameters.replaceConfig) {
                 def config = openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}")
 
-                config.describe()
+                for (o in config) {
+                    o.describe()
+                }
                 //openshift.replace(openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}"))
             }
                           
