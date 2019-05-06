@@ -3,12 +3,6 @@ kind: Template
 metadata:
   name: hello-config-template
 objects:
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    name: ${APP_NAME}
-  data:
-    hello.environment: dev2
 parameters:
 - description: Application Name
   displayName: Application Name

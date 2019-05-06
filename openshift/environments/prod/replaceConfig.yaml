@@ -4,12 +4,6 @@ metadata:
   name: hello-config-template
 objects:
 - apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    name: ${APP_NAME}
-  data:
-    hello.environment: prod
-- apiVersion: v1
   kind: Route
   metadata:
     labels:
