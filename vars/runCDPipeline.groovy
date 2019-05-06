@@ -12,11 +12,8 @@ def call(parameters) {
         stages {
             stage("Checkout") {
                 steps {      
-                    script {
-                        gatherParameters(parameters)
-
-                        env.GIT_COMMIT = checkout(scm).GIT_COMMIT
-                    }
+                    gatherParameters(parameters)
+                    gitClone(scm)
                 }
             }
             stage("Compile") {
@@ -102,7 +99,7 @@ def call(parameters) {
                     }
                 }
                 steps {
-                    checkout(scm)
+                    gitClone(scm)
 
                     load parameters.integrationTestCommands
                 }

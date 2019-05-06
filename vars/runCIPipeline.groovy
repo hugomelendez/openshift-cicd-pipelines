@@ -12,13 +12,8 @@ def call(parameters) {
         stages {
             stage("Checkout") {
                 steps {      
-                    script {
-                        logMessage(message: "Test %s - %d", parameters: ["leandro", 42])
-
-                        gatherParameters(parameters)
-
-                        env.GIT_COMMIT = checkout(scm).GIT_COMMIT
-                    }
+                    gatherParameters(parameters)
+                    gitClone(scm)
                 }
             }
             stage("Compile") {
