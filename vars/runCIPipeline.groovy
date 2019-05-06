@@ -12,6 +12,7 @@ def call(parameters) {
         stages {
             stage("Checkout") {
                 steps {      
+                    echo env.JOB_NAME
                     gatherParameters(parameters)
                     gitClone(scm)
                 }
