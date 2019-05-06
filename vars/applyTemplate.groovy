@@ -7,9 +7,14 @@ def call(parameters) {
 
             openshift.apply(process(filter(objects, parameters.createBuildObjects)))
             
-            if (parameters.replaceConfig)
-                openshift.replace(openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}"))
-            
+            if (parameters.replaceConfig) {
+                def config = openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}")
+
+                echo config
+
+                //openshift.replace(openshift.process(readFile(file: parameters.replaceConfig), "-p APP_NAME=${parameters.application}"))
+            }
+                          
             if (parameters.deploymentPatch)
                 openshift.patch("dc/${parameters.application}", "'${readFile(file: parameters.deploymentPatch)}'")                            
         }
