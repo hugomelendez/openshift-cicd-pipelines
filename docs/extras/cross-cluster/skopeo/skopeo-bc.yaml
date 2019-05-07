@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: skopeo
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: skopeo:latest
+  runPolicy: Serial
+  type: Docker
+  source:
+    dockerfile: |-
+      FROM registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7
+
+      USER root
+
+      RUN yum repolist > /dev/null && \
+          yum clean all && \
+          INSTALL_PKGS="skopeo" && \
+          yum install -y --enablerepo=rhel-7-server-extras-rpms --setopt=tsflags=nodocs $INSTALL_PKGS && \
+          rpm -V $INSTALL_PKGS && \
+          yum clean all
+
+      USER 1001
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: jenkins-slave-base-rhel7:latest

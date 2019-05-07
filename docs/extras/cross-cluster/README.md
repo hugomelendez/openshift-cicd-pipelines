@@ -20,7 +20,7 @@ The step looks like:
 
 ## With Skopeo
 
-First, the agent **skopeo** needs to be available to use, then the step looks like:
+First, the agent **skopeo** needs to be available to use (see the instructions in the [setup.sh](./skopeo/setup.sh)), then the step looks like:
 
     stage("Promote Image") {
         agent {
