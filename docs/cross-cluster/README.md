@@ -1,6 +1,8 @@
 # Cross-Cluster Image Promotions
 
-## With the CLI (oc image mirror)
+## With the CLI (oc image mirror)
+
+The step looks like:
 
     stage("Promote Image") {
         steps {
@@ -17,6 +19,8 @@
     }
 
 ## With Skopeo
+
+First, the agent **skopeo** needs to be available to use, then the step looks like:
 
     stage("Promote Image") {
         agent {
