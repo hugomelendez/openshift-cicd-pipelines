@@ -11,4 +11,4 @@ TBD
 ## Extras
 
 * [Approvals](./approvals)
-* [Cross Cluster Image Promotions](./cross-cluster)
+* [Cross-Cluster Image Promotions](./cross-cluster)

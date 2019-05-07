@@ -1,14 +1,14 @@
 # Approvals
 
-For the approval process, the input step in Jenkins will get the user who clicked and the query the OpenShift API to get the groups, if the user belongs to a given group, then the pipeline will continue otherwise it will wait for a user that belongs to that group.
+For the approval process, the input step in Jenkins will get the user who clicked and then query the OpenShift API to get the groups, if the user belongs to a given group, then the pipeline will continue otherwise it will wait for a user that belongs to that given group.
 
-A new cluster role needs to be created in the cluster:
+A new cluster role needs to be created in the cluster (logged as a cluster admin):
 
     oc create -f group-reader.yaml
 
     oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:jenkins:jenkins 
 
-Then the Jenkins step will look like:
+Then the Jenkins step is:
 
     stage("Approve Deploy") {
         when {
