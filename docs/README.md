@@ -1,14 +1,14 @@
 # Documentation
 
-## Introduction
+## Introduction
 
 TBD
 
-## Usage
+## Usage
 
 TBD
 
-## Extras
+## Extras
 
 * [Approvals](./approvals)
 * [Cross Cluster Image Promotions](./cross-cluster)
