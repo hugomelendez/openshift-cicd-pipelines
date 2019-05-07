@@ -2,7 +2,7 @@
 
 Basic demonstration of OpenShift CI/CD pipelines for deploying applications across environments using advanced deployment strategies like Blue/Green.
 
-## Documentantion
+## Documentantion
 
 * [Introduction](./docs/introduction)
 * [Usage](./docs/usage)
