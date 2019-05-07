@@ -2,6 +2,14 @@
 
 Basic demonstration of OpenShift CI/CD pipelines for deploying applications across environments using advanced deployment strategies like Blue/Green.
 
+## Documentantion
+
+* [Introduction](./docs/introduction)
+* [Usage](./docs/usage)
+* [Extras](./docs/extras)
+    * [Approvals](./docs/extras/approvals)
+    * [Cross-Cluster Image Promotions](./docs/extras/cross-cluster)
+
 ## Note
 
 This repository serves as an incubator for new features, to apply this pipelines in real scenarios the application and the pipeline library must be splitted.
