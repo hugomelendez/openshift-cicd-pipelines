@@ -8,11 +8,11 @@ The pipelines use the declarative approach and the [OpenShift Jenkins Pipeline P
 
 ### CI
 
-![CI](./demo/images/pipeline-ci.png)
+![CI](./docs/demo/images/pipeline-ci.png)
 
 ### CD
 
-![CD](./demo/images/pipeline-cd.png)
+![CD](./docs/demo/images/pipeline-cd.png)
 
 ## Documentantion
 
