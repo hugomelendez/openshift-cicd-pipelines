@@ -20,7 +20,11 @@ The step looks like:
 
 ## With Skopeo
 
-First, the agent **skopeo** needs to be available to use (see the instructions in the [setup.sh](./skopeo/setup.sh)), then the step looks like:
+Skopeo is a command line utility tool that can manage operations between registries.
+
+An agent with Skopeo installed is required to run the following step of the pipeline. To create the agent see the instructions in the [setup.sh](./skopeo/setup.sh).
+
+The following code snippet represents the Jenkins step:
 
     stage("Promote Image") {
         agent {

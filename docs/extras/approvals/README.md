@@ -8,7 +8,7 @@ A new cluster role needs to be created in the cluster (logged as a cluster admin
 
     oc adm policy add-cluster-role-to-user group-reader system:serviceaccount:jenkins:jenkins 
 
-Then the Jenkins step is:
+The following code snippet represents the Jenkins step:
 
     stage("Approve Deploy") {
         when {
