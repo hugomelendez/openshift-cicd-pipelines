@@ -1,6 +1,0 @@
-runCDPipeline(application: env.APP_NAME,
-              agent: "maven",
-              compileCommands: "./application/mvnw package -DskipTests; mkdir ./application/deploy; cp -R ./application/target/lib ./application/deploy; cp ./application/target/*-runner.jar ./application/deploy; cp -R ./application/.s2i ./application/deploy",
-              testCommands: "./application/mvnw test",
-              artifactsDir: "./application/deploy",
-              openShiftDir: "./application/openshift")

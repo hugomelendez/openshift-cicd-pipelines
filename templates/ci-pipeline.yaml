@@ -18,7 +18,7 @@ objects:
       git:
         uri: ${GIT_REPO}
         ref: ${GIT_BRANCH}
-      contextDir: application/openshift/pipelines/ci
+      contextDir: ${OPENSHIFT_DIR}/pipelines/ci
     strategy:
       jenkinsPipelineStrategy:
         env:
@@ -43,6 +43,11 @@ parameters:
 - description: Git Branch
   displayName: Git Branch
   name: GIT_BRANCH
+  required: true
+- description: OpenShift Directory
+  displayName: OpenShift Directory
+  name: OPENSHIFT_DIR
+  value: ./apps/quarkus/openshift
   required: true
 - description: Webhook Secret
   displayName: Webhook Secret
