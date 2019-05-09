@@ -51,11 +51,11 @@ A pipeline is a BuildConfig of type **JenkinsPipeline** so for creation the **ne
 
 ### CI 
 
-    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-ci-pipeline --context-dir=./application/openshift/pipelines/ci --strategy=pipeline -e APP_NAME=hello-service-ci -n dev
+    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-ci-pipeline --context-dir=./apps/quarkus/openshift/pipelines/ci --strategy=pipeline -e APP_NAME=hello-service-ci -n dev
     
 ### CD
 
-    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-pipeline --context-dir=./application/openshift/pipelines/cd --strategy=pipeline -e APP_NAME=hello-service -n dev
+    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-pipeline --context-dir=./apps/quarkus/openshift/pipelines/cd --strategy=pipeline -e APP_NAME=hello-service -n dev
 
 After the execution of this commands the pipelines are automatically started.
 
