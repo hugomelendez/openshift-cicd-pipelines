@@ -94,7 +94,7 @@ def call(parameters) {
                     }
                 }
                 steps {
-                    gitClone(scm)
+                    gitClone()
 
                     load env.APP_INT_TEST_COMMANDS
                 }

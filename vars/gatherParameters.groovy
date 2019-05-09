@@ -4,10 +4,18 @@ def call(parameters) {
     env.APP_NAME = parameters.application
     env.IMAGE_NAME = parameters.application
 
-    env.DEV_PROJECT = "dev"
-    env.TEST_PROJECT = "test"
-    env.PROD_PROJECT = "prod"
-                    
+    env.PROJECT = getProject()
+
+    if (!env.PROJECT.equals("dev")) {
+        env.DEV_PROJECT = "${env.PROJECT}-dev"
+        env.TEST_PROJECT = "${env.PROJECT}-test"
+        env.PROD_PROJECT = "${env.PROJECT}-prod"
+    } else {
+        env.DEV_PROJECT = "dev"
+        env.TEST_PROJECT = "test"
+        env.PROD_PROJECT = "prod"
+    }
+
     env.APP_OPENSHIFT_DIR = (env.OPENSHIFT_DIR) ? env.OPENSHIFT_DIR : "./openshift"
     env.APP_TEMPLATE = (parameters.applicationTemplate) ? parameters.applicationTemplate : "./${env.APP_OPENSHIFT_DIR}/template.yaml"
     env.APP_TEMPLATE_PARAMETERS_DEV = (parameters.applicationTemplateParametersDev) ? parameters.applicationTemplateParametersDev : "./${env.APP_OPENSHIFT_DIR}/environments/dev/templateParameters.txt"
