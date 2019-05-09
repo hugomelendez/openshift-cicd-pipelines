@@ -1,6 +1,5 @@
 runCDPipeline(application: env.APP_NAME,
               agent: "maven",
-              compileCommands: "./apps/quarkus/mvnw package -DskipTests; mkdir ./apps/quarkus/deploy; cp -R ./apps/quarkus/target/lib ./apps/quarkus/deploy; cp ./apps/quarkus/target/*-runner.jar ./apps/quarkus/deploy; cp -R ./apps/quarkus/.s2i ./apps/quarkus/deploy",
-              testCommands: "./apps/quarkus/mvnw test",
-              artifactsDir: "./apps/quarkus/deploy",
-              openShiftDir: "./apps/quarkus/openshift")
+              compileCommands: "cd ./apps/quarkus; ./mvnw package -DskipTests; mkdir ./deploy; cp -R ./target/lib ./deploy; cp ./target/*-runner.jar ./deploy; cp -R ./.s2i ./deploy",
+              testCommands: "cd ./apps/quarkus; ./mvnw test",
+              artifactsDir: "./apps/quarkus/deploy")

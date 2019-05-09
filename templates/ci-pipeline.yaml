@@ -24,6 +24,8 @@ objects:
         env:
         - name: APP_NAME
           value: ${APP_NAME}
+        - name: OPENSHIFT_DIR
+          value: ${OPENSHIFT_DIR}
         jenkinsfilePath: Jenkinsfile
       type: JenkinsPipeline
     triggers:
@@ -47,7 +49,7 @@ parameters:
 - description: OpenShift Directory
   displayName: OpenShift Directory
   name: OPENSHIFT_DIR
-  value: ./apps/quarkus/openshift
+  value: ./openshift
   required: true
 - description: Webhook Secret
   displayName: Webhook Secret

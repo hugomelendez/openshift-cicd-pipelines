@@ -22,7 +22,7 @@ oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n tes
 oc adm policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n prod
 
 oc create -f ./templates/ci-pipeline.yaml -n dev
-oc new-app --template ci-pipeline -p APP_NAME=hello-service-ci -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master -n dev
+oc new-app --template ci-pipeline -p APP_NAME=hello-service-ci -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master -p OPENSHIFT_DIR=./apps/quarkus/openshift -n dev
 
 oc create -f ./templates/cd-pipeline.yaml -n dev
-oc new-app --template cd-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -n dev
+oc new-app --template cd-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p OPENSHIFT_DIR=./apps/quarkus/openshift -n dev
