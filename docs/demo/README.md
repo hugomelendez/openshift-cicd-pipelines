@@ -51,11 +51,11 @@ A pipeline is a BuildConfig of type **JenkinsPipeline** so for creation the **ne
 
 ### CI 
 
-    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-ci-pipeline --context-dir=./pipelines/ci --strategy=pipeline -e APP_NAME=hello-service-ci -n dev
+    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-ci-pipeline --context-dir=./openshift/pipelines/ci --strategy=pipeline -e APP_NAME=hello-service-ci -n dev
     
 ### CD
 
-    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-pipeline --context-dir=./pipelines/cd --strategy=pipeline -e APP_NAME=hello-service -n dev
+    oc new-build ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git --name=hello-service-pipeline --context-dir=./openshift/pipelines/cd --strategy=pipeline -e APP_NAME=hello-service -n dev
 
 After the execution of this commands the pipelines are automatically started.
 
@@ -65,10 +65,10 @@ Another creation method is using Templates:
 
 ### CI 
 
-    oc create -f ./pipelines/ci/ci-pipeline.yaml -n dev
+    oc create -f ./templates/ci-pipeline.yaml -n dev
     oc new-app --template ci-pipeline -p APP_NAME=hello-service-ci -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -p GIT_BRANCH=master -n dev
 
 ### CD
 
-    oc create -f ./pipelines/cd/cd-pipeline.yaml -n dev
+    oc create -f ./templates/cd-pipeline.yaml -n dev
     oc new-app --template cd-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-cicd-pipelines.git -n dev
