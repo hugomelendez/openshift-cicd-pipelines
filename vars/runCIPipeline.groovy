@@ -12,9 +12,9 @@ def call(parameters) {
         stages {
             stage("Checkout") {
                 steps {      
-                    echo env.JOB_NAME
+                    echo env.JOB_NAME.split("/")[0].split("-")[0]
                     gatherParameters(parameters)
-                    gitClone(scm)
+                    gitClone()
                 }
             }
             stage("Compile") {

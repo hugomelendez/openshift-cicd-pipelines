@@ -13,7 +13,7 @@ def call(parameters) {
             stage("Checkout") {
                 steps {      
                     gatherParameters(parameters)
-                    gitClone(scm)
+                    gitClone()
                 }
             }
             stage("Compile") {

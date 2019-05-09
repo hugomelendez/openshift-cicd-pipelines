@@ -1,6 +1,6 @@
 # Usage
 
-As can be seen this repository contains the pipelines, the pipeline library and the application. For this repository it is acceptable but in a real scenario this repository need to be splitted:
+As can be seen this repository contains the pipelines, the pipeline library and the application. For this repository it is acceptable but in a real scenario this repository need to be splitted in:
 
 * Pipelines repository
 * Applications repositories
@@ -14,15 +14,15 @@ This repository must contain:
 * vars
 * jenkins
 
-### Pipeline Library
+### Pipeline Library
 
 The **vars** directory contains the implementation of the pipeline library that is used. It contains common steps to interact with OpenShift.
 
 ### Jenkins S2I
 
-The **jenkins** directory contains the configuration of Jenkins to be used in a S2I build image process.
+The **jenkins** directory contains the configuration of Jenkins to be used in the S2I build image process for its customization.
 
-### Applications repositories
+### Applications Repositories
 
 The applications use the pipelines and this implementation is designed to contain the majority of the CI/CD logic but some information is required in the applications repositories. 
 
