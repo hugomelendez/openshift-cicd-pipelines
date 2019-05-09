@@ -4,7 +4,7 @@
   <server></server>
   <namespaces>
     <string>jenkins</string>
-    <string>dev</string>
+    <string>hello-dev</string>
   </namespaces>
   <foldersEnabled>true</foldersEnabled>
   <jobNamePattern></jobNamePattern>

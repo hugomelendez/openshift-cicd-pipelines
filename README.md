@@ -12,6 +12,7 @@ Basic demonstration of OpenShift CI/CD pipelines for deploying applications acro
 
 ![CD](./docs/demo/images/pipeline-cd.png)
 
+
 ## Documentation
 
 * [Introduction](./docs/introduction)
@@ -19,13 +20,9 @@ Basic demonstration of OpenShift CI/CD pipelines for deploying applications acro
 * [Extras](./docs/extras)
     * [Approvals](./docs/extras/approvals)
     * [Cross-Cluster Image Promotions](./docs/extras/cross-cluster)
-* [Demo](./docs/demo)
 
-## Pipeline Library
+## Demo
 
-The pipelines use a shared library for common functionality, the library is embedded in this repository but can be externalized in other Git repository as well.
+The demonstration uses the [Hello Service](https://github.com/redhatcsargentina/openshift-hello-service) application.
 
-## Note
-
-This repository serves as an incubator for new features, to apply this pipelines in real scenarios the application and the pipeline library must be splitted.
-
+The instructions can be found [here](./docs/demo).
