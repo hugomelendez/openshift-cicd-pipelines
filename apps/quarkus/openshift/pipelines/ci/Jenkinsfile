@@ -2,4 +2,5 @@ runCIPipeline(application: env.APP_NAME,
               agent: "maven",
               compileCommands: "cd ./apps/quarkus; ./mvnw package -DskipTests; mkdir ./deploy; cp -R ./target/lib ./deploy; cp ./target/*-runner.jar ./deploy; cp -R ./.s2i ./deploy",
               testCommands: "cd ./apps/quarkus; ./mvnw test",
-              artifactsDir: "./apps/quarkus/deploy")
+              artifactsDir: "./apps/quarkus/deploy",
+              version: readMavenPom("./apps/quarkus/pom.xml"))

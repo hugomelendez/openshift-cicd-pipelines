@@ -3,6 +3,7 @@
 def call(parameters) {
     env.APP_NAME = parameters.application
     env.IMAGE_NAME = parameters.application
+    env.TAG_NAME = parameters.version
 
     env.PROJECT = getProject()
 

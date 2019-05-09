@@ -12,7 +12,6 @@ def call(parameters) {
         stages {
             stage("Checkout") {
                 steps {      
-                    echo env.JOB_NAME.split("/")[0].split("-")[0]
                     gatherParameters(parameters)
                     gitClone()
                 }
@@ -45,7 +44,8 @@ def call(parameters) {
             stage("Deploy DEV") {
                 steps {
                     script {
-                        env.TAG_NAME = getVersion(parameters.agent)
+                        if (!env.TAG_NAME)
+                            env.TAG_NAME = getVersion(parameters.agent)
                     }   
                     
                     tagImage(srcProject: env.DEV_PROJECT, 

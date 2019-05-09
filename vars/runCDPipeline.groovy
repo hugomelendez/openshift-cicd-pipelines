@@ -44,7 +44,8 @@ def call(parameters) {
             stage("Deploy DEV") {
                 steps {
                     script {
-                        env.TAG_NAME = getVersion(parameters.agent)
+                        if (!env.TAG_NAME)
+                            env.TAG_NAME = getVersion(parameters.agent)
                     }   
                     
                     tagImage(srcProject: env.DEV_PROJECT, 

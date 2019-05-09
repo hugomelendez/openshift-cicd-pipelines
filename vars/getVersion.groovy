@@ -2,5 +2,7 @@
 
 def call(tech) {
     if (tech.equals("maven"))
-        readMavenPom().getVersion()
+        return readMavenPom().getVersion()
+    else
+        return "latest"
 }
