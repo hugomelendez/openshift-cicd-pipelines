@@ -12,7 +12,6 @@ Basic demonstration of OpenShift CI/CD pipelines for deploying applications acro
 
 ![CD](./docs/demo/images/pipeline-cd.png)
 
-
 ## Documentation
 
 * [Introduction](./docs/introduction)
@@ -20,9 +19,4 @@ Basic demonstration of OpenShift CI/CD pipelines for deploying applications acro
 * [Extras](./docs/extras)
     * [Approvals](./docs/extras/approvals)
     * [Cross-Cluster Image Promotions](./docs/extras/cross-cluster)
-
-## Demo
-
-The demonstration uses the [Hello Service](https://github.com/redhatcsargentina/openshift-hello-service) application.
-
-The instructions can be found [here](./docs/demo).
+* [Demo](./docs/demo)

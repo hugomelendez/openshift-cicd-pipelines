@@ -1,5 +1,7 @@
 # Demo
 
+The demonstration uses the [Hello Service](https://github.com/redhatcsargentina/openshift-hello-service) application.
+
 ## Create the Projects
 
 These projects (environments) are used to deploy the application:
