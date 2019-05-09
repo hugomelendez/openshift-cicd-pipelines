@@ -4,8 +4,6 @@ Basic demonstration of OpenShift CI/CD pipelines for deploying applications acro
 
 ## Pipelines
 
-The pipelines use the declarative approach and the [OpenShift Jenkins Pipeline Plugin](https://github.com/openshift/jenkins-client-plugin).
-
 ### CI
 
 ![CI](./docs/demo/images/pipeline-ci.png)
@@ -14,7 +12,7 @@ The pipelines use the declarative approach and the [OpenShift Jenkins Pipeline P
 
 ![CD](./docs/demo/images/pipeline-cd.png)
 
-## Documentantion
+## Documentation
 
 * [Introduction](./docs/introduction)
 * [Usage](./docs/usage)
