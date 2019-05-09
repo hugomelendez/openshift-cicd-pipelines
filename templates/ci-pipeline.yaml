@@ -18,7 +18,7 @@ objects:
       git:
         uri: ${GIT_REPO}
         ref: ${GIT_BRANCH}
-      contextDir: openshift/pipelines/ci
+      contextDir: application/openshift/pipelines/ci
     strategy:
       jenkinsPipelineStrategy:
         env:
