@@ -85,23 +85,18 @@ def call(parameters) {
                 }
             }
             stage("Integration Test") {
-                when {
-                    expression {
-                        return parameters.integrationTestAgent
-                    }
-                }
                 agent {
                     kubernetes {
                         cloud "openshift"
                         defaultContainer "jnlp"
                         label "${env.APP_NAME}-int-test"
-                        yaml ((parameters.integrationTestAgent) ? readFile(parameters.integrationTestAgent) : "")     
+                        yaml readFile(env.APP_INT_TEST_AGENT)
                     }
                 }
                 steps {
                     gitClone(scm)
 
-                    load parameters.integrationTestCommands
+                    load env.APP_INT_TEST_COMMANDS
                 }
             }
             stage("Deploy PROD (Blue)") {
