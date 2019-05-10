@@ -46,7 +46,7 @@ There are two kinds of pipelines in this implementation:
 * CD Pipeline
 
 
-##### Example
+##### Example
 
 ###### CI
 
@@ -70,15 +70,15 @@ This pipeline does the same than the CI pipeline and continoues deploying the ap
 
 #### Template
 
-The file template.yaml has the definition of the application, it is used to create/update the application in the environments to guarantee the correct promotion of all the resources avoiding differences between them.
+The file **template.yaml** has the definition of the application, it is used to create/update the application in the environments to guarantee the correct promotion of all the resources avoiding differences between them.
 
-This template might has ConfigMaps, Routes and PersistentVolumeClaims among others apart from the core resources like DeploymentConfig, ImageStream, BuildConfig and Service. 
+This template might have ConfigMaps, Routes and PersistentVolumeClaims among others apart from the core resources like DeploymentConfig, ImageStream, BuildConfig and Service. 
 
-An important details is the parameters. The template must have a mandatory parameters named **APP_NAME**, which is very useful to name the application, thanks to that parameter the template can be instantiated multiple times in the same project (having the same application deployed several times with a different name each). Extra parameters can be added too.
+An important thing are the parameters. The template must have a mandatory parameters named **APP_NAME**, which is very useful to name the application, thanks to that parameter the template can be instantiated multiple times in the same project (having the same application deployed several times with a different name each time). Extra parameters can be added too.
 
 ### Environment Specific Configuration
 
-The template.yaml is equal to every environment as it main goal is to promote all the objects required by the application. This is helpful to promote the infrastructure of the application but the configuration needs to be environment specific and for that reason exist the environments directory with a set of convenient files:
+The **template.yaml** must be used in every environment as it main goal is to promote all the objects required by the application. This is helpful to promote the infrastructure of the application but the configuration needs to be environment specific and for that reason the **environments** directory exists with a set of convenient files:
 
 #### Patching the DeploymentConfig
 
@@ -101,7 +101,7 @@ This operation is done based on the **deploymentPatch.yaml** file:
 With this approach it is possible to modify for example:
 
 * the application replicas
-* the application resources (in PROD more resources are needed compare to DEV and TEST, same case for the replicas)
+* the application resources (in PROD higher resources are needed compare to DEV and TEST, same case for the replicas)
 
 #### Replacing Configuration Resources
 
@@ -119,7 +119,7 @@ This operation is done based on the **replaceConfig.yaml** file:
       required: true
       value: hello-service
 
-Notice that this file is a template similar to the application template, all the objects in this template replace the ones that existe in the **template.yaml**, this is very useful to replace entire ConfigMaps for example.
+Notice that this file is a template similar to the application template, all the objects in this template replace the ones that exist in the **template.yaml**, this is very useful to replace entire ConfigMaps for example.
 
 #### Setting the Template Parameters
 
