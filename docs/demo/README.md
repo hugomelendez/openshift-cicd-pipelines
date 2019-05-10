@@ -8,7 +8,7 @@ These projects (environments) are used to deploy the application:
 
     oc new-project hello-dev
     oc new-project hello-test
-    oc new-project hello-hello-prod
+    oc new-project hello-prod
 
 This project is used to deploy the Jenkins instance:
 
@@ -68,9 +68,9 @@ Another creation method is using Templates:
 ### CI 
 
     oc create -f ./templates/ci-pipeline.yaml -n hello-dev
-    oc new-app --template ci-pipeline -p APP_NAME=hello-service-ci -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-hello-service.git -p GIT_BRANCH=master -p OPENSHIFT_DIR=./apps/quarkus/openshift -n hello-dev
+    oc new-app --template ci-pipeline -p APP_NAME=hello-service-ci -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-hello-service.git -p GIT_BRANCH=master -n hello-dev
 
 ### CD
 
     oc create -f ./templates/cd-pipeline.yaml -n hello-dev
-    oc new-app --template cd-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-hello-service.git -p OPENSHIFT_DIR=./apps/quarkus/openshift -n hello-dev
+    oc new-app --template cd-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-hello-service.git -n hello-dev
