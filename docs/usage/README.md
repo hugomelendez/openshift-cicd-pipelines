@@ -121,7 +121,7 @@ This operation is done based on the **replaceConfig.yaml** file:
 
 Notice that this file is a template similar to the application template, all the objects in this template replace the ones that exist in the **template.yaml**, this is very useful to replace entire ConfigMaps for example.
 
-#### Setting the Template Parameters
+#### Setting the Template Parameters
 
 The template.yaml has parameters that can be set with the **templateParameters.txt** file:
 
