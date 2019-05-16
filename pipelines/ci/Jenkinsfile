@@ -1,0 +1,7 @@
+runCIPipeline(application: env.APP_NAME,
+              agent: "",
+              compileCommands: "",
+              testCommands: "",
+              artifactsDir: "",
+              integrationTestAgent: "",
+              integrationTestCommands: "")
