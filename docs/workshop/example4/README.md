@@ -1,14 +1,14 @@
-# Example 4 -Pipeline Template
+# Example 4 - Pipeline Template
 
-In this example we will see that a pipeline can be created with a Template.
+In this example a template is created to create a pipeline.
 
 ## Steps
 
-First we need to create the template, for that we will export the previously created pipeline:
+To create the template, the previously created pipeline is exported in YAML format:
 
     oc get bc hello-service -o yaml -n hello-dev > cd-pipeline.yaml
 
-With that we need to create a Template using the next YAML:
+The next snippet is an empty Template that must be completed with the result of the export:
 
     apiVersion: v1
     kind: Template
@@ -33,7 +33,9 @@ With that we need to create a Template using the next YAML:
       value: master
       required: true
 
- The template needs to be created before its used:
+The final result is in [this](./cd-pipeline-yaml) file.
+
+The template needs to be created in OpenShift before it is used:
 
     oc create -f cd-pipeline.yaml -n openshift
 

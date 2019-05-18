@@ -9,7 +9,7 @@ Create the TEST and PROD projects:
     oc new-project hello-test
     oc new-project hello-prod
 
-Remove the triggers in the DEV Hello Service application (henceforth the pipeline will handle the deployments):
+Remove the triggers in the DEV Hello Service application (henceforth the pipeline will handle deployments):
 
     oc set triggers dc/hello-service -n hello-dev --remove-all
 
@@ -25,7 +25,7 @@ Create the application in TEST and PROD (for the first time):
     oc expose svc hello-service -n hello-prod
     oc set triggers dc/hello-service -n hello-prod --remove-all
 
-Add permissions to the Jenkins ServiceAccount to edit the TEST and PROD projects:
+Add edit permissions to the Jenkins ServiceAccount in the TEST and PROD projects:
 
     oc adm policy add-role-to-user edit system:serviceaccount:hello-dev:jenkins -n hello-test
     oc adm policy add-role-to-user edit system:serviceaccount:hello-dev:jenkins -n hello-prod
