@@ -10,7 +10,7 @@ An OpenShift 3.9+ cluster is required, in this workshop MiniShift ([CDK 3.8](htt
 
 ## A Sample Application
 
-The Hello Service application is used during the workshop. The source code is in [this](./application) directory. 
+The Hello Service application is used during the workshop. The source code is in [this](./app) directory. 
 
 It needs to be pushed to a Git repository, so create a Git repository and push it for later use.
 
