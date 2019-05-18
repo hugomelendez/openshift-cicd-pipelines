@@ -1,0 +1,72 @@
+pipeline {
+    agent {
+        label "maven"
+    }
+    options { 
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+    }
+    stages {
+        stage("Checkout") {
+            steps {
+                gitClone()
+            }
+        }
+        stage("Compile") {
+            steps {
+                sh("mvn package -DskipTests")
+            }
+        }
+        stage("Test") {
+            steps {
+                sh("mvn test")
+            }
+        }
+        stage("Build Image") {
+            steps {
+                buildImage(application: env.APP_NAME, artifactsDir: "./target")
+            }
+        }
+        stage("Deploy DEV") {
+            steps {
+                deployImage(application: env.APP_NAME, image: env.APP_NAME, tag: "latest")
+            }
+        }
+        stage("Promote TEST") {
+            steps {
+                input("Promote TEST?")
+
+                script { env.TAG = readMavenPom().getVersion() }
+
+                tagImage(srcProject: "hello-dev", 
+                         srcImage: env.APP_NAME, 
+                         srcTag: "latest",
+                         dstProject: "hello-test",
+                         dstImage: env.APP_NAME,
+                         dstTag: env.TAG)
+            }
+        }
+        stage("Deploy TEST") {
+            steps {
+                deployImage(project: "hello-test", application: env.APP_NAME, image: env.APP_NAME, tag: env.TAG)
+            }
+        }
+        stage("Promote PROD") {
+            steps {
+                input("Promote PROD?")
+
+                tagImage(srcProject: "hello-test", 
+                         srcImage: env.APP_NAME, 
+                         srcTag: env.TAG,
+                         dstProject: "hello-prod",
+                         dstImage: env.APP_NAME,
+                         dstTag: env.TAG)
+            }
+        }
+        stage("Deploy PROD") {
+            steps {
+                deployImage(project: "hello-prod", application: env.APP_NAME, image: env.APP_NAME, tag: env.TAG)
+            }
+        }
+    }
+}

@@ -17,7 +17,7 @@ Basic demonstration of OpenShift CI/CD pipelines for deploying applications acro
 * [Introduction](./docs/introduction)
 * [Usage](./docs/usage)
 * [Extras](./docs/extras)
-    * [Approvals](./docs/extras/approvals)
+    * [Image Promotion Approvals](./docs/extras/image-promotion-approvals)
     * [Cross-Cluster Image Promotions](./docs/extras/cross-cluster)
     * [Maven Agent with Persistent Storage](./docs/extras/maven-agent-persistent-storage)
 * [Demo](./docs/demo)

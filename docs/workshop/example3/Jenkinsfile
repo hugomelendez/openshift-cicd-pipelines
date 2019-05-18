@@ -1,0 +1,101 @@
+pipeline {
+    agent {
+        label "maven"
+    }
+    options { 
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+    }
+    stages {
+        stage("Checkout") {
+            steps {
+                checkout(scm)
+            }
+        }
+        stage("Compile") {
+            steps {
+                sh("mvn package -DskipTests")
+            }
+        }
+        stage("Test") {
+            steps {
+                sh("mvn test")
+            }
+        }
+        stage("Build Image") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject() {
+                            openshift.selector("bc", env.APP_NAME).startBuild("--from-dir=./target", "--wait=true");
+                        }
+                    }
+                }
+            }
+        }
+        stage("Deploy DEV") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject() {
+                            openshift.selector("dc", env.APP_NAME).rollout().status()
+                        }
+                    }
+                }
+            }
+        }
+        stage("Promote TEST") {
+            steps {
+                script {
+                    input("Promote TEST?")
+
+                    openshift.withCluster() {
+                        openshift.withProject("hello-test") {
+                            env.TAG = readMavenPom().getVersion()
+                            openshift.tag("hello-dev/${APP_NAME}:latest", "hello-test/${APP_NAME}:${TAG}")
+                        }
+                    }
+                }
+            }
+        }
+        stage("Deploy TEST") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject("hello-test") {
+                            openshift.set("triggers", "dc/${APP_NAME}", "--remove-all")
+                            openshift.set("triggers", "dc/${APP_NAME}", "--from-image=${APP_NAME}:${TAG}", "-c ${APP_NAME}")
+                            openshift.selector("dc", env.APP_NAME).rollout().status()
+                        }
+                    }
+                }
+            }
+        }
+        stage("Promote PROD") {
+            steps {
+                script {
+                    input("Promote PROD?")
+
+                    openshift.withCluster() {
+                        openshift.withProject("hello-prod") {
+                            openshift.tag("hello-test/${APP_NAME}:${TAG}", "hello-prod/${APP_NAME}:${TAG}")
+                        }
+                    }
+                }
+            }
+        }
+        stage("Deploy PROD") {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject("hello-prod") {
+                            openshift.set("triggers", "dc/${APP_NAME}", "--remove-all")
+                            openshift.set("triggers", "dc/${APP_NAME}", "--from-image=${APP_NAME}:${TAG}", "-c ${APP_NAME}")
+                            openshift.selector("dc", env.APP_NAME).rollout().status()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

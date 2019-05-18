@@ -45,7 +45,6 @@ There are two kinds of pipelines in this implementation:
 * CI Pipeline
 * CD Pipeline
 
-
 ##### Example
 
 ###### CI
