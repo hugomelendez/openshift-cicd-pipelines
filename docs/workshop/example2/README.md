@@ -1,6 +1,6 @@
 # Example 2 - CI Pipeline
 
-In this example we start using an integration pipeline with a simple Jenkins deployment.
+In this example an integration pipeline is used with a simple ephemeral Jenkins instance.
 
 ## Steps
 

@@ -1,6 +1,6 @@
 # Example 3 - CD Pipeline
 
-In this example we will deploy building from master promoting the image from DEV to TEST and finally PROD.
+In this example a pipeline is created to build the code from master and promote the image from DEV to TEST and finally PROD.
 
 # Steps
 
