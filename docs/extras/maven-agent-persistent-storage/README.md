@@ -15,7 +15,7 @@ a PersistentVolume are required so a PersistentVolumeClaim is created:
         requests:
         storage: 100Gi" | oc create -f - -n cicd
 
-Then the agent must be configured to used the PVC and this is accomplished with the [OpenShift Jenkins Sync Plugin](https://github.com/openshift/jenkins-sync-plugin) creating a ConfigMap having the XML configuration (in [setup.sh](.(setup.sh))).
+Then the agent must be configured to used the PVC and this is accomplished with the [OpenShift Jenkins Sync Plugin](https://github.com/openshift/jenkins-sync-plugin) creating a ConfigMap having the XML configuration of the agent (see the [maven-agent.yaml](./maven-agent.yaml) file).
 
 
 
