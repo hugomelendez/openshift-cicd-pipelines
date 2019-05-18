@@ -1,4 +1,4 @@
-# Example 2 - CI Pipeline
+# Example 2 - CI Pipeline
 
 In this example we start using an integration pipeline with a simple Jenkins deployment.
 

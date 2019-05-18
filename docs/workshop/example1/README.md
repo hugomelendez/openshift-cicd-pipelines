@@ -1,4 +1,4 @@
-# Example 1 - First Steps
+# Example 1 - First Steps
 
 This are the first steps:
 
@@ -6,7 +6,7 @@ This are the first steps:
 * Deploy an application with S2I
 * Review the objects created by the process
 
-## Steps
+## Steps
 
 Create the DEV project:
 
