@@ -4,7 +4,7 @@ This is a revision of topics previously seen. The main difference is that the Je
 
 ## Steps
 
-### Cleanup
+### Cleanup
 
     oc delete project hello-dev hello-test hello-prod
 
@@ -40,6 +40,8 @@ The commands to create and label the Secrets are:
 ### Create a Preconfigured Jenkins Instance with S2I
 
 A custom preconfigured Jenkins instance is created with the following commands:
+
+    oc create -f https://raw.githubusercontent.com/openshift/origin/release-3.11/examples/jenkins/jenkins-persistent-template.json -n openshift
 
     oc new-build jenkins:2 --binary --name custom-jenkins -n jenkins
     oc start-build custom-jenkins --from-dir=./jenkins --wait -n jenkins
