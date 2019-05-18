@@ -28,3 +28,4 @@ To test this feature delete the pipeline and create it again:
 
 The pipeline will end without errors.
 
+Note: The pipeline is created in OpenShift and then synchronized into Jenkins thanks to the [OpenShift Jenkins Sync Plugin](https://github.com/openshift/jenkins-sync-plugin). 
