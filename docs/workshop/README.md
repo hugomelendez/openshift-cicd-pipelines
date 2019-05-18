@@ -12,10 +12,10 @@ An OpenShift 3.11 cluster is required, in this workshop MiniShift ([CDK 3.8](htt
     
     minishift start --memory=4GB --cpus=2 --disk-size=40GB
 
-    # Exposes the cluster registry
+    # Expose the cluster registry
     minishift addons apply registry-route
 
-    # Avoids a Jenkins instance in every project a pipeline is created
+    # Avoid the creation of a Jenkins instance in every project a pipeline is created and started
     minishift openshift config set --patch '{"jenkinsPipelineConfig":{"autoProvisionEnabled":false}}'
 
 ### A Sample Application
