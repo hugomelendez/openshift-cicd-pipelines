@@ -12,6 +12,12 @@ An OpenShift 3.11 cluster is required, in this workshop MiniShift ([CDK 3.8](htt
     
     minishift start --memory=4GB --cpus=2 --disk-size=40GB
 
+    # Exposes the cluster registry
+    minishift addons apply registry-route
+
+    # Avoids a Jenkins instance in every project a pipeline is created
+    minishift openshift config set --patch '{"jenkinsPipelineConfig":{"autoProvisionEnabled":false}}'
+
 ### A Sample Application
 
 The Hello Service application is used during the workshop. The source code is in [this](./application) directory. 

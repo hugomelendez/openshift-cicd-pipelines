@@ -8,6 +8,14 @@ This is a revision of topics previously seen. The main difference is that the Je
 
     oc delete project hello-dev hello-test hello-prod
 
+### Update the Pipelines Repository
+
+Push the following directories in this example directory to the pipelines Git repository (openshift-cicd-pipelines):
+
+* Improved pipeline library
+* Jenkins S2I assets
+* Templates 
+
 ### Create the Projects
 
 These projects (environments) are used to deploy the application:
