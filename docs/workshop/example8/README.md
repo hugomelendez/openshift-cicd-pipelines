@@ -8,7 +8,7 @@ This is a revision of topics previously seen. The main difference is that the Je
 
     oc delete project hello-dev hello-test hello-prod
 
-### Update the Pipelines Repository
+### Update the CI/CD Pipelines Repository
 
 Push the following directories in this example directory to the pipelines Git repository (openshift-cicd-pipelines):
 
