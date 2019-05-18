@@ -33,7 +33,7 @@ The next snippet is an empty Template that must be completed with the result of 
       value: master
       required: true
 
-The final result is in [this](./cd-pipeline.yaml) file.
+An example is in [this](./cd-pipeline.yaml) file.
 
 The template needs to be created in OpenShift before it is used:
 
