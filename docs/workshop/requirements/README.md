@@ -1,14 +1,14 @@
 # Requirements
 
-## OpenShift Cluster
+## An OpenShift 3.9+ Cluster
 
-An OpenShift cluster is required, in this workshop MiniShift (CDK 3.8) is used:
+An OpenShift 3.9+ cluster is required, in this workshop MiniShift ([CDK 3.8](https://developers.redhat.com/products/cdk/download)) is used:
 
     minishift setup-cdk
     
-    minishift start --memory=4GB --cpus=2
+    minishift start --memory=4GB --cpus=2 --disk-size=40GB
 
-## Sample Application
+## A Sample Application
 
 The Hello Service application is used during the workshop. The source code is in [this](./application) directory. 
 
