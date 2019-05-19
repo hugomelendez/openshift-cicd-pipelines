@@ -20,6 +20,10 @@ def process(objects) {
             }
 
             o.spec.triggers = []
+        }
+
+        if (o.kind.equals("BuildConfig")) {
+            o.spec.triggers = []
         } 
     }
 

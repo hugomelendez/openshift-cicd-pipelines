@@ -37,7 +37,7 @@ A custom preconfigured Jenkins instance is created with the following commands:
 
     oc new-build jenkins:2 --binary --name custom-jenkins -n jenkins
     oc start-build custom-jenkins --from-dir=./jenkins --wait -n jenkins
-    oc new-app --template=jenkins-ephemeral --name=jenkins -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:lahello-test -p NAMESPACE=jenkins -n jenkins
+    oc new-app --template=jenkins-ephemeral --name=jenkins -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest -p NAMESPACE=jenkins -n jenkins
 
 Finally a set of permissions need to be granted:
 
