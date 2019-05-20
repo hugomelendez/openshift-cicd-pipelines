@@ -43,6 +43,7 @@ def call(parameters) {
             }
             stage("Deploy DEV") {
                 steps {
+                    echo env.PROD_APPROVERS_GROUP
                     processApproval(message: "Switch to new version?", approversGroup: env.PROD_APPROVERS_GROUP)
 
                     script {
