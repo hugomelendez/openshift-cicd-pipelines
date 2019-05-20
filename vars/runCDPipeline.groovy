@@ -43,8 +43,6 @@ def call(parameters) {
             }
             stage("Deploy DEV") {
                 steps {
-                    processApproval(message: "Switch to new version?", approversGroup: env.PROD_APPROVERS_GROUP)
-
                     script {
                         env.TAG_NAME = getVersion(parameters.agent)
                     }   
