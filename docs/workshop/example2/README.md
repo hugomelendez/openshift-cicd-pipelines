@@ -27,7 +27,7 @@ When a new BuildConfig is created a Secret is automatically assigned to it if th
 
 To test this feature delete the pipeline and create it again:
 
-    oc delete bc hello-service -n hello-dev
+    oc delete bc hello-service-pipeline -n hello-dev
 
     oc new-build ssh://git@github.com/leandroberetta/openshift-hello-service.git --strategy pipeline --name hello-service-pipeline -e APP_NAME=hello-service -n hello-dev
 
