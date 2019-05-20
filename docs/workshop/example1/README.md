@@ -20,7 +20,7 @@ Create the application:
 
     oc new-app -i redhat-openjdk18-openshift:1.2 ssh://git@github.com/leandroberetta/openshift-hello-service.git --name hello-service -n hello-dev
 
-The build will fail because the repository is private, create a Secret (1):
+The build will fail because the repository is private, create a Secret [*]:
 
     oc create secret generic repository-credentials --from-file=ssh-privatekey=$HOME/.ssh/id_rsa --type=kubernetes.io/ssh-auth -n hello-dev
 
@@ -40,6 +40,6 @@ After the build is completed a triggers deploy the image, to test it, create a R
 
     oc expose svc hello-service -n hello-dev
     
-(1) Sometimes, you cannot make git clone with ssh, and you must use https, in that case, the secret is made like that:
+[*] Sometimes, you cannot make git clone with ssh, and you must use https, in that case, the secret is made like that:
 
     oc create secret generic repository-credentials --from-literal=username=<github_username> --from-literal=password=<github_password> --type=kubernetes.io/basic-auth -n hello-dev

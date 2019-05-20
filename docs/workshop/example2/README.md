@@ -13,9 +13,9 @@ Create a Jenkins instance in the hello-dev project:
 
     oc new-app --template=jenkins-ephemeral --name=jenkins -n hello-dev
 
-Copy the pipeline file to the root_dir of your repo:
+Copy the Jenkinsfile pipeline example to the root directory of your Git repository and push it:
 
-    cp workshop/example2/Jenkinsfile $APP_DIR/
+    cp ./docs/workshop/example2/Jenkinsfile your_repo/
 
 Create the pipeline (a pipeline is a BuildConfig of type JenkinsPipeline):
 

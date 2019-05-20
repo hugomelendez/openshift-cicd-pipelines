@@ -1,6 +1,6 @@
 # Proxy settings
 
-When behind corporate proxy, you need to confiugure it inside Jenkins:
+When behind a corporate proxy, you need to configure it inside Jenkins:
 
 - Go to Jenkins URL (tipically https://jenkins-hello-dev.apps.../) 
 - Go to `Jenkins -> Manage Jenkins -> Manage Plugin -> Advanced pluginManager -> advanced`

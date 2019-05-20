@@ -1,4 +1,4 @@
-# Image Promotion Approvals
+# Image Promotion Approvals
 
 ## Steps
 
