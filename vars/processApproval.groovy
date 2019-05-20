@@ -6,15 +6,17 @@ def call(parameters) {
             def canApprove = false
             def groups = openshift.selector("groups").objects()
             
-            for (g in groups) {
-                if (g.metadata.name.equals(parameters.approversGroup) && g.users.contains(user)) {
-                    canApprove = true
-                    echo "User ${user} from group ${g.metadata.name} approved the deployment"
-                } 
-            }
+            while (canApprove == false) {
+                for (g in groups) {
+                    if (g.metadata.name.equals(parameters.approversGroup) && g.users.contains(user)) {
+                        canApprove = true
+                        echo "User ${user} from group ${g.metadata.name} approved the deployment"
+                    } 
+                }
 
-            if (canApprove == false)
-                echo "User ${user} is not allowed to approve the deployment"
+                if (canApprove == false)
+                    echo "User ${user} is not allowed to approve the deployment"
+            }           
         }  
     }
 }
