@@ -143,7 +143,7 @@ def call(parameters) {
             }
             stage("Deploy PROD (Green)") {
                 steps {
-                    input("Switch to new version?")
+                    processApproval(message: "Switch to new version?", approversGroup: env.PROD_APPROVERS_GROUP)
 
                     script{
                         blueGreen.switchToGreenApplication(project: env.PROD_PROJECT, application: env.APP_NAME)   
