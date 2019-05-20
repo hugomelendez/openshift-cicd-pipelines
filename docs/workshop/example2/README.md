@@ -13,6 +13,10 @@ Create a Jenkins instance in the hello-dev project:
 
     oc new-app --template=jenkins-ephemeral --name=jenkins -n hello-dev
 
+Copy the pipeline file to the root_dir of your repo:
+
+    cp workshop/example2/Jenkinsfile $APP_DIR/
+
 Create the pipeline (a pipeline is a BuildConfig of type JenkinsPipeline):
 
     oc new-build ssh://git@github.com/leandroberetta/openshift-hello-service.git --strategy pipeline --name hello-service-pipeline -n hello-dev
