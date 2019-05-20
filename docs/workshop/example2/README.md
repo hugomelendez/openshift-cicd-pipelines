@@ -4,6 +4,11 @@ In this example an integration pipeline is used with a simple ephemeral Jenkins 
 
 ## Steps
 
+Remove the triggers in the DEV Hello Service application (henceforth the pipeline will handle deployments):
+
+    oc set triggers dc/hello-service -n hello-dev --remove-all
+    oc set triggers bc/hello-service -n hello-dev --remove-all
+
 Create a Jenkins instance in the hello-dev project:
 
     oc new-app --template=jenkins-ephemeral --name=jenkins -n hello-dev

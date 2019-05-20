@@ -9,10 +9,6 @@ Create the TEST and PROD projects:
     oc new-project hello-test
     oc new-project hello-prod
 
-Remove the triggers in the DEV Hello Service application (henceforth the pipeline will handle deployments):
-
-    oc set triggers dc/hello-service -n hello-dev --remove-all
-
 Create the application in TEST and PROD (for the first time):
 
     oc tag hello-dev/hello-service:latest hello-test/hello-service:latest -n hello-test
