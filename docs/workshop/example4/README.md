@@ -41,4 +41,4 @@ The template needs to be created in OpenShift before it is used:
 
 Then the pipeline can be created with the following command:
 
-    oc new-app --template=cd-pipeline -p APP_NAME=hello-service -p GIT_REPO= -p GIT_BRANCH=masters --name=hello-service-pipeline -n hello-dev
+    oc new-app --template=cd-pipeline -p APP_NAME=hello-service -p GIT_REPO= -p GIT_BRANCH=master --name=hello-service-pipeline -n hello-dev
