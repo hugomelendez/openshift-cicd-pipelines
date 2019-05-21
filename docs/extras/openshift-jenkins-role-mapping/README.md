@@ -1,4 +1,4 @@
-# OpenShift Role to Jenkins Permission Mapping
+# OpenShift Role to Jenkins Permission Mapping
 
 Permissions for users in Jenkins, and OpenShift to Jenkins permission mapping, can be changed in OpenShift after those users are initially established in Jenkins.
 
