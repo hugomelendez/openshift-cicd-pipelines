@@ -20,6 +20,7 @@ Basic demonstration of OpenShift CI/CD pipelines for deploying applications acro
     * [Image Promotion Approvals](./docs/extras/image-promotion-approvals)
     * [Cross-Cluster Image Promotions](./docs/extras/cross-cluster)
     * [Maven Agent with Persistent Storage](./docs/extras/maven-agent-persistent-storage)
+    * [OpenShift Role to Jenkins Permission Mapping](./docs/extras/openshift-jenkins-role-mapping)
     * [Jenkins Behind a Corporate Proxy](./docs/extras/jenkins-behind-proxy)
 * [Demo](./docs/demo)
 * [Workshop](./docs/workshop)
