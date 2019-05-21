@@ -2,7 +2,7 @@
 
 ## Steps
 
-See the [Image Promotion Approvals](../../extras/image-promotion-approvals) section.
+See the [Image Promotion Approvals](../../extras/image-promotion-approvals) section in the documentation.
 
 Create some users and groups to test the approvals:
 
