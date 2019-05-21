@@ -22,5 +22,6 @@ Basic demonstration of OpenShift CI/CD pipelines for deploying applications acro
     * [Maven Agent with Persistent Storage](./docs/extras/maven-agent-persistent-storage)
     * [OpenShift Role to Jenkins Permission Mapping](./docs/extras/openshift-jenkins-role-mapping)
     * [Jenkins Behind a Corporate Proxy](./docs/extras/jenkins-behind-proxy)
+    * [Custom Roles](./docs/extras/custom-roles)
 * [Demo](./docs/demo)
 * [Workshop](./docs/workshop)
