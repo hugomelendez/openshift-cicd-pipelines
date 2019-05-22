@@ -26,10 +26,6 @@ Basic demonstration of OpenShift CI/CD pipelines for deploying applications acro
 * [Demo](./docs/demo)
 * [Workshop](./docs/workshop)
 
-<<<<<<< HEAD
 <div style="text-align: center;">
-    <img src="./docs/images/fedora.png" alt="" height="" width="200">
+    <img src="./docs/images/fedora.png" alt="" height="" width="100">
 </div>
-=======
-<img src="./docs/images/redhat.png" alt="" height="42" width="42">
->>>>>>> ef59344a7cd269ebdc827da08b5b54ceb886120d
