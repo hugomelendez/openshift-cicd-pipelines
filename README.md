@@ -2,15 +2,17 @@
 
 Basic demonstration of OpenShift CI/CD pipelines for deploying applications across environments using advanced deployment strategies like Blue/Green.
 
+![OpenShift](./docs/images/openshift.png)
+
 ## Pipelines
 
 ### CI
 
-![CI](./docs/demo/images/pipeline-ci.png)
+![CI](./docs/images/pipeline-ci.png)
 
 ### CD
 
-![CD](./docs/demo/images/pipeline-cd.png)
+![CD](./docs/images/pipeline-cd.png)
 
 ## Documentation
 
@@ -25,3 +27,5 @@ Basic demonstration of OpenShift CI/CD pipelines for deploying applications acro
     * [Custom Roles](./docs/extras/custom-roles)
 * [Demo](./docs/demo)
 * [Workshop](./docs/workshop)
+
+![RedHat](./docs/images/redhat.png)
