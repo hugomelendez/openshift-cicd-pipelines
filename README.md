@@ -1,8 +1,7 @@
 # OpenShift CI/CD Pipelines
 
-Basic demonstration of OpenShift CI/CD pipelines for deploying applications across environments using advanced deployment strategies like Blue/Green.
-
-![OpenShift](./docs/images/openshift.png)
+|-------|------|
+|![OpenShift](./docs/images/openshift.png)|Basic demonstration of OpenShift CI/CD pipelines for deploying applications across environments using advanced deployment strategies like Blue/Green.|
 
 ## Pipelines
 
