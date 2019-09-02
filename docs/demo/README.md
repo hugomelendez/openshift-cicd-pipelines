@@ -1,6 +1,6 @@
 # Demo
 
-The demonstration uses the [Hello Service](https://github.com/redhatcsargentina/openshift-hello-service) application.
+The demonstration uses the [Hello Service](https://github.com/leandroberetta/openshift-hello-service) application.
 
 ## Create the Projects
 
@@ -53,11 +53,11 @@ A pipeline is a BuildConfig of type **JenkinsPipeline** so for creation the **ne
 
 ### CI 
 
-    oc new-build ssh://git@github.com/redhatcsargentina/openshift-hello-service.git --name=hello-service-ci-pipeline --context-dir=./openshift/pipelines/ci --strategy=pipeline -e APP_NAME=hello-service-ci -n hello-dev
+    oc new-build ssh://git@github.com/leandroberetta/openshift-hello-service.git --name=hello-service-ci-pipeline --context-dir=./openshift/pipelines/ci --strategy=pipeline -e APP_NAME=hello-service-ci -n hello-dev
     
 ### CD
 
-    oc new-build ssh://git@github.com/redhatcsargentina/openshift-hello-service.git --name=hello-service-pipeline --context-dir=./openshift/pipelines/cd --strategy=pipeline -e APP_NAME=hello-service -n hello-dev
+    oc new-build ssh://git@github.com/leandroberetta/openshift-hello-service.git --name=hello-service-pipeline --context-dir=./openshift/pipelines/cd --strategy=pipeline -e APP_NAME=hello-service -n hello-dev
 
 After the execution of this commands the pipelines are automatically started.
 
@@ -68,9 +68,9 @@ Another creation method is using Templates:
 ### CI 
 
     oc create -f ./templates/ci-pipeline.yaml -n hello-dev
-    oc new-app --template ci-pipeline -p APP_NAME=hello-service-ci -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-hello-service.git -p GIT_BRANCH=master -n hello-dev
+    oc new-app --template ci-pipeline -p APP_NAME=hello-service-ci -p GIT_REPO=ssh://git@github.com/leandroberetta/openshift-hello-service.git -p GIT_BRANCH=master -n hello-dev
 
 ### CD
 
     oc create -f ./templates/cd-pipeline.yaml -n hello-dev
-    oc new-app --template cd-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/redhatcsargentina/openshift-hello-service.git -n hello-dev
+    oc new-app --template cd-pipeline -p APP_NAME=hello-service -p GIT_REPO=ssh://git@github.com/leandroberetta/openshift-hello-service.git -n hello-dev

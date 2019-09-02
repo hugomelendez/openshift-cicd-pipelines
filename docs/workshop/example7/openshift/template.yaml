@@ -158,7 +158,7 @@ parameters:
   displayName: Git Repository
   name: GIT_REPO
   required: true
-  value: ssh://git@github.com/redhatcsargentina/openshift-hello-service.git
+  value: ssh://git@github.com/leandroberetta/openshift-hello-service.git
 - description: Git Branch
   displayName: Git Branch
   name: GIT_BRANCH
