@@ -27,11 +27,11 @@ def createBlueGreenRoute(parameters) {
 }
 
 def getBlueGreenRoute(parameters) {
-    openshift.withCluster(parameters.clusterUrl, parameters.credentialsId) {
-        openshift.withProject(parameters.project) {
+    //openshift.withCluster(parameters.clusterUrl, parameters.credentialsId) {
+    //    openshift.withProject(parameters.project) {
             return openshift.selector("route/${parameters.application}-blue-green").object()
-        }
-    }
+    //    }
+    //}
 }
 
 def getBlueApplication(parameters) {
