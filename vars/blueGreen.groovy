@@ -53,8 +53,13 @@ def switchToGreenApplication(parameters) {
     openshift.withCluster(parameters.clusterUrl, parameters.credentialsId) {
         openshift.withProject(parameters.project) {
             def route = getBlueGreenRoute(project: parameters.project, application: parameters.application)
-            
-            route.spec.to.name = getBlueApplication(project: parameters.project, application: parameters.application)
+            def blueApplication = "${parameters.application}-1"  
+                            
+            if (route.spec.to.name.compareTo("${parameters.application}-1") == 0) {
+                blueApplication = "${parameters.application}-2"
+            }
+
+            route.spec.to.name = blueApplication
             
             openshift.apply(route)        
         }
